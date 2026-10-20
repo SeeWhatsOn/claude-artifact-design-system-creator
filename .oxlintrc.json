@@ -15,5 +15,23 @@
       }
     ]
   },
-  "ignorePatterns": ["dist/**", "docs/**"]
+  "ignorePatterns": ["dist/**", "docs/**"],
+  "overrides": [
+    {
+      "files": ["src/core/**"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["react", "react-*", "react/*", "zustand", "zustand/*", "@/components/*"],
+                "message": "src/core is framework-free: keep UI and state code out of it."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }
