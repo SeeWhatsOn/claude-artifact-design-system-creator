@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { migrate } from "./migrations";
 
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
 export const CURRENT_SCHEMA_VERSION = 1;
@@ -131,8 +132,8 @@ export function parseProject(input: unknown): ParseProjectResult {
   if (typeof version === "number" && version > CURRENT_SCHEMA_VERSION) {
     return { ok: false, error: "This project was made with a newer version of Brandkit. Reload the app to update." };
   }
-  // Migrations from older schemaVersions go here once version 2 exists.
-  const result = projectSchema.safeParse(input);
+  const data = typeof version === "number" ? migrate({ ...input }, version, CURRENT_SCHEMA_VERSION) : input;
+  const result = projectSchema.safeParse(data);
   if (!result.success) return { ok: false, error: z.prettifyError(result.error) };
   return { ok: true, project: result.data };
 }
