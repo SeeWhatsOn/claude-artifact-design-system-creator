@@ -1,13 +1,26 @@
+import { useMemo } from "react";
+import { PalettePicker } from "@/colour/PalettePicker";
+import { compile } from "@/core/compile";
+import { DownloadButton } from "@/export/DownloadButton";
+import { PreviewPane } from "@/preview/PreviewPane";
+import { useProjectStore } from "@/state/project-store";
 import "./index.css";
 
-/** The app shell: title bar and main area that later steps fill in. */
+/** The app shell: controls on the left, live preview on the right. */
 export function App() {
+  const project = useProjectStore(state => state.project);
+  const { preview } = useMemo(() => compile(project), [project]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="border-b px-4 py-3">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <h1 className="text-lg font-semibold">Brandkit for Claude</h1>
+        <DownloadButton />
       </header>
-      <main className="p-4" />
+      <main className="grid gap-6 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+        <PalettePicker />
+        <PreviewPane vars={preview.light} />
+      </main>
     </div>
   );
 }
