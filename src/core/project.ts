@@ -1,9 +1,14 @@
 import { z } from "zod";
+import { migrate } from "./migrations";
 
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
 export const CURRENT_SCHEMA_VERSION = 1;
 
-const hexColour = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex colour like #1D6FB5");
+// Stored lowercase so every colour compares and exports the same way however it was typed.
+const hexColour = z
+  .string()
+  .regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex colour like #1D6FB5")
+  .transform(hex => hex.toLowerCase());
 
 /** The ten fixed text roles, from largest to smallest. */
 export const TEXT_ROLES = ["display", "h1", "h2", "h3", "lead", "body", "small", "caption", "label", "code"] as const;
@@ -15,6 +20,19 @@ const fontRefSchema = z.object({
   variable: z.boolean(),
   // Points at the binary in IndexedDB for uploaded fonts.
   assetId: z.string().optional(),
+});
+
+/** The few colours a user sets; the colour engine derives every interface colour from them. */
+export const paletteSeedsSchema = z.object({
+  brand: hexColour,
+  brandForeground: hexColour,
+  neutralLightBg: hexColour,
+  neutralDarkBg: hexColour,
+  neutralHue: z.object({ hue: z.number().min(0).max(360), chroma: z.number().min(0) }),
+  accent: hexColour,
+  success: hexColour,
+  warning: hexColour,
+  danger: hexColour,
 });
 
 const themeOverridesSchema = z.record(z.string(), hexColour);
@@ -44,19 +62,9 @@ const projectSchema = z.object({
   }),
   presetId: z.string().nullable(),
   palette: z.object({
-    // Null until the user picks a palette; export is blocked until then.
+    // Null until the user picks a curated palette, or when seeds don't match one (e.g. migrated custom colours).
     paletteId: z.string().nullable(),
-    seeds: z.object({
-      brand: hexColour,
-      brandForeground: hexColour,
-      neutralLightBg: hexColour,
-      neutralDarkBg: hexColour,
-      neutralHue: z.object({ hue: z.number().min(0).max(360), chroma: z.number().min(0) }),
-      accent: hexColour,
-      success: hexColour,
-      warning: hexColour,
-      danger: hexColour,
-    }),
+    seeds: paletteSeedsSchema,
     overrides: z.object({ light: themeOverridesSchema, dark: themeOverridesSchema }),
   }),
   darkEnabled: z.boolean(),
@@ -110,6 +118,9 @@ const projectSchema = z.object({
 /** A user's whole design system: everything the app edits, saves and exports. */
 export type Project = z.infer<typeof projectSchema>;
 
+/** The seed colours of a palette. */
+export type PaletteSeeds = z.infer<typeof paletteSeedsSchema>;
+
 /** A typeface choice, either from Google Fonts or uploaded by the user. */
 export type FontRef = z.infer<typeof fontRefSchema>;
 
@@ -125,8 +136,8 @@ export function parseProject(input: unknown): ParseProjectResult {
   if (typeof version === "number" && version > CURRENT_SCHEMA_VERSION) {
     return { ok: false, error: "This project was made with a newer version of Brandkit. Reload the app to update." };
   }
-  // Migrations from older schemaVersions go here once version 2 exists.
-  const result = projectSchema.safeParse(input);
+  const data = typeof version === "number" ? migrate({ ...input }, version, CURRENT_SCHEMA_VERSION) : input;
+  const result = projectSchema.safeParse(data);
   if (!result.success) return { ok: false, error: z.prettifyError(result.error) };
   return { ok: true, project: result.data };
 }

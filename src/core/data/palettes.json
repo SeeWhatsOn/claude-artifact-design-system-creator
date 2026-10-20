@@ -1,0 +1,567 @@
+[
+  {
+    "id": "civic-ledger",
+    "name": "Civic Ledger",
+    "mood": "Plain-spoken public service: trustworthy blue, unmissable yellow focus, zero decoration.",
+    "inspiration": "GOV.UK Design System colour palette (Crown copyright, OGL) — https://design-system.service.gov.uk/styles/colour/",
+    "seeds": {
+      "brand": "#1D6FB5",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F3F2F1",
+      "neutralDarkBg": "#1D1C1A",
+      "neutralHue": {
+        "hue": 85,
+        "chroma": 0.004,
+        "intent": "near-achromatic warm grey; neutral should disappear behind content"
+      },
+      "accent": "#FFDD00",
+      "success": "#00703C",
+      "warning": "#F47738",
+      "danger": "#D4351C"
+    },
+    "contrast": {
+      "brandOnBg": 4.7,
+      "fgOnBrand": 5.26,
+      "brandOnDarkBg": 3.24,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "bauhaus-primary",
+    "name": "Bauhaus Primary",
+    "mood": "Constructivist confidence: signal red, chrome yellow, cool paper — for design tools and cultural institutions.",
+    "inspiration": "Bauhaus primaries (Itten / Kandinsky colour-form studies, 1919–33); Herbert Bayer's Bauhaus print work — https://www.bauhaus100.de/en/",
+    "seeds": {
+      "brand": "#BE1E2D",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F1F2F0",
+      "neutralDarkBg": "#1C1D1F",
+      "neutralHue": {
+        "hue": 264,
+        "chroma": 0.004,
+        "intent": "cool paper grey with a hint of green, deliberately not cream"
+      },
+      "accent": "#F2B705",
+      "success": "#2E7D4F",
+      "warning": "#E89A0C",
+      "danger": "#8E1B1B"
+    },
+    "note": "Brand is red, so danger is pushed darker/browner and must always carry an icon.",
+    "contrast": {
+      "brandOnBg": 5.48,
+      "fgOnBrand": 6.15,
+      "brandOnDarkBg": 2.74,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "ledger-ink",
+    "name": "Ledger Ink",
+    "mood": "Calm, numerate fintech: deep petrol ink with a fresh mint signal for gains.",
+    "inspiration": "Banknote intaglio inks and Wise's 2023 rebrand use of deep ink + fresh green (inspiration only, hues changed) — https://wise.design/foundations/colour",
+    "seeds": {
+      "brand": "#0E4D64",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F3F6F7",
+      "neutralDarkBg": "#0C1A20",
+      "neutralHue": {
+        "hue": 227,
+        "chroma": 0.023,
+        "intent": "cool blue-green grey, low chroma, to keep tables crisp"
+      },
+      "accent": "#3DDC97",
+      "success": "#1E8E5A",
+      "warning": "#D9A21B",
+      "danger": "#C8372D"
+    },
+    "contrast": {
+      "brandOnBg": 8.54,
+      "fgOnBrand": 9.27,
+      "brandOnDarkBg": 1.91,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "clinic-calm",
+    "name": "Clinic Calm",
+    "mood": "Reassuring healthcare: steady jade, soft peach warmth, generous clinical white.",
+    "inspiration": "NHS Identity accessible colour guidance (emphasis on contrast and calm) — https://www.england.nhs.uk/nhsidentity/identity-guidelines/colours/",
+    "seeds": {
+      "brand": "#0F7663",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F4F8F7",
+      "neutralDarkBg": "#0F1C1A",
+      "neutralHue": {
+        "hue": 184,
+        "chroma": 0.019,
+        "intent": "barely-green clinical grey; clean, never sterile blue-grey"
+      },
+      "accent": "#F4A582",
+      "success": "#2F855A",
+      "warning": "#C77C02",
+      "danger": "#C0392B"
+    },
+    "contrast": {
+      "brandOnBg": 5.17,
+      "fgOnBrand": 5.54,
+      "brandOnDarkBg": 3.16,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "crayon-box",
+    "name": "Crayon Box",
+    "mood": "Kids and learning: raspberry, sunflower and sky — bright but legible.",
+    "inspiration": "Mary Blair's concept art for 'It's a Small World' and the widely-used Coolors palette 8ECAE6/219EBC/FFB703/FB8500 — https://coolors.co/palette/8ecae6-219ebc-023047-ffb703-fb8500",
+    "seeds": {
+      "brand": "#C2255C",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FFF8EC",
+      "neutralDarkBg": "#1A1D2E",
+      "neutralHue": {
+        "hue": 276,
+        "chroma": 0.033,
+        "intent": "sunny warm white by day, deep ink-navy by night (not black)"
+      },
+      "accent": "#FFB703",
+      "success": "#2A9D8F",
+      "warning": "#F77F00",
+      "danger": "#D62828"
+    },
+    "contrast": {
+      "brandOnBg": 5.36,
+      "fgOnBrand": 5.66,
+      "brandOnDarkBg": 2.95,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "noir-champagne",
+    "name": "Noir Champagne",
+    "mood": "Dark-led luxury: espresso lacquer, champagne metal, hushed restraint.",
+    "inspiration": "Art Deco interiors — Chrysler Building lobby marble and brass; Ruhlmann lacquer furniture — https://www.metmuseum.org/essays/art-deco",
+    "seeds": {
+      "brand": "#4A3428",
+      "brandForeground": "#F6EFE4",
+      "neutralLightBg": "#F7F4EF",
+      "neutralDarkBg": "#15110E",
+      "neutralHue": {
+        "hue": 59,
+        "chroma": 0.009,
+        "intent": "warm brown-black and ivory; neutral carries the luxury, brand stays quiet"
+      },
+      "accent": "#C9A96E",
+      "success": "#4E7A55",
+      "warning": "#B7832F",
+      "danger": "#9E2B25"
+    },
+    "contrast": {
+      "brandOnBg": 10.56,
+      "fgOnBrand": 10.14,
+      "brandOnDarkBg": 1.62,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "trailhead",
+    "name": "Trailhead",
+    "mood": "Outdoorsy and rugged: pine forest, blaze-orange markers, weathered stone.",
+    "inspiration": "US National Park Service Unigrid brochures and WPA national-park posters (1938–41) — https://www.nps.gov/subjects/hfc/unigrid.htm",
+    "seeds": {
+      "brand": "#2F5D3A",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F3F2EC",
+      "neutralDarkBg": "#161B17",
+      "neutralHue": {
+        "hue": 151,
+        "chroma": 0.011,
+        "intent": "stone grey leaning warm-olive"
+      },
+      "accent": "#E07A1F",
+      "success": "#3A7D44",
+      "warning": "#D99A1E",
+      "danger": "#B23A2A"
+    },
+    "contrast": {
+      "brandOnBg": 6.81,
+      "fgOnBrand": 7.64,
+      "brandOnDarkBg": 2.28,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "solarized-dusk",
+    "name": "Solarized Dusk",
+    "mood": "Dark-led developer tool: deep teal-black base, mustard brand, precise cyan accents.",
+    "inspiration": "Solarized by Ethan Schoonover (CIELAB-tuned 16-colour scheme) — https://ethanschoonover.com/solarized/",
+    "echoesTell": "Partial echo of the cream-paper cluster: light bg #FDF6E3 is close to #F4F1EA. Kept because it is Solarized's canonical base3 and the brand is mustard, not terracotta; recommend dark theme as default.",
+    "seeds": {
+      "brand": "#7A5F00",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FDF6E3",
+      "neutralDarkBg": "#002B36",
+      "neutralHue": {
+        "hue": 220,
+        "chroma": 0.049,
+        "intent": "strongly tinted: blue-teal night, warm parchment day (Solarized base03 / base3)"
+      },
+      "accent": "#2AA198",
+      "success": "#3E7F17",
+      "warning": "#CB4B16",
+      "danger": "#DC322F"
+    },
+    "contrast": {
+      "brandOnBg": 5.62,
+      "fgOnBrand": 6.06,
+      "brandOnDarkBg": 2.48,
+      "aa": "AA normal text (>=4.5:1)"
+    }
+  },
+  {
+    "id": "oxford-commons",
+    "name": "Oxford Commons",
+    "mood": "Academic and scholarly: heraldic navy, collegiate crimson, quiet library grey.",
+    "inspiration": "University heraldic colours (Oxford blue, Harvard crimson) — https://www.ox.ac.uk/public-affairs/style-guide/digital-style-guide",
+    "seeds": {
+      "brand": "#0B2A4A",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F5F6F8",
+      "neutralDarkBg": "#0D1622",
+      "neutralHue": {
+        "hue": 256,
+        "chroma": 0.028,
+        "intent": "cool paper grey, faint blue"
+      },
+      "accent": "#9E1B32",
+      "success": "#2E6B3F",
+      "warning": "#B7791F",
+      "danger": "#B3261E"
+    },
+    "contrast": {
+      "brandOnBg": 13.45,
+      "fgOnBrand": 14.54,
+      "brandOnDarkBg": 1.25,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "memphis-pop",
+    "name": "Memphis Pop",
+    "mood": "Music and culture: turquoise, bubblegum and lemon — loud, irreverent, 80s.",
+    "inspiration": "Memphis Group (Ettore Sottsass, Milan 1981) — https://www.vam.ac.uk/articles/memphis-group",
+    "seeds": {
+      "brand": "#007C89",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FFFDF8",
+      "neutralDarkBg": "#1A1A1F",
+      "neutralHue": {
+        "hue": 286,
+        "chroma": 0.01,
+        "intent": "bright white with a whisper of warmth; dark mode is aubergine-free charcoal"
+      },
+      "accent": "#FF5FA2",
+      "success": "#1F9D55",
+      "warning": "#FFC93C",
+      "danger": "#E23B3B"
+    },
+    "contrast": {
+      "brandOnBg": 4.87,
+      "fgOnBrand": 4.95,
+      "brandOnDarkBg": 3.5,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "werner-moss",
+    "name": "Werner Moss",
+    "mood": "Eco and natural: lichen olive, ochre earth, unbleached linen.",
+    "inspiration": "Werner's Nomenclature of Colours (1814, used by Darwin) — https://www.c82.net/werner/",
+    "seeds": {
+      "brand": "#4F5D2F",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F2F1EA",
+      "neutralDarkBg": "#181A13",
+      "neutralHue": {
+        "hue": 121,
+        "chroma": 0.014,
+        "intent": "linen grey with a yellow-green cast"
+      },
+      "accent": "#C9873A",
+      "success": "#4A7C3A",
+      "warning": "#C28A1E",
+      "danger": "#A63A2B"
+    },
+    "contrast": {
+      "brandOnBg": 6.31,
+      "fgOnBrand": 7.14,
+      "brandOnDarkBg": 2.46,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "plum-market",
+    "name": "Plum Market",
+    "mood": "Boutique retail: ripe plum with saffron price-tag pops.",
+    "inspiration": "Liberty London fabric archive and spice-market stalls (plum + saffron pairing) — https://www.libertylondon.com/uk/info/our-heritage",
+    "seeds": {
+      "brand": "#6D2E5B",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FAF6F7",
+      "neutralDarkBg": "#1C1419",
+      "neutralHue": {
+        "hue": 341,
+        "chroma": 0.016,
+        "intent": "rosy off-white and plum-black; neutral tinted toward brand"
+      },
+      "accent": "#F4A300",
+      "success": "#2F7D4F",
+      "warning": "#D98E04",
+      "danger": "#C0392B"
+    },
+    "note": "Plum is a red-purple (hue ~340 OKLCH), far from indigo; no gradients.",
+    "contrast": {
+      "brandOnBg": 8.94,
+      "fgOnBrand": 9.58,
+      "brandOnDarkBg": 1.88,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "riso-zine",
+    "name": "Riso Zine",
+    "mood": "Indie publishing: risograph federal blue with fluorescent pink overprint.",
+    "inspiration": "Riso ink colour library (Federal Blue, Fluorescent Pink, Sunflower, Green) — https://www.stencil.wtf/colors",
+    "seeds": {
+      "brand": "#3D5588",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F6F5F2",
+      "neutralDarkBg": "#191B22",
+      "neutralHue": {
+        "hue": 273,
+        "chroma": 0.014,
+        "intent": "uncoated-paper grey, neutral-warm"
+      },
+      "accent": "#FF48B0",
+      "success": "#00A95C",
+      "warning": "#FFB511",
+      "danger": "#E03A3E"
+    },
+    "contrast": {
+      "brandOnBg": 6.75,
+      "fgOnBrand": 7.36,
+      "brandOnDarkBg": 2.34,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "salmon-paper",
+    "name": "Salmon Paper",
+    "mood": "Serious editorial and business news: salmon newsprint, claret masthead, oxford teal.",
+    "inspiration": "Financial Times Origami colour system (paper/claret/teal; hues adjusted) — https://origami.ft.com/foundations/colours/",
+    "seeds": {
+      "brand": "#990F3D",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FFF1E5",
+      "neutralDarkBg": "#1F1A17",
+      "neutralHue": {
+        "hue": 53,
+        "chroma": 0.022,
+        "intent": "salmon-pink paper by day, warm charcoal by night"
+      },
+      "accent": "#0D7680",
+      "success": "#09823F",
+      "warning": "#C77700",
+      "danger": "#CC0000"
+    },
+    "note": "Salmon, not cream; claret, not terracotta. Avoid pairing with hairline-rule broadsheet layout tell.",
+    "contrast": {
+      "brandOnBg": 7.62,
+      "fgOnBrand": 8.43,
+      "brandOnDarkBg": 2.04,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "nordic-frost",
+    "name": "Nordic Frost",
+    "mood": "Dark-led productivity: polar-night base, frost blues, aurora status colours.",
+    "inspiration": "Nord theme by Arctic Ice Studio — https://www.nordtheme.com/docs/colors-and-palettes",
+    "seeds": {
+      "brand": "#4A6890",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#ECEFF4",
+      "neutralDarkBg": "#2E3440",
+      "neutralHue": {
+        "hue": 264,
+        "chroma": 0.023,
+        "intent": "cool blue-grey polar night (Nord0) and snow storm (Nord6)"
+      },
+      "accent": "#88C0D0",
+      "success": "#A3BE8C",
+      "warning": "#EBCB8B",
+      "danger": "#BF616A"
+    },
+    "note": "Blue-grey neutral sits near Tailwind slate; the bluish-frost brand and aurora accents keep it distinct.",
+    "contrast": {
+      "brandOnBg": 4.96,
+      "fgOnBrand": 5.72,
+      "brandOnDarkBg": 2.19,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "saffron-kitchen",
+    "name": "Saffron Kitchen",
+    "mood": "Food and hospitality: toasted saffron, cardamom teal, warm plaster.",
+    "inspiration": "Indian spice markets and Rajasthani painted walls; Pantone 'Saffron' family — https://www.pantone.com/color-finder/14-1064-TCX",
+    "seeds": {
+      "brand": "#8C4A00",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#FFF8F0",
+      "neutralDarkBg": "#1E140B",
+      "neutralHue": {
+        "hue": 63,
+        "chroma": 0.023,
+        "intent": "warm plaster white, roasted brown-black"
+      },
+      "accent": "#2E6E73",
+      "success": "#3F7D3A",
+      "warning": "#E0A100",
+      "danger": "#B83227"
+    },
+    "contrast": {
+      "brandOnBg": 6.44,
+      "fgOnBrand": 6.79,
+      "brandOnDarkBg": 2.67,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "morandi-studio",
+    "name": "Morandi Studio",
+    "mood": "Architecture and studio practice: dusty rose-clay, sage, chalky plaster.",
+    "inspiration": "Giorgio Morandi's still lifes (muted, greyed 'Morandi colours') — https://www.museomorandi.it/",
+    "seeds": {
+      "brand": "#7A5C58",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#EFEBE6",
+      "neutralDarkBg": "#22201F",
+      "neutralHue": {
+        "hue": 74,
+        "chroma": 0.008,
+        "intent": "chalky greige, low chroma, warm"
+      },
+      "accent": "#A9B5A0",
+      "success": "#5E7F5A",
+      "warning": "#B98A3E",
+      "danger": "#A2453D"
+    },
+    "contrast": {
+      "brandOnBg": 5.06,
+      "fgOnBrand": 6,
+      "brandOnDarkBg": 2.7,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "hi-vis",
+    "name": "Hi-Vis",
+    "mood": "Logistics and industrial: graphite steel with safety-yellow action.",
+    "inspiration": "ISO 3864 safety colours and Herman Miller / Vitra industrial signage — https://www.iso.org/standard/51021.html",
+    "echoesTell": "Deliberately echoes 'near-black + single acid accent' (graphite + safety yellow). Justified for industrial/logistics where hi-vis is the domain's own vocabulary; avoid as a generic default.",
+    "seeds": {
+      "brand": "#2A2D33",
+      "brandForeground": "#FFD100",
+      "neutralLightBg": "#F2F2F0",
+      "neutralDarkBg": "#16181B",
+      "neutralHue": {
+        "hue": 258,
+        "chroma": 0.007,
+        "intent": "neutral steel grey, no hue"
+      },
+      "accent": "#FFD100",
+      "success": "#2E7D32",
+      "warning": "#F29100",
+      "danger": "#C62828"
+    },
+    "contrast": {
+      "brandOnBg": 12.31,
+      "fgOnBrand": 9.45,
+      "brandOnDarkBg": 1.29,
+      "aa": "AA normal text (>=4.5:1)"
+    }
+  },
+  {
+    "id": "signal-orange",
+    "name": "Signal Orange",
+    "mood": "Sports and fitness: high-energy orange on cool track-grey, teal for recovery.",
+    "inspiration": "Strava's orange-led activity UI and athletics track markings (hue darkened for AA) — https://www.strava.com/",
+    "seeds": {
+      "brand": "#B83B0A",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F3F5F7",
+      "neutralDarkBg": "#14181C",
+      "neutralHue": {
+        "hue": 248,
+        "chroma": 0.01,
+        "intent": "cool grey with a faint blue, to make the orange pop"
+      },
+      "accent": "#00A6A6",
+      "success": "#2E8540",
+      "warning": "#E8A317",
+      "danger": "#C8102E"
+    },
+    "note": "Saturated orange on cool grey — not desaturated terracotta on cream.",
+    "contrast": {
+      "brandOnBg": 5.24,
+      "fgOnBrand": 5.73,
+      "brandOnDarkBg": 3.12,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  },
+  {
+    "id": "burle-marx",
+    "name": "Burle Marx",
+    "mood": "Travel and landscape: jungle green, bougainvillea pink, sun-bleached sand.",
+    "inspiration": "Roberto Burle Marx's tropical modernist gardens and Copacabana promenade — https://www.moma.org/calendar/exhibitions/1449",
+    "seeds": {
+      "brand": "#1E6B4E",
+      "brandForeground": "#FFFFFF",
+      "neutralLightBg": "#F7F3EB",
+      "neutralDarkBg": "#0F1A15",
+      "neutralHue": {
+        "hue": 165,
+        "chroma": 0.019,
+        "intent": "sun-bleached sand by day, deep green-black by night"
+      },
+      "accent": "#E8508A",
+      "success": "#2F8F4E",
+      "warning": "#E6A23C",
+      "danger": "#C2362F"
+    },
+    "contrast": {
+      "brandOnBg": 5.81,
+      "fgOnBrand": 6.43,
+      "brandOnDarkBg": 2.77,
+      "aa": "AA normal text (>=4.5:1)"
+    },
+    "echoesTell": null
+  }
+]

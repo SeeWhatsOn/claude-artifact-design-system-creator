@@ -5,7 +5,8 @@ A browser app for building a brand design system visually, then exporting it as 
 ```mermaid
 flowchart LR
   UI["React UI<br/>(src/App.tsx)"] -->|updateProject| Store["Project store<br/>zustand + zundo"]
-  Store <-->|save / restore| IDB[(IndexedDB)]
+  Store <-->|autosave / restore| IDB[(IndexedDB)]
+  Store <-->|open / save| File["Project file<br/>.brandkit.json"]
   Store -->|Project| Compile["compile()<br/>src/core"]
   Compile -->|preview vars| UI
   Compile -->|diagnostics| UI
@@ -40,14 +41,21 @@ bun run build          # static bundle in dist/
 
 ## Folder map
 
-| Folder               | What's in it                                                                                                      |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `src/core/`          | Framework-free design core: Project schema, default project, `compile()`. No React or zustand (enforced by lint). |
-| `src/state/`         | The project store: undo/redo and IndexedDB persistence.                                                           |
-| `src/components/ui/` | shadcn components.                                                                                                |
-| `src/lib/`           | shadcn's `cn()` helper.                                                                                           |
-| `styles/`            | Global Tailwind and shadcn theme CSS.                                                                             |
-| `test/`              | `bun test` preload (happy-dom, jest-dom matchers).                                                                |
-| `e2e/`               | Playwright specs and the static server that mimics GitHub Pages.                                                  |
-| `docs/`              | Spec and design research.                                                                                         |
-| `.github/workflows/` | CI and Pages deploy.                                                                                              |
+| Folder               | What's in it                                                                                                                                                                       |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/core/`          | Framework-free design core: Project schema and migrations, palettes, colour engine, contrast checks, exporters, project file, `compile()`. No React or zustand (enforced by lint). |
+| `src/state/`         | The project store: undo/redo and IndexedDB persistence.                                                                                                                            |
+| `src/colour/`        | Colour step: palette picker and dark-theme switch.                                                                                                                                 |
+| `src/preview/`       | Live preview with a light/dark toggle.                                                                                                                                             |
+| `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
+| `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
+| `src/export/`        | Zip building and the Download Design System button.                                                                                                                                |
+| `src/project-file/`  | Open and save project buttons.                                                                                                                                                     |
+| `src/history/`       | Undo/redo buttons and shortcuts.                                                                                                                                                   |
+| `src/components/ui/` | shadcn components.                                                                                                                                                                 |
+| `src/lib/`           | shadcn's `cn()` helper.                                                                                                                                                            |
+| `styles/`            | Global Tailwind and shadcn theme CSS.                                                                                                                                              |
+| `test/`              | `bun test` preload (happy-dom, jest-dom matchers).                                                                                                                                 |
+| `e2e/`               | Playwright specs and the static server that mimics GitHub Pages.                                                                                                                   |
+| `docs/`              | Spec and design research.                                                                                                                                                          |
+| `.github/workflows/` | CI and Pages deploy.                                                                                                                                                               |
