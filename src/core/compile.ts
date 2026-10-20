@@ -1,3 +1,4 @@
+import { checkContrast } from "./colour/contrast-check";
 import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-theme";
 import { claudeDesignSystemFiles, type ExportTheme } from "./export/claude-design-system";
 import type { FontRef, Project } from "./project";
@@ -35,7 +36,8 @@ export function compile(project: Project, { now = new Date() }: CompileOptions =
   const themes: ExportTheme[] = [{ id: "light", name: "Light", colours: light }];
   if (dark) themes.push({ id: "dark", name: "Dark", colours: dark });
   const preview = { light: toCssVars(light), ...(dark && { dark: toCssVars(dark) }), fontsToLoad: [] };
-  return { preview, diagnostics: [], files: claudeDesignSystemFiles(project, themes, now) };
+  const diagnostics = themes.flatMap(theme => checkContrast(theme.colours, theme.id));
+  return { preview, diagnostics, files: claudeDesignSystemFiles(project, themes, now) };
 }
 
 function themeColours(project: Project, theme: ThemeId): ThemeColours {
