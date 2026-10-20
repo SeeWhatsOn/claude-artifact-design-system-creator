@@ -1,8 +1,9 @@
 import { FolderOpen, Save } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
-import { readProjectFile, writeProjectFile } from "@/core/project-file";
+import { readProjectFile, usedAssets, writeProjectFile } from "@/core/project-file";
 import { downloadFile } from "@/download/download-file";
+import { useAssetStore } from "@/state/asset-store";
 import { useProjectStore } from "@/state/project-store";
 
 type Status = { kind: "done" | "error"; message: string } | null;
@@ -11,11 +12,13 @@ type Status = { kind: "done" | "error"; message: string } | null;
 export function ProjectFileButtons() {
   const project = useProjectStore(state => state.project);
   const updateProject = useProjectStore(state => state.updateProject);
+  const assets = useAssetStore(state => state.assets);
+  const addAssets = useAssetStore(state => state.addAssets);
   const [status, setStatus] = useState<Status>(null);
 
   function save() {
-    // Uploaded fonts and logos aren't stored yet; they'll be passed here once uploads exist.
-    downloadFile(`${project.meta.namespace}.brandkit.json`, writeProjectFile(project, {}), "application/json");
+    const file = writeProjectFile(project, usedAssets(project, assets));
+    downloadFile(`${project.meta.namespace}.brandkit.json`, file, "application/json");
   }
 
   async function open(event: ChangeEvent<HTMLInputElement>) {
@@ -26,6 +29,8 @@ export function ProjectFileButtons() {
     // Cleared so picking the same file again still fires a change.
     input.value = "";
     if (!result.ok) return setStatus({ kind: "error", message: result.error });
+    // Assets first, so the opened project never points at a file that isn't stored yet.
+    addAssets(result.assets);
     updateProject(() => result.project);
     setStatus({ kind: "done", message: `Opened ${result.project.meta.name}.` });
   }
