@@ -1,13 +1,17 @@
 {
-  "name": "bun-react-template",
+  "name": "brandkit-for-claude",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/index.ts",
-    "start": "NODE_ENV=production bun src/index.ts",
     "build": "bun run build.ts",
-    "typecheck": "bun check"
+    "test": "bun test",
+    "test:e2e": "playwright test",
+    "check": "bun check",
+    "lint": "oxlint --deny-warnings",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check"
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",
