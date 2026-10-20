@@ -4,7 +4,9 @@ import { PalettePicker } from "@/colour/PalettePicker";
 import { compile } from "@/core/compile";
 import { DiagnosticsPanel } from "@/diagnostics/DiagnosticsPanel";
 import { DownloadButton } from "@/export/DownloadButton";
+import { UndoRedoButtons } from "@/history/UndoRedoButtons";
 import { PreviewPane } from "@/preview/PreviewPane";
+import { ProjectFileButtons } from "@/project-file/ProjectFileButtons";
 import { useProjectStore } from "@/state/project-store";
 import "./index.css";
 
@@ -18,7 +20,11 @@ export function App() {
     <div className="min-h-screen bg-background text-foreground">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <h1 className="text-lg font-semibold">Brandkit for Claude</h1>
-        <DownloadButton disabled={blocked} />
+        <div className="flex flex-wrap items-center gap-2">
+          <UndoRedoButtons />
+          <ProjectFileButtons />
+          <DownloadButton disabled={blocked} />
+        </div>
       </header>
       <main className="grid gap-6 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="space-y-4">
