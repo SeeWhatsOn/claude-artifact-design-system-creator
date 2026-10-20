@@ -1,4 +1,4 @@
-import type { Project, RoleOverride, TextRole } from "./project";
+import type { FamilySlot, FontRef, Project, RoleOverride, TextRole } from "./project";
 
 /** Sets the body size every role scales from. Role overrides are kept. */
 export function setTypeBase(project: Project, base: number): Project {
@@ -20,4 +20,9 @@ export function setRoleOverride(project: Project, role: TextRole, changes: RoleO
 export function clearRoleOverride(project: Project, role: TextRole): Project {
   const { [role]: _removed, ...roleOverrides } = project.type.roleOverrides;
   return { ...project, type: { ...project.type, roleOverrides } };
+}
+
+/** Puts a font in one slot (headings, body or code). Roles keep their overrides; weights snap to the new font. */
+export function setFamily(project: Project, slot: FamilySlot, font: FontRef): Project {
+  return { ...project, type: { ...project.type, families: { ...project.type.families, [slot]: font } } };
 }

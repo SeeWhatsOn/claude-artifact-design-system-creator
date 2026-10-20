@@ -1,8 +1,9 @@
 import { BODY_TEXT_CONTRAST, formatRatio } from "../colour/contrast-levels";
 import type { ThemeColours, ThemeId } from "../colour/derive-theme";
-import type { Diagnostic } from "../compile";
+import type { Diagnostic, FileMap } from "../compile";
 import { toJsonFile } from "../json-file";
 import type { Project } from "../project";
+import type { BundledFont } from "../type/uploaded-fonts";
 import { claudeTokens, COLOUR_USAGE } from "./claude-tokens";
 
 /** The Design System type contract this export is written against (see docs/research/01). */
@@ -11,8 +12,8 @@ export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
 /** One theme's colours, ready to export. */
 export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
 
-/** What the export needs besides the project: when it was made, and the checks it should be honest about. */
-export type ExportContext = { now: Date; diagnostics: Diagnostic[] };
+/** What the export needs besides the project: when it was made, the checks it should be honest about, and uploaded fonts. */
+export type ExportContext = { now: Date; diagnostics: Diagnostic[]; fonts: BundledFont[] };
 
 /**
  * Builds the `project/` files that Claude's Design System artifact type reads, without any file the page generates.
@@ -21,8 +22,8 @@ export type ExportContext = { now: Date; diagnostics: Diagnostic[] };
 export function claudeDesignSystemFiles(
   project: Project,
   themes: ExportTheme[],
-  { now, diagnostics }: ExportContext,
-): Record<string, string> {
+  { now, diagnostics, fonts }: ExportContext,
+): FileMap {
   const at = now.toISOString();
   // Per the type's instructions, the page fills in sections, blobs and docs.sections itself.
   const index = {
@@ -45,8 +46,9 @@ export function claudeDesignSystemFiles(
     },
   };
   return {
-    "project/tokens.json": toJsonFile(claudeTokens(project, themes)),
+    "project/tokens.json": toJsonFile(claudeTokens(project, themes, fonts)),
     "project/README.md": readme(project, themes, diagnostics),
+    ...Object.fromEntries(fonts.map(font => [`project/fonts/${font.file}`, font.bytes])),
     "project/design-system.json": toJsonFile(index),
   };
 }

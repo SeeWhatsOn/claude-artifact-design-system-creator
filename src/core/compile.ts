@@ -3,8 +3,11 @@ import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-th
 import { checkPaletteTells } from "./colour/palette-tells";
 import { claudeDesignSystemFiles, type ExportTheme } from "./export/claude-design-system";
 import { colourVars, fontsToLoad, shapeVars, typeVars } from "./preview-vars";
-import { checkShape } from "./shape/check-shape";
 import type { FontRef, Project } from "./project";
+import type { ProjectAssets } from "./project-file";
+import { checkShape } from "./shape/check-shape";
+import { checkFlaggedFonts } from "./type/flagged-fonts";
+import { bundledFonts, checkUploadedFonts } from "./type/uploaded-fonts";
 
 /** CSS custom property name (e.g. "--primary") to value. */
 export type CssVarMap = Record<string, string>;
@@ -28,11 +31,11 @@ export type CompileOutput = {
   files: FileMap;
 };
 
-/** Inputs that aren't part of the project. `now` stamps the export; tests pin it. */
-export type CompileOptions = { now?: Date };
+/** Inputs that aren't part of the project. `now` stamps the export; tests pin it. `assets` holds uploaded files. */
+export type CompileOptions = { now?: Date; assets?: ProjectAssets };
 
 /** The single entry point to the design core: turns a project into preview vars, diagnostics and export files. */
-export function compile(project: Project, { now = new Date() }: CompileOptions = {}): CompileOutput {
+export function compile(project: Project, { now = new Date(), assets = {} }: CompileOptions = {}): CompileOutput {
   const light = themeColours(project, "light");
   const dark = project.darkEnabled ? themeColours(project, "dark") : undefined;
   // Light always leads: Claude's Design System falls back to the first theme.
@@ -49,8 +52,11 @@ export function compile(project: Project, { now = new Date() }: CompileOptions =
     ...themes.flatMap(theme => checkContrast(theme.colours, theme.id)),
     ...checkPaletteTells(project.palette.seeds),
     ...checkShape(project.shape),
+    ...checkFlaggedFonts(project.type),
+    ...checkUploadedFonts(project.type, assets),
   ];
-  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics });
+  const fonts = bundledFonts(project.type, assets);
+  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics, fonts });
   return { preview, diagnostics, files };
 }
 

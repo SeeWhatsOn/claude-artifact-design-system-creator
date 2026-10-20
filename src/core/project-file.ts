@@ -20,6 +20,15 @@ export function writeProjectFile(project: Project, assets: ProjectAssets): strin
   return toJsonFile({ format: FORMAT, project, assets: encoded });
 }
 
+/** The uploads the project actually refers to, so a saved file doesn't carry ones it no longer uses. */
+export function usedAssets(project: Project, assets: ProjectAssets): ProjectAssets {
+  const ids = [
+    ...Object.values(project.type.families).flatMap(font => (font.files ?? []).map(file => file.assetId)),
+    ...project.logos.map(logo => logo.assetId),
+  ];
+  return Object.fromEntries(ids.flatMap(id => (assets[id] ? [[id, assets[id]]] : [])));
+}
+
 /** Reads a project file, migrating and validating the project inside it. */
 export function readProjectFile(text: string): ReadProjectFileResult {
   let file: unknown;

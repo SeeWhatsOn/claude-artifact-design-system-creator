@@ -1,0 +1,137 @@
+[
+  {
+    "families": ["Inter"],
+    "severity": "hard",
+    "reason": "The #1 distributional-convergence default; the Anthropic blog's prompt says 'Never use'."
+  },
+  {
+    "families": ["Roboto"],
+    "severity": "hard",
+    "reason": "Listed under 'Never use' in Anthropic's frontend aesthetics prompt; Android/Material system default."
+  },
+  {
+    "families": ["Open Sans"],
+    "severity": "hard",
+    "reason": "Listed under 'Never use' in Anthropic's frontend aesthetics prompt."
+  },
+  {
+    "families": ["Lato"],
+    "severity": "hard",
+    "reason": "Listed under 'Never use' in Anthropic's frontend aesthetics prompt."
+  },
+  {
+    "families": ["Arial", "Helvetica", "system-ui"],
+    "severity": "hard",
+    "reason": "'Default system fonts' are listed under 'Never use'; also the zero-decision fallback stack."
+  },
+  {
+    "families": ["Space Grotesk"],
+    "severity": "hard",
+    "reason": "The blog names it as the font Claude falls back to when Inter is banned."
+  },
+  {
+    "families": ["Poppins"],
+    "severity": "soft",
+    "reason": "Google Fonts popularity rank 8; the stock geometric font in templates and AI landing pages."
+  },
+  {
+    "families": ["Montserrat"],
+    "severity": "soft",
+    "reason": "Google Fonts rank 7; the stock geometric heading font in templates."
+  },
+  {
+    "families": ["DM Sans"],
+    "severity": "soft",
+    "reason": "Rank 21 and a frequent LLM fallback for 'clean modern sans'; reads as a template default."
+  },
+  {
+    "families": ["Manrope"],
+    "severity": "soft",
+    "reason": "Rank 30; common SaaS and AI-builder default; reads as a generic startup."
+  },
+  {
+    "families": ["Plus Jakarta Sans"],
+    "severity": "soft",
+    "reason": "Rank 35; common in AI-generated SaaS kits as the non-Inter Inter."
+  },
+  {
+    "families": ["Outfit"],
+    "severity": "soft",
+    "reason": "Rank 33; common geometric default in AI landing-page generators."
+  },
+  {
+    "families": ["Geist"],
+    "severity": "soft",
+    "reason": "Vercel's typeface, default in v0/Next.js scaffolds; a Vercel/shadcn tell."
+  },
+  {
+    "families": ["Geist Mono"],
+    "severity": "soft",
+    "reason": "Pairs with Geist in v0/Next.js defaults; a mono micro-label tell."
+  },
+  {
+    "families": ["Playfair Display"],
+    "severity": "soft",
+    "reason": "The stock high-contrast serif and one of the blog's own 'Editorial' examples; the cream + serif + terracotta cluster."
+  },
+  {
+    "families": ["Fraunces"],
+    "severity": "soft",
+    "reason": "Soft high-contrast variable serif that LLMs reach for to look editorial; part of the cream/serif/terracotta cluster the skill bans."
+  },
+  {
+    "families": ["Instrument Serif"],
+    "severity": "soft",
+    "reason": "Single-weight high-contrast display serif ubiquitous in 2024-26 AI and startup landing pages; same cluster."
+  },
+  {
+    "families": ["DM Serif Display"],
+    "severity": "soft",
+    "reason": "High-contrast display serif frequently paired with DM Sans in templates."
+  },
+  {
+    "families": ["Cormorant Garamond"],
+    "severity": "soft",
+    "reason": "The default 'luxury' serif in AI output; thin and hard to read at body sizes."
+  },
+  {
+    "families": ["Bricolage Grotesque"],
+    "severity": "soft",
+    "reason": "Named in the blog's 'Distinctive' examples, so prompted Claude now converges on it."
+  },
+  {
+    "families": ["JetBrains Mono"],
+    "severity": "soft",
+    "reason": "The blog's first 'Code aesthetic' example; the default mono in prompted output."
+  },
+  {
+    "families": ["Space Mono"],
+    "severity": "soft",
+    "reason": "Companion to Space Grotesk and the stock 'techy' mono for labels."
+  },
+  {
+    "families": ["Newsreader"],
+    "severity": "info",
+    "reason": "A good face, but one of the blog's 'Distinctive' examples, so it shows up often in prompted output. Fine if chosen on purpose."
+  },
+  {
+    "families": ["Crimson Pro"],
+    "severity": "info",
+    "reason": "A good face, but one of the blog's 'Editorial' examples."
+  },
+  {
+    "families": ["IBM Plex Sans", "IBM Plex Serif", "IBM Plex Mono"],
+    "severity": "info",
+    "reason": "A good system, but the blog's 'Technical' example. Fine if chosen on purpose."
+  },
+  {
+    "families": ["Source Sans 3"],
+    "severity": "info",
+    "reason": "The blog's 'Technical' example; neutral to the point of anonymous."
+  },
+  {
+    "families": ["Fira Code"],
+    "severity": "info",
+    "reason": "The blog's 'Code aesthetic' example; ligature mono default."
+  }
+]

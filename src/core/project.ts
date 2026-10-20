@@ -13,6 +13,9 @@ const hexColour = z
 /** The ten fixed text roles, from largest to smallest. */
 export const TEXT_ROLES = ["display", "h1", "h2", "h3", "lead", "body", "small", "caption", "label", "code"] as const;
 
+// Export file names go into a zip path, so no slashes or dot-dot.
+const SAFE_FILE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
 /** The three font slots a design system has. Each text role uses one of them. */
 export const FAMILY_SLOTS = ["display", "body", "mono"] as const;
 
@@ -23,8 +26,10 @@ const fontRefSchema = z.object({
   variable: z.boolean(),
   // Picks the generic fallback (serif, monospace…). Optional because older projects didn't record it.
   category: z.enum(["serif", "sans-serif", "monospace", "display", "handwriting"]).optional(),
-  // Points at the binary in IndexedDB for uploaded fonts.
-  assetId: z.string().optional(),
+  // Uploaded fonts only: one file per weight. Each binary lives in the asset store under its assetId.
+  files: z
+    .array(z.object({ assetId: z.string().min(1), file: z.string().regex(SAFE_FILE_NAME), weight: z.number().int() }))
+    .optional(),
 });
 
 /** The few colours a user sets; the colour engine derives every interface colour from them. */

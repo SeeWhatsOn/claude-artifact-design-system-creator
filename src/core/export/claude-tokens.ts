@@ -3,6 +3,7 @@ import { textTransform } from "../preview-vars";
 import { FAMILY_SLOTS, TEXT_ROLES, type FamilySlot, type Project } from "../project";
 import { radiusTokens, shadowTokens, spacingTokens } from "../shape/shape-tokens";
 import { fontStack, typeStyles, type TypeStyle } from "../type/type-scale";
+import type { BundledFont } from "../type/uploaded-fonts";
 import type { ExportTheme } from "./claude-design-system";
 
 // The small, legible set Claude gets: core surfaces and text, actions, status and chart colours.
@@ -39,7 +40,7 @@ export const COLOUR_USAGE: [ColourToken, string][] = [
 const GROUP_NAMES: Record<FamilySlot, string> = { display: "Headings", body: "Text", mono: "Code" };
 
 /** Builds tokens.json in the Design System's list shape (never DTCG): colour, type, spacing, radius, shadow. */
-export function claudeTokens(project: Project, themes: ExportTheme[]) {
+export function claudeTokens(project: Project, themes: ExportTheme[], fonts: BundledFont[]) {
   return {
     name: project.meta.name,
     version: 1,
@@ -52,7 +53,7 @@ export function claudeTokens(project: Project, themes: ExportTheme[]) {
         usage,
       })),
     },
-    type: typeTokens(project.type),
+    type: typeTokens(project.type, fonts),
     spacing: { tokens: spacingTokens(project.shape) },
     // Left out until chosen; export is blocked meanwhile.
     ...(project.shape.radii && { radius: { tokens: radiusTokens(project.shape) } }),
@@ -61,7 +62,8 @@ export function claudeTokens(project: Project, themes: ExportTheme[]) {
 }
 
 // Google fonts are named in families only; Claude loads them itself, so they need no file.
-function typeTokens(type: Project["type"]) {
+// Uploaded fonts are listed in `fonts` with the file bundled next to tokens.json.
+function typeTokens(type: Project["type"], fonts: BundledFont[]) {
   const styles = typeStyles(type);
   const families = Object.fromEntries(FAMILY_SLOTS.map(slot => [slot, fontStack(type.families[slot], slot)]));
   // Groups follow each role's actual family, so a role moved to another font moves group too.
@@ -70,7 +72,8 @@ function typeTokens(type: Project["type"]) {
     family: slot,
     styles: TEXT_ROLES.filter(role => styles[role].family === slot).map(role => typeStyle(role, styles[role])),
   })).filter(group => group.styles.length > 0);
-  return { fonts: [], families, groups };
+  const files = fonts.map(font => ({ family: font.family, file: `fonts/${font.file}`, weight: String(font.weight) }));
+  return { fonts: files, families, groups };
 }
 
 function typeStyle(name: string, style: TypeStyle) {
