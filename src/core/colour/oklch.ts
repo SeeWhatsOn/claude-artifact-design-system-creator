@@ -18,12 +18,7 @@ export function oklchToHex({ l, c, h }: Oklch): string {
   return formatHex(inGamut) ?? "#000000";
 }
 
-/** The same colour at a different OKLCH lightness. */
-export function withLightness(hex: string, l: number): string {
-  return oklchToHex({ ...hexToOklch(hex), l });
-}
-
-/** WCAG 2 contrast ratio between two colours (1–21). */
+/** WCAG 2 contrast ratio between two colours (1–21). Wrapped so only this file depends on culori. */
 export function contrast(a: string, b: string): number {
   return wcagContrast(a, b);
 }

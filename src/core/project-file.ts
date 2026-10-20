@@ -10,6 +10,7 @@ export type ReadProjectFileResult =
 
 const FORMAT = "brandkit-project";
 const NOT_A_PROJECT = "This file isn't a Brandkit project.";
+const damagedAsset = (id: string) => `The uploaded file "${id}" in this project is damaged.`;
 
 /** Serialises the whole system to one JSON file, with uploads embedded as base64 so the file is self-contained. */
 export function writeProjectFile(project: Project, assets: ProjectAssets): string {
@@ -34,11 +35,11 @@ export function readProjectFile(text: string): ReadProjectFileResult {
   const assets: ProjectAssets = {};
   const raw = "assets" in file && typeof file.assets === "object" && file.assets !== null ? file.assets : {};
   for (const [id, value] of Object.entries(raw)) {
-    if (typeof value !== "string") return { ok: false, error: `The uploaded file "${id}" in this project is damaged.` };
+    if (typeof value !== "string") return { ok: false, error: damagedAsset(id) };
     try {
       assets[id] = fromBase64(value);
     } catch {
-      return { ok: false, error: `The uploaded file "${id}" in this project is damaged.` };
+      return { ok: false, error: damagedAsset(id) };
     }
   }
   return { ok: true, project: parsed.project, assets };

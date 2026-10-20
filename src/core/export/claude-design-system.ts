@@ -1,11 +1,11 @@
-import type { ThemeColours } from "../colour/derive-theme";
+import type { ThemeColours, ThemeId } from "../colour/derive-theme";
 import type { Project } from "../project";
 
 /** The Design System type contract this export is written against (see docs/research/01). */
 export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
 
 /** One theme's colours, ready to export. */
-export type ExportTheme = { id: "light" | "dark"; name: string; colours: ThemeColours };
+export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
 
 // The small, legible set Claude gets: core surfaces and text, actions, status and chart colours.
 // Popover, input and the sidebar set are shadcn plumbing and stay out of the Design System.

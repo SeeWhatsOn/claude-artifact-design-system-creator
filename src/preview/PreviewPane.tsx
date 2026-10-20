@@ -3,14 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
 
-type PreviewTheme = "light" | "dark";
-
 /** Renders sample components with the compiled colours applied as CSS variables scoped to the preview. */
 export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
-  const [chosen, setChosen] = useState<PreviewTheme>("light");
+  const [chosen, setChosen] = useState<ThemeId>("light");
   // Falls back to light when the project's dark theme is switched off.
   const theme = dark ? chosen : "light";
   const vars = theme === "dark" && dark ? dark : light;

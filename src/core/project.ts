@@ -58,7 +58,7 @@ const projectSchema = z.object({
   }),
   presetId: z.string().nullable(),
   palette: z.object({
-    // Null until the user picks a palette; export is blocked until then.
+    // Null until the user picks a curated palette, or when seeds don't match one (e.g. migrated custom colours).
     paletteId: z.string().nullable(),
     seeds: paletteSeedsSchema,
     overrides: z.object({ light: themeOverridesSchema, dark: themeOverridesSchema }),
