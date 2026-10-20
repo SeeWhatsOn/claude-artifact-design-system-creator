@@ -1,0 +1,502 @@
+[
+  {
+    "id": "broadsheet-modern",
+    "name": "Modern Broadsheet",
+    "mood": "editorial",
+    "display": {
+      "family": "Brygada 1918",
+      "category": "serif",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "body": {
+      "family": "Schibsted Grotesk",
+      "category": "sans-serif",
+      "weights": [400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Fragment Mono",
+      "category": "monospace",
+      "weights": [400],
+      "variable": false
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Brygada is a 1918 Polish book-face revival: sturdy, low-contrast, not the Playfair/Fraunces hairline look. Schibsted Grotesk was drawn for a Nordic news publisher, so it reads well at 15-16px. Set headlines in Brygada 600-700; keep body at 400."
+  },
+  {
+    "id": "caslon-library",
+    "name": "Caslon Library",
+    "mood": "literary",
+    "display": {
+      "family": "Libre Caslon Display",
+      "category": "serif",
+      "weights": [400],
+      "variable": false
+    },
+    "body": {
+      "family": "Libre Caslon Text",
+      "category": "serif",
+      "weights": [400, 700],
+      "variable": false
+    },
+    "mono": {
+      "family": "Courier Prime",
+      "category": "monospace",
+      "weights": [400, 700],
+      "variable": false
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Caslon's text and display cuts as one family. The Display cut is a single 400 weight for 28px and up only; use Text 400/700 for body (large x-height, made for screen). Give body text line-height 1.6. Courier Prime adds a manuscript and typewriter note."
+  },
+  {
+    "id": "calligraphic-humanist",
+    "name": "Calligraphic Humanist",
+    "mood": "humanist",
+    "display": {
+      "family": "Alegreya",
+      "category": "serif",
+      "weights": [400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Alegreya Sans",
+      "category": "sans-serif",
+      "weights": [100, 300, 400, 500, 700, 800, 900],
+      "variable": false
+    },
+    "mono": {
+      "family": "Fira Mono",
+      "category": "monospace",
+      "weights": [400, 500, 700],
+      "variable": false
+    },
+    "suggestedRatio": 1.25,
+    "notes": "A superfamily, so serif and sans share proportions. Alegreya Sans is static (no variable font): load only 400/500/700. The serif has a calligraphic rhythm that suits long-form and culture brands."
+  },
+  {
+    "id": "bauhaus-geometric",
+    "name": "Bauhaus Geometric",
+    "mood": "geometric",
+    "display": {
+      "family": "Jost",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Albert Sans",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Spline Sans Mono",
+      "category": "monospace",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": true
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Jost is a Futura-style geometric face; use it for headings at 500-700 or very light at 200 for large display. Albert Sans has a geometric skeleton but a larger x-height and open apertures, so it reads better than Futura-likes at 15px."
+  },
+  {
+    "id": "nordic-grotesk",
+    "name": "Nordic Grotesk",
+    "mood": "grotesk",
+    "display": {
+      "family": "Familjen Grotesk",
+      "category": "sans-serif",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "body": {
+      "family": "Instrument Sans",
+      "category": "sans-serif",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "mono": {
+      "family": "Azeret Mono",
+      "category": "monospace",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "suggestedRatio": 1.25,
+    "notes": "Familjen has quirky, slightly inky shapes that give display sizes character. Instrument Sans has a width axis (75-100): narrow it for dense UI and leave it at 100 for body. This is Instrument Sans, not the flagged Instrument Serif."
+  },
+  {
+    "id": "swiss-variable",
+    "name": "Swiss Variable",
+    "mood": "neo-grotesk / swiss",
+    "display": {
+      "family": "Archivo",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Archivo",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Source Code Pro",
+      "category": "monospace",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "suggestedRatio": 1.25,
+    "notes": "One family used two ways. Archivo's wdth axis runs 62-125: set display expanded (wdth 112-125, wght 800) and body at normal width, wght 400. Grotesk structure with no Helvetica, Inter or Arial."
+  },
+  {
+    "id": "mozilla-slab",
+    "name": "Field Notes Slab",
+    "mood": "slab",
+    "display": {
+      "family": "Zilla Slab",
+      "category": "serif",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": false
+    },
+    "body": {
+      "family": "Karla",
+      "category": "sans-serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800],
+      "variable": true
+    },
+    "mono": {
+      "family": "Fira Mono",
+      "category": "monospace",
+      "weights": [400, 500, 700],
+      "variable": false
+    },
+    "suggestedRatio": 1.25,
+    "notes": "Zilla Slab is a static family with heavy wedge-ish slabs and a strong 600/700 for headlines. Karla is a quirky grotesque, readable at 16px. Fira Mono shares Zilla's Mozilla heritage."
+  },
+  {
+    "id": "big-shoulders-poster",
+    "name": "Poster Condensed",
+    "mood": "condensed",
+    "display": {
+      "family": "Big Shoulders",
+      "category": "display",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Libre Franklin",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Fragment Mono",
+      "category": "monospace",
+      "weights": [400],
+      "variable": false
+    },
+    "suggestedRatio": 1.5,
+    "notes": "Big Shoulders (variable opsz 10-72 plus wght; it replaced the older 'Big Shoulders Display' on Google Fonts) is Chicago-signage condensed. Set it big and tight with a 1.5 ratio. Libre Franklin carries body text at 400 with generous tracking."
+  },
+  {
+    "id": "industrial-barlow",
+    "name": "Industrial",
+    "mood": "condensed / industrial",
+    "display": {
+      "family": "Barlow Condensed",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": false
+    },
+    "body": {
+      "family": "Barlow",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": false
+    },
+    "mono": {
+      "family": "Martian Mono",
+      "category": "monospace",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800],
+      "variable": true
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Barlow is modelled on California highway and rail signage; it is static, with 9 weights and italics. Use the Condensed cut for headings and labels and regular Barlow for body. Martian Mono's wide shapes suit data and specs."
+  },
+  {
+    "id": "soft-rounded",
+    "name": "Soft Rounded",
+    "mood": "rounded / friendly",
+    "display": {
+      "family": "Fredoka",
+      "category": "sans-serif",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": true
+    },
+    "body": {
+      "family": "Nunito Sans",
+      "category": "sans-serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Sometype Mono",
+      "category": "monospace",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "suggestedRatio": 1.25,
+    "notes": "Fredoka is rounded with a wdth axis (75-125); use 500-600 for headings. Nunito Sans is the unrounded sibling of the overused Nunito: it has opsz/wdth/YTLC axes and a large x-height, so it is very readable. Don't swap in Nunito (rounded) for body."
+  },
+  {
+    "id": "terminal-chivo",
+    "name": "Terminal",
+    "mood": "technical",
+    "display": {
+      "family": "Chivo Mono",
+      "category": "monospace",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Chivo",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Chivo Mono",
+      "category": "monospace",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "suggestedRatio": 1.2,
+    "notes": "Mono display set large and light (200-300), or heavy (800), over the matching Chivo grotesk for body. Gives a technical feel without JetBrains Mono, Space Mono or Space Grotesk. Avoid ALL-CAPS mono micro-labels, a template tell."
+  },
+  {
+    "id": "hyperlegible",
+    "name": "Hyperlegible",
+    "mood": "accessible / public-service",
+    "display": {
+      "family": "Lexend",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Atkinson Hyperlegible Next",
+      "category": "sans-serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800],
+      "variable": true
+    },
+    "mono": {
+      "family": "Atkinson Hyperlegible Mono",
+      "category": "sans-serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800],
+      "variable": true
+    },
+    "suggestedRatio": 1.2,
+    "notes": "Atkinson Hyperlegible Next (2025, Braille Institute) has strongly distinguished letterforms (Il1, 0O). Lexend was designed around reading-proficiency research. Use a conservative 1.2 ratio and 16-18px body."
+  },
+  {
+    "id": "incised-luxe",
+    "name": "Incised Luxe",
+    "mood": "luxurious",
+    "display": {
+      "family": "Marcellus",
+      "category": "serif",
+      "weights": [400],
+      "variable": false
+    },
+    "body": {
+      "family": "Spectral",
+      "category": "serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800],
+      "variable": false
+    },
+    "mono": {
+      "family": "Xanh Mono",
+      "category": "monospace",
+      "weights": [400],
+      "variable": false
+    },
+    "suggestedRatio": 1.414,
+    "notes": "Marcellus is a flared, incised Trajan-like face (single weight; use for headings and tracked small caps). Spectral (Production Type) is a screen-first serif body that is elegant but readable at 16px. This avoids high-contrast-serif + generic sans. Xanh Mono is a refined serif mono."
+  },
+  {
+    "id": "gluten-pop",
+    "name": "Gluten Pop",
+    "mood": "playful",
+    "display": {
+      "family": "Gluten",
+      "category": "display",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Figtree",
+      "category": "sans-serif",
+      "weights": [300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Sometype Mono",
+      "category": "monospace",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Gluten is a bouncy display face with a slnt axis (-13 to 13) and wght 100-900. Use it only for headings and stickers, never for body. Figtree is clean and friendly for body at 400. Keep motion and colour restrained so it doesn't read as a kids' brand unless that is the intent."
+  },
+  {
+    "id": "civic-record",
+    "name": "Civic Record",
+    "mood": "institutional / civic",
+    "display": {
+      "family": "Source Serif 4",
+      "category": "serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Public Sans",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Overpass Mono",
+      "category": "monospace",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": true
+    },
+    "suggestedRatio": 1.25,
+    "notes": "Public Sans is the USWDS (US government) typeface. Source Serif 4 has an opsz axis (8-60): set display at opsz 60 for authority. Overpass Mono derives from Highway Gothic, a civic signage lineage."
+  },
+  {
+    "id": "red-hat-enterprise",
+    "name": "Open Enterprise",
+    "mood": "corporate / enterprise",
+    "display": {
+      "family": "Red Hat Display",
+      "category": "sans-serif",
+      "weights": [300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Red Hat Text",
+      "category": "sans-serif",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": true
+    },
+    "mono": {
+      "family": "Red Hat Mono",
+      "category": "monospace",
+      "weights": [300, 400, 500, 600, 700],
+      "variable": true
+    },
+    "suggestedRatio": 1.25,
+    "notes": "A complete open-source corporate superfamily with separate Display and Text optical cuts, which pairs like the IBM Plex system without being Plex (Plex is one of the fonts the Anthropic blog suggests, so it recurs in prompted output)."
+  },
+  {
+    "id": "piazzolla-scholar",
+    "name": "Scholar",
+    "mood": "academic / scientific",
+    "display": {
+      "family": "Piazzolla",
+      "category": "serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "body": {
+      "family": "Piazzolla",
+      "category": "serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Source Code Pro",
+      "category": "monospace",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "suggestedRatio": 1.2,
+    "notes": "Piazzolla is a compact, sturdy text serif with an opsz axis (8-30) and wght 100-900. Raise opsz for headings and keep it at 14-16 for body. Suits papers, docs and dense reading. Use a 1.2 ratio for long documents."
+  },
+  {
+    "id": "warm-bookish",
+    "name": "Warm Bookish",
+    "mood": "warm / bookish",
+    "display": {
+      "family": "Young Serif",
+      "category": "serif",
+      "weights": [400],
+      "variable": false
+    },
+    "body": {
+      "family": "Literata",
+      "category": "serif",
+      "weights": [200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Fira Mono",
+      "category": "monospace",
+      "weights": [400, 500, 700],
+      "variable": false
+    },
+    "suggestedRatio": 1.25,
+    "notes": "Young Serif is a heavy, soft old-style display face (single 400 weight that already looks bold). Literata was Google Play Books' reading face, with opsz 7-72 and wght 200-900. Avoid the cream-paper + terracotta palette with this pairing; it leans that way."
+  },
+  {
+    "id": "seventies-retro",
+    "name": "Seventies Retro",
+    "mood": "retro",
+    "display": {
+      "family": "Shrikhand",
+      "category": "display",
+      "weights": [400],
+      "variable": false
+    },
+    "body": {
+      "family": "Cabin",
+      "category": "sans-serif",
+      "weights": [400, 500, 600, 700],
+      "variable": true
+    },
+    "mono": {
+      "family": "Courier Prime",
+      "category": "monospace",
+      "weights": [400, 700],
+      "variable": false
+    },
+    "suggestedRatio": 1.333,
+    "notes": "Shrikhand is a heavy, italic, Indian-poster-inspired display face (single weight). Cabin is a humanist sans with a wdth axis (75-100) and modest x-height; keep body at 16px minimum."
+  },
+  {
+    "id": "block-brutal",
+    "name": "Block Brutal",
+    "mood": "brutalist / bold",
+    "display": {
+      "family": "Dela Gothic One",
+      "category": "display",
+      "weights": [400],
+      "variable": false
+    },
+    "body": {
+      "family": "Hanken Grotesk",
+      "category": "sans-serif",
+      "weights": [100, 200, 300, 400, 500, 600, 700, 800, 900],
+      "variable": true
+    },
+    "mono": {
+      "family": "Fragment Mono",
+      "category": "monospace",
+      "weights": [400],
+      "variable": false
+    },
+    "suggestedRatio": 1.5,
+    "notes": "Dela Gothic One is an ultra-heavy display face (single weight, Latin plus Japanese). Pair it with Hanken Grotesk's neutral, slightly geometric body at 400. Get the contrast from scale (1.5 ratio), not colour gimmicks."
+  }
+]

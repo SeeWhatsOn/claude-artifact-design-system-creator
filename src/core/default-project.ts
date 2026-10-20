@@ -26,14 +26,21 @@ export function createDefaultProject(): Project {
     type: {
       // Families from docs/research/05-font-pairings.json ("broadsheet-modern").
       families: {
-        display: { source: "google", family: "Brygada 1918", weights: [400, 500, 600, 700], variable: true },
+        display: {
+          source: "google",
+          family: "Brygada 1918",
+          weights: [400, 500, 600, 700],
+          variable: true,
+          category: "serif",
+        },
         body: {
           source: "google",
           family: "Schibsted Grotesk",
           weights: [400, 500, 600, 700, 800, 900],
           variable: true,
+          category: "sans-serif",
         },
-        mono: { source: "google", family: "Fragment Mono", weights: [400], variable: false },
+        mono: { source: "google", family: "Fragment Mono", weights: [400], variable: false, category: "monospace" },
       },
       base: 16,
       ratio: 1.333,

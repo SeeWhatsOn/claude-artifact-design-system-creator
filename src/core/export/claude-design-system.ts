@@ -1,44 +1,15 @@
 import { BODY_TEXT_CONTRAST, formatRatio } from "../colour/contrast-levels";
-import type { ColourToken, ThemeColours, ThemeId } from "../colour/derive-theme";
+import type { ThemeColours, ThemeId } from "../colour/derive-theme";
 import type { Diagnostic } from "../compile";
 import { toJsonFile } from "../json-file";
 import type { Project } from "../project";
+import { claudeTokens, COLOUR_USAGE } from "./claude-tokens";
 
 /** The Design System type contract this export is written against (see docs/research/01). */
 export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
 
 /** One theme's colours, ready to export. */
 export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
-
-// The small, legible set Claude gets: core surfaces and text, actions, status and chart colours.
-// Popover, input and the sidebar set are shadcn plumbing and stay out of the Design System.
-const COLOUR_USAGE: [ColourToken, string][] = [
-  ["background", "Page background."],
-  ["foreground", "Body text and headings on background, card and secondary."],
-  ["card", "Cards and raised panels on the page background."],
-  ["card-foreground", "Text on card."],
-  ["primary", "The one main action per view: primary buttons, links, selected states."],
-  ["primary-foreground", "Text and icons on primary."],
-  ["secondary", "Secondary buttons, quiet panels and table header rows."],
-  ["secondary-foreground", "Text on secondary."],
-  ["muted", "Subtle fills: disabled controls, skeletons, code blocks."],
-  ["muted-foreground", "Secondary text: captions, help text, timestamps. Readable on background, card and muted."],
-  ["accent", "Highlights and hover fills for menu items and ghost buttons. Never for large areas."],
-  ["accent-foreground", "Text on accent."],
-  ["border", "Hairline borders and dividers between surfaces; also input borders."],
-  ["ring", "Focus outlines on interactive elements."],
-  ["destructive", "Delete and other irreversible actions, and error states. Always pair with an icon or words."],
-  ["destructive-foreground", "Text and icons on destructive."],
-  ["success", "Positive status: saved, passed, gains."],
-  ["success-foreground", "Text on success."],
-  ["warning", "Caution status that needs attention but isn't an error."],
-  ["warning-foreground", "Text on warning."],
-  ["chart-1", "First chart series; the brand colour."],
-  ["chart-2", "Second chart series."],
-  ["chart-3", "Third chart series."],
-  ["chart-4", "Fourth chart series."],
-  ["chart-5", "Fifth chart series."],
-];
 
 /** What the export needs besides the project: when it was made, and the checks it should be honest about. */
 export type ExportContext = { now: Date; diagnostics: Diagnostic[] };
@@ -53,19 +24,6 @@ export function claudeDesignSystemFiles(
   { now, diagnostics }: ExportContext,
 ): Record<string, string> {
   const at = now.toISOString();
-  const tokens = {
-    name: project.meta.name,
-    version: 1,
-    color: {
-      // The first theme is the fallback for any token missing a value, so light always leads.
-      themes: themes.map(({ id, name }) => ({ id, name })),
-      tokens: COLOUR_USAGE.map(([name, usage]) => ({
-        name,
-        value: Object.fromEntries(themes.map(theme => [theme.id, theme.colours[name]])),
-        usage,
-      })),
-    },
-  };
   // Per the type's instructions, the page fills in sections, blobs and docs.sections itself.
   const index = {
     v: 3,
@@ -87,7 +45,7 @@ export function claudeDesignSystemFiles(
     },
   };
   return {
-    "project/tokens.json": toJsonFile(tokens),
+    "project/tokens.json": toJsonFile(claudeTokens(project, themes)),
     "project/README.md": readme(project, themes, diagnostics),
     "project/design-system.json": toJsonFile(index),
   };
@@ -118,7 +76,20 @@ ${contrastRule}
 ## Colour
 
 ${colourList}
+
+## Type
+
+${typeRules(project)}
 `;
+}
+
+function typeRules(project: Project): string {
+  const { display, body, mono } = project.type.families;
+  return [
+    `- Headings use ${display.family}, running text uses ${body.family} and code uses ${mono.family}.`,
+    "- Use the ten text styles in `tokens.json` as they are. Don't invent in-between sizes or weights.",
+    "- One `display` line per view at most; most pages start at `h1`.",
+  ].join("\n");
 }
 
 // The index namespace is the global a component bundle would assign, so it must be a JS identifier.

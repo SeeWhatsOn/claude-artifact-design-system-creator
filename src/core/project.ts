@@ -13,11 +13,16 @@ const hexColour = z
 /** The ten fixed text roles, from largest to smallest. */
 export const TEXT_ROLES = ["display", "h1", "h2", "h3", "lead", "body", "small", "caption", "label", "code"] as const;
 
+/** The three font slots a design system has. Each text role uses one of them. */
+export const FAMILY_SLOTS = ["display", "body", "mono"] as const;
+
 const fontRefSchema = z.object({
   source: z.enum(["google", "upload"]),
   family: z.string().min(1),
   weights: z.array(z.number().int().min(1).max(1000)).min(1),
   variable: z.boolean(),
+  // Picks the generic fallback (serif, monospace…). Optional because older projects didn't record it.
+  category: z.enum(["serif", "sans-serif", "monospace", "display", "handwriting"]).optional(),
   // Points at the binary in IndexedDB for uploaded fonts.
   assetId: z.string().optional(),
 });
@@ -39,7 +44,7 @@ const themeOverridesSchema = z.record(z.string(), hexColour);
 
 const roleOverrideSchema = z
   .object({
-    family: z.enum(["display", "body", "mono"]),
+    family: z.enum(FAMILY_SLOTS),
     size: z.number().positive(),
     weight: z.number().int().min(1).max(1000),
     lineHeight: z.number().positive(),
@@ -70,6 +75,7 @@ const projectSchema = z.object({
   darkEnabled: z.boolean(),
   type: z.object({
     families: z.object({ display: fontRefSchema, body: fontRefSchema, mono: fontRefSchema }),
+    // Base size in px; every role is base × ratio^step.
     base: z.number().positive(),
     ratio: z.number().gt(1),
     roleOverrides: z.partialRecord(z.enum(TEXT_ROLES), roleOverrideSchema),
@@ -123,6 +129,15 @@ export type PaletteSeeds = z.infer<typeof paletteSeedsSchema>;
 
 /** A typeface choice, either from Google Fonts or uploaded by the user. */
 export type FontRef = z.infer<typeof fontRefSchema>;
+
+/** One of the display, body and mono font slots. */
+export type FamilySlot = (typeof FAMILY_SLOTS)[number];
+
+/** One of the ten text roles. */
+export type TextRole = (typeof TEXT_ROLES)[number];
+
+/** A user's changes to one text role; anything left out is generated from the scale. */
+export type RoleOverride = z.infer<typeof roleOverrideSchema>;
 
 /** The outcome of loading untrusted project data. */
 export type ParseProjectResult = { ok: true; project: Project } | { ok: false; error: string };
