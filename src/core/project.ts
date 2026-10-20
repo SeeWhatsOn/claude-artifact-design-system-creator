@@ -17,6 +17,19 @@ const fontRefSchema = z.object({
   assetId: z.string().optional(),
 });
 
+/** The few colours a user sets; the colour engine derives every interface colour from them. */
+export const paletteSeedsSchema = z.object({
+  brand: hexColour,
+  brandForeground: hexColour,
+  neutralLightBg: hexColour,
+  neutralDarkBg: hexColour,
+  neutralHue: z.object({ hue: z.number().min(0).max(360), chroma: z.number().min(0) }),
+  accent: hexColour,
+  success: hexColour,
+  warning: hexColour,
+  danger: hexColour,
+});
+
 const themeOverridesSchema = z.record(z.string(), hexColour);
 
 const roleOverrideSchema = z
@@ -46,17 +59,7 @@ const projectSchema = z.object({
   palette: z.object({
     // Null until the user picks a palette; export is blocked until then.
     paletteId: z.string().nullable(),
-    seeds: z.object({
-      brand: hexColour,
-      brandForeground: hexColour,
-      neutralLightBg: hexColour,
-      neutralDarkBg: hexColour,
-      neutralHue: z.object({ hue: z.number().min(0).max(360), chroma: z.number().min(0) }),
-      accent: hexColour,
-      success: hexColour,
-      warning: hexColour,
-      danger: hexColour,
-    }),
+    seeds: paletteSeedsSchema,
     overrides: z.object({ light: themeOverridesSchema, dark: themeOverridesSchema }),
   }),
   darkEnabled: z.boolean(),
@@ -109,6 +112,9 @@ const projectSchema = z.object({
 
 /** A user's whole design system: everything the app edits, saves and exports. */
 export type Project = z.infer<typeof projectSchema>;
+
+/** The seed colours of a palette. */
+export type PaletteSeeds = z.infer<typeof paletteSeedsSchema>;
 
 /** A typeface choice, either from Google Fonts or uploaded by the user. */
 export type FontRef = z.infer<typeof fontRefSchema>;
