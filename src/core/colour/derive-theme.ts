@@ -2,8 +2,8 @@ import type { PaletteSeeds } from "../project";
 import { BODY_TEXT_CONTRAST, NON_TEXT_CONTRAST } from "./contrast-levels";
 import { ensureContrast, fitFill, hexToOklch, oklchToHex } from "./oklch";
 
-// Every colour the app derives per theme: the shadcn set plus success, warning and destructive foregrounds.
-const COLOUR_TOKENS = [
+/** Every derived colour name: the shadcn set plus success, warning and destructive foregrounds. */
+export const COLOUR_TOKENS = [
   "background",
   "foreground",
   "card",
