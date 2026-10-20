@@ -1,6 +1,8 @@
 import { useMemo } from "react";
+import { ColourOverrides } from "@/colour/ColourOverrides";
 import { DarkThemeToggle } from "@/colour/DarkThemeToggle";
 import { PalettePicker } from "@/colour/PalettePicker";
+import { SeedEditor } from "@/colour/SeedEditor";
 import { compile } from "@/core/compile";
 import { DiagnosticsPanel } from "@/diagnostics/DiagnosticsPanel";
 import { DownloadButton } from "@/export/DownloadButton";
@@ -29,7 +31,9 @@ export function App() {
       <main className="grid gap-6 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="space-y-4">
           <PalettePicker />
+          <SeedEditor />
           <DarkThemeToggle />
+          <ColourOverrides light={preview.light} dark={preview.dark} />
         </div>
         <div className="space-y-6">
           <PreviewPane light={preview.light} dark={preview.dark} />
