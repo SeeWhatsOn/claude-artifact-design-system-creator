@@ -37,20 +37,12 @@ export function compile(project: Project, { now = new Date() }: CompileOptions =
   if (dark) themes.push({ id: "dark", name: "Dark", colours: dark });
   const preview = { light: toCssVars(light), ...(dark && { dark: toCssVars(dark) }), fontsToLoad: [] };
   const diagnostics = themes.flatMap(theme => checkContrast(theme.colours, theme.id));
-  return { preview, diagnostics, files: claudeDesignSystemFiles(project, themes, now) };
+  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics });
+  return { preview, diagnostics, files };
 }
 
 function themeColours(project: Project, theme: ThemeId): ThemeColours {
-  return withOverrides(deriveTheme(project.palette.seeds, theme), project.palette.overrides[theme]);
-}
-
-// Overrides win over derived values; they are keyed by token name without the leading dashes.
-function withOverrides(colours: ThemeColours, overrides: Record<string, string>): ThemeColours {
-  const result: ThemeColours = { ...colours };
-  for (const [name, value] of Object.entries(overrides)) {
-    if (name in result) result[name as keyof ThemeColours] = value.toLowerCase();
-  }
-  return result;
+  return deriveTheme(project.palette.seeds, theme, project.palette.overrides[theme]);
 }
 
 function toCssVars(colours: ThemeColours): CssVarMap {

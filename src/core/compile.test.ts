@@ -58,7 +58,7 @@ test("the brand seed and its foreground become the primary colours", () => {
 });
 
 test("an override replaces a derived colour", () => {
-  const project = withOverride(createDefaultProject(), "card", "#ABCDEF");
+  const project = withOverride(createDefaultProject(), "card", "#abcdef");
   expect(compile(project).preview.light["--card"]).toBe("#abcdef");
 });
 
@@ -66,7 +66,7 @@ test("changing the brand seed changes the preview", () => {
   const project = createDefaultProject();
   const changed = {
     ...project,
-    palette: { ...project.palette, seeds: { ...project.palette.seeds, brand: "#BE1E2D" } },
+    palette: { ...project.palette, seeds: { ...project.palette.seeds, brand: "#be1e2d" } },
   };
   expect(compile(changed).preview.light["--primary"]).toBe("#be1e2d");
 });
@@ -114,4 +114,16 @@ test("a dark override replaces the derived dark colour only", () => {
   const { light, dark } = compile(overridden).preview;
   expect(dark?.["--card"]).toBe("#123456");
   expect(light["--card"]).not.toBe("#123456");
+});
+
+test("dark button text follows an overridden dark background", () => {
+  const project = createDefaultProject();
+  const overridden = {
+    ...project,
+    palette: { ...project.palette, overrides: { light: {}, dark: { background: "#0a1420" } } },
+  };
+  const dark = compile(overridden).preview.dark ?? {};
+  expect(dark["--background"]).toBe("#0a1420");
+  expect(dark["--primary-foreground"]).toBe("#0a1420");
+  expect(wcagContrast(dark["--primary"]!, "#0a1420")).toBeGreaterThanOrEqual(4.5);
 });

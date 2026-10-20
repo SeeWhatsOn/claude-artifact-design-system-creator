@@ -1,4 +1,7 @@
-import type { ThemeColours, ThemeId } from "../colour/derive-theme";
+import { BODY_TEXT_CONTRAST, formatRatio } from "../colour/contrast-levels";
+import type { ColourToken, ThemeColours, ThemeId } from "../colour/derive-theme";
+import type { Diagnostic } from "../compile";
+import { toJsonFile } from "../json-file";
 import type { Project } from "../project";
 
 /** The Design System type contract this export is written against (see docs/research/01). */
@@ -9,36 +12,46 @@ export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
 
 // The small, legible set Claude gets: core surfaces and text, actions, status and chart colours.
 // Popover, input and the sidebar set are shadcn plumbing and stay out of the Design System.
-const COLOUR_USAGE: Partial<Record<keyof ThemeColours, string>> = {
-  background: "Page background.",
-  foreground: "Body text and headings on background, card and secondary.",
-  card: "Cards and raised panels on the page background.",
-  "card-foreground": "Text on card.",
-  primary: "The one main action per view: primary buttons, links, selected states.",
-  "primary-foreground": "Text and icons on primary.",
-  secondary: "Secondary buttons, quiet panels and table header rows.",
-  "secondary-foreground": "Text on secondary.",
-  muted: "Subtle fills: disabled controls, skeletons, code blocks.",
-  "muted-foreground": "Secondary text: captions, help text, timestamps. Readable on background, card and muted.",
-  accent: "Highlights and hover fills for menu items and ghost buttons. Never for large areas.",
-  "accent-foreground": "Text on accent.",
-  border: "Hairline borders and dividers between surfaces; also input borders.",
-  ring: "Focus outlines on interactive elements.",
-  destructive: "Delete and other irreversible actions, and error states. Always pair with an icon or words.",
-  "destructive-foreground": "Text and icons on destructive.",
-  success: "Positive status: saved, passed, gains.",
-  "success-foreground": "Text on success.",
-  warning: "Caution status that needs attention but isn't an error.",
-  "warning-foreground": "Text on warning.",
-  "chart-1": "First chart series; the brand colour.",
-  "chart-2": "Second chart series.",
-  "chart-3": "Third chart series.",
-  "chart-4": "Fourth chart series.",
-  "chart-5": "Fifth chart series.",
-};
+const COLOUR_USAGE: [ColourToken, string][] = [
+  ["background", "Page background."],
+  ["foreground", "Body text and headings on background, card and secondary."],
+  ["card", "Cards and raised panels on the page background."],
+  ["card-foreground", "Text on card."],
+  ["primary", "The one main action per view: primary buttons, links, selected states."],
+  ["primary-foreground", "Text and icons on primary."],
+  ["secondary", "Secondary buttons, quiet panels and table header rows."],
+  ["secondary-foreground", "Text on secondary."],
+  ["muted", "Subtle fills: disabled controls, skeletons, code blocks."],
+  ["muted-foreground", "Secondary text: captions, help text, timestamps. Readable on background, card and muted."],
+  ["accent", "Highlights and hover fills for menu items and ghost buttons. Never for large areas."],
+  ["accent-foreground", "Text on accent."],
+  ["border", "Hairline borders and dividers between surfaces; also input borders."],
+  ["ring", "Focus outlines on interactive elements."],
+  ["destructive", "Delete and other irreversible actions, and error states. Always pair with an icon or words."],
+  ["destructive-foreground", "Text and icons on destructive."],
+  ["success", "Positive status: saved, passed, gains."],
+  ["success-foreground", "Text on success."],
+  ["warning", "Caution status that needs attention but isn't an error."],
+  ["warning-foreground", "Text on warning."],
+  ["chart-1", "First chart series; the brand colour."],
+  ["chart-2", "Second chart series."],
+  ["chart-3", "Third chart series."],
+  ["chart-4", "Fourth chart series."],
+  ["chart-5", "Fifth chart series."],
+];
 
-/** Builds the `project/` files that Claude's Design System artifact type reads, without any file the page generates. */
-export function claudeDesignSystemFiles(project: Project, themes: ExportTheme[], now: Date): Record<string, string> {
+/** What the export needs besides the project: when it was made, and the checks it should be honest about. */
+export type ExportContext = { now: Date; diagnostics: Diagnostic[] };
+
+/**
+ * Builds the `project/` files that Claude's Design System artifact type reads, without any file the page generates.
+ * The index is the last key, because the type asks for it to be written last.
+ */
+export function claudeDesignSystemFiles(
+  project: Project,
+  themes: ExportTheme[],
+  { now, diagnostics }: ExportContext,
+): Record<string, string> {
   const at = now.toISOString();
   const tokens = {
     name: project.meta.name,
@@ -46,9 +59,9 @@ export function claudeDesignSystemFiles(project: Project, themes: ExportTheme[],
     color: {
       // The first theme is the fallback for any token missing a value, so light always leads.
       themes: themes.map(({ id, name }) => ({ id, name })),
-      tokens: Object.entries(COLOUR_USAGE).map(([name, usage]) => ({
+      tokens: COLOUR_USAGE.map(([name, usage]) => ({
         name,
-        value: Object.fromEntries(themes.map(theme => [theme.id, theme.colours[name as keyof ThemeColours]])),
+        value: Object.fromEntries(themes.map(theme => [theme.id, theme.colours[name]])),
         usage,
       })),
     },
@@ -74,17 +87,25 @@ export function claudeDesignSystemFiles(project: Project, themes: ExportTheme[],
     },
   };
   return {
-    "project/tokens.json": `${JSON.stringify(tokens, null, 2)}\n`,
-    "project/README.md": readme(project, themes),
-    "project/design-system.json": `${JSON.stringify(index, null, 2)}\n`,
+    "project/tokens.json": toJsonFile(tokens),
+    "project/README.md": readme(project, themes, diagnostics),
+    "project/design-system.json": toJsonFile(index),
   };
 }
 
-function readme(project: Project, themes: ExportTheme[]): string {
+function readme(project: Project, themes: ExportTheme[], diagnostics: Diagnostic[]): string {
   const themeNames = themes.map(theme => theme.name.toLowerCase()).join(" and ");
-  const colourList = Object.entries(COLOUR_USAGE)
-    .map(([name, usage]) => `- \`${name}\`: ${usage}`)
-    .join("\n");
+  const colourList = COLOUR_USAGE.map(([name, usage]) => `- \`${name}\`: ${usage}`).join("\n");
+  const bodyText = formatRatio(BODY_TEXT_CONTRAST);
+  // Claude reads the README as fact, so it only promises readable text when every pair delivers it.
+  const lowContrast = diagnostics.filter(diagnostic => diagnostic.code === "contrast-low");
+  const contrastRule =
+    lowContrast.length === 0
+      ? `- Every text colour is paired with the surface named in its usage note, and reads at ${bodyText} or better in every theme.`
+      : [
+          `- Every text colour is paired with the surface named in its usage note. These pairs read below ${bodyText}, so use them only for large or bold text:`,
+          ...lowContrast.map(diagnostic => `  - ${diagnostic.message}`),
+        ].join("\n");
   return `# ${project.meta.name}
 
 ${project.meta.name}'s design system, made with Brandkit for Claude. It has ${themeNames} themes. Use these tokens instead of your own defaults.
@@ -92,7 +113,7 @@ ${project.meta.name}'s design system, made with Brandkit for Claude. It has ${th
 ## Global rules
 
 - Body text is \`foreground\` on \`background\` or \`card\`. Quieter text is \`muted-foreground\`, never a lighter grey.
-- Every text colour is paired with the surface named in its usage note, and reads at 4.5:1 or better in every theme.
+${contrastRule}
 
 ## Colour
 

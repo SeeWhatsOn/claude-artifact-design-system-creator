@@ -1,4 +1,5 @@
 import type { PaletteSeeds } from "../project";
+import { BODY_TEXT_CONTRAST, NON_TEXT_CONTRAST } from "./contrast-levels";
 import { ensureContrast, fitFill, hexToOklch, oklchToHex } from "./oklch";
 
 // Every colour the app derives per theme: the shadcn set plus success, warning and destructive foregrounds.
@@ -50,45 +51,50 @@ export type ThemeColours = Record<ColourToken, string>;
 /** Light or dark. */
 export type ThemeId = "light" | "dark";
 
-const TEXT_MIN = 4.5;
-// Chart marks aren't text, so they need the 3:1 non-text contrast against the background.
-const GRAPHIC_MIN = 3;
+// How each theme builds its surfaces. Light surfaces step darker from the page and dark ones lighter,
+// so raised panels read as raised in both. Lightness values are OKLCH L.
+const THEME_STEPS = {
+  light: { card: 0.025, secondary: -0.045, sidebar: -0.015, border: -0.1, foregroundL: 0.21, mutedL: 0.5 },
+  dark: { card: 0.04, secondary: 0.08, sidebar: 0.02, border: 0.14, foregroundL: 0.96, mutedL: 0.72 },
+} as const;
 
-/** Expands palette seeds into every interface colour for one theme. Overrides are applied by the caller. */
-export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId): ThemeColours {
+/**
+ * Expands palette seeds into every interface colour for one theme, then applies the user's overrides.
+ * An overridden background feeds the derivation, so surfaces and text built on it follow.
+ */
+export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId, overrides: Record<string, string>): ThemeColours {
+  const steps = THEME_STEPS[theme];
+  const isDark = theme === "dark";
   // The grey ramp is built at the palette's own neutral hue and chroma rather than stock zinc or slate.
   const neutral = (l: number) => oklchToHex({ l, c: seeds.neutralHue.chroma, h: seeds.neutralHue.hue });
-  const isDark = theme === "dark";
-  const background = (isDark ? seeds.neutralDarkBg : seeds.neutralLightBg).toLowerCase();
+  const background = overrides.background ?? (isDark ? seeds.neutralDarkBg : seeds.neutralLightBg);
   const bgL = hexToOklch(background).l;
-  // Light surfaces step darker from the page; dark surfaces step lighter, so raised panels read as raised.
-  const step = (amount: number) => neutral(isDark ? bgL + amount : bgL - amount);
+  const step = (amount: number) => neutral(Math.min(bgL + amount, 1));
 
-  const card = isDark ? step(0.04) : neutral(Math.min(bgL + 0.025, 1));
-  const secondary = step(isDark ? 0.08 : 0.045);
-  const sidebar = step(isDark ? 0.02 : 0.015);
-  const border = step(isDark ? 0.14 : 0.1);
+  const card = step(steps.card);
+  const secondary = step(steps.secondary);
+  const sidebar = step(steps.sidebar);
+  const border = step(steps.border);
   const surfaces = [background, card, secondary, sidebar];
 
-  const foreground = ensureContrast(neutral(isDark ? 0.96 : 0.21), surfaces, TEXT_MIN);
-  const mutedForeground = ensureContrast(neutral(isDark ? 0.72 : 0.5), surfaces, TEXT_MIN);
+  const foreground = ensureContrast(neutral(steps.foregroundL), surfaces, BODY_TEXT_CONTRAST);
+  const mutedForeground = ensureContrast(neutral(steps.mutedL), surfaces, BODY_TEXT_CONTRAST);
   const onFill = [foreground, isDark ? background : neutral(0.99)];
 
   // In light, the brand pair is the user's exact choice; the contrast checker reports it if it falls short.
   // Brands are tuned for light surfaces, so dark mode lightens the brand until it reads on the dark
   // background, then puts dark text on it.
-  const primary = isDark
-    ? ensureContrast(seeds.brand.toLowerCase(), [background, card], TEXT_MIN)
-    : seeds.brand.toLowerCase();
-  const primaryForeground = isDark ? background : seeds.brandForeground.toLowerCase();
+  const primary = isDark ? ensureContrast(seeds.brand, [background, card], BODY_TEXT_CONTRAST) : seeds.brand;
+  const primaryForeground = isDark ? background : seeds.brandForeground;
 
-  const accent = fitFill(seeds.accent.toLowerCase(), onFill, TEXT_MIN);
-  const destructive = fitFill(seeds.danger.toLowerCase(), onFill, TEXT_MIN);
-  const success = fitFill(seeds.success.toLowerCase(), onFill, TEXT_MIN);
-  const warning = fitFill(seeds.warning.toLowerCase(), onFill, TEXT_MIN);
-  const chart = (seed: string) => ensureContrast(seed.toLowerCase(), [background], isDark ? GRAPHIC_MIN : 1);
+  const accent = fitFill(seeds.accent, onFill, BODY_TEXT_CONTRAST);
+  const destructive = fitFill(seeds.danger, onFill, BODY_TEXT_CONTRAST);
+  const success = fitFill(seeds.success, onFill, BODY_TEXT_CONTRAST);
+  const warning = fitFill(seeds.warning, onFill, BODY_TEXT_CONTRAST);
+  // Light chart colours are the seeds as given; dark ones are lifted until they stand out from the page.
+  const chart = (seed: string) => (isDark ? ensureContrast(seed, [background], NON_TEXT_CONTRAST) : seed);
 
-  return {
+  const derived: ThemeColours = {
     background,
     foreground,
     card,
@@ -126,4 +132,7 @@ export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId): ThemeColours {
     "sidebar-border": border,
     "sidebar-ring": primary,
   };
+  // Overrides win last; unknown names (from an older or hand-edited file) are ignored.
+  for (const name of COLOUR_TOKENS) derived[name] = overrides[name] ?? derived[name];
+  return derived;
 }

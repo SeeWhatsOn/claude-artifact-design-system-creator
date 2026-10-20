@@ -97,3 +97,22 @@ test("the title and README use the brand name", () => {
   expect(index.namespace).toBe("AcmeStudio");
   expect(files["project/README.md"]).toStartWith("# Acme Studio");
 });
+
+test("the index is the last file, as the Design System type asks", () => {
+  expect(Object.keys(compile(createDefaultProject()).files).at(-1)).toBe("project/design-system.json");
+});
+
+test("the README only promises 4.5:1 text when every pair reaches it", () => {
+  const project = createDefaultProject();
+  const readable = compile(project).files["project/README.md"];
+  expect(readable).toContain("reads at 4.5:1 or better");
+
+  // White on #3D8BD0 is about 3.6:1: allowed, but only with a warning.
+  const lowContrast = {
+    ...project,
+    palette: { ...project.palette, seeds: { ...project.palette.seeds, brand: "#3D8BD0" } },
+  };
+  const readme = compile(lowContrast).files["project/README.md"];
+  expect(readme).not.toContain("reads at 4.5:1 or better");
+  expect(readme).toContain("below 4.5:1");
+});
