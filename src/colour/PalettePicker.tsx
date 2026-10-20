@@ -1,7 +1,7 @@
 import { applyPalette, PALETTES } from "@/core/palettes";
 import { useProjectStore } from "@/state/project-store";
 
-/** Lets the user pick one of the 20 curated palettes, each shown with its seed swatches. */
+/** Lets the user pick one of the curated palettes, each shown with its seed swatches. */
 export function PalettePicker() {
   const paletteId = useProjectStore(state => state.project.palette.paletteId);
   const updateProject = useProjectStore(state => state.updateProject);

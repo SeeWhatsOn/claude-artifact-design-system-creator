@@ -8,7 +8,8 @@ import { projectStore } from "@/state/project-store";
 export function UndoRedoButtons() {
   const canUndo = useStore(projectStore.temporal, state => state.pastStates.length > 0);
   const canRedo = useStore(projectStore.temporal, state => state.futureStates.length > 0);
-  const { undo, redo } = projectStore.temporal.getState();
+  const undo = useStore(projectStore.temporal, state => state.undo);
+  const redo = useStore(projectStore.temporal, state => state.redo);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -16,12 +17,12 @@ export function UndoRedoButtons() {
       // Text fields keep their own native undo for what's being typed.
       if (isTextEntry(event.target)) return;
       event.preventDefault();
-      if (event.shiftKey) projectStore.temporal.getState().redo();
-      else projectStore.temporal.getState().undo();
+      if (event.shiftKey) redo();
+      else undo();
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [undo, redo]);
 
   return (
     <div className="flex gap-1">
