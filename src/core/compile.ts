@@ -2,7 +2,8 @@ import { checkContrast } from "./colour/contrast-check";
 import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-theme";
 import { checkPaletteTells } from "./colour/palette-tells";
 import { claudeDesignSystemFiles, type ExportTheme } from "./export/claude-design-system";
-import { colourVars, fontsToLoad, typeVars } from "./preview-vars";
+import { colourVars, fontsToLoad, shapeVars, typeVars } from "./preview-vars";
+import { checkShape } from "./shape/check-shape";
 import type { FontRef, Project } from "./project";
 
 /** CSS custom property name (e.g. "--primary") to value. */
@@ -37,8 +38,8 @@ export function compile(project: Project, { now = new Date() }: CompileOptions =
   // Light always leads: Claude's Design System falls back to the first theme.
   const themes: ExportTheme[] = [{ id: "light", name: "Light", colours: light }];
   if (dark) themes.push({ id: "dark", name: "Dark", colours: dark });
-  // Type doesn't change with the theme, so both themes carry the same type variables.
-  const shared = typeVars(project.type);
+  // Type and shape don't change with the theme, so both themes carry the same variables.
+  const shared = { ...typeVars(project.type), ...shapeVars(project.shape) };
   const preview = {
     light: { ...colourVars(light), ...shared },
     ...(dark && { dark: { ...colourVars(dark), ...shared } }),
@@ -47,6 +48,7 @@ export function compile(project: Project, { now = new Date() }: CompileOptions =
   const diagnostics = [
     ...themes.flatMap(theme => checkContrast(theme.colours, theme.id)),
     ...checkPaletteTells(project.palette.seeds),
+    ...checkShape(project.shape),
   ];
   const files = claudeDesignSystemFiles(project, themes, { now, diagnostics });
   return { preview, diagnostics, files };

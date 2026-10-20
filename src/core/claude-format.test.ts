@@ -17,6 +17,8 @@ const typeStyleSchema = z.object({
   fontWeight: z.number().int(),
   usage: z.string().min(1),
 });
+// Lengths are px, rem, em or %.
+const lengthTokenSchema = tokenSchema.extend({ value: z.string().regex(/^\d+(\.\d+)?(px|rem|em|%)$/) });
 const tokensFileSchema = z.object({
   name: z.string().min(1),
   version: z.number(),
@@ -29,6 +31,9 @@ const tokensFileSchema = z.object({
     families: z.record(z.string(), z.string()),
     groups: z.array(z.object({ name: z.string(), family: z.string(), styles: z.array(typeStyleSchema).min(1) })),
   }),
+  spacing: z.object({ tokens: z.array(lengthTokenSchema).min(4).max(6) }),
+  radius: z.object({ tokens: z.array(lengthTokenSchema).length(4) }),
+  shadow: z.object({ tokens: z.array(tokenSchema.extend({ value: z.string() })).min(1) }),
 });
 
 // Names must be unique across every family, not just within one.
@@ -36,6 +41,7 @@ function allTokenNames(tokens: z.infer<typeof tokensFileSchema>): string[] {
   return [
     ...tokens.color.tokens.map(token => token.name),
     ...tokens.type.groups.flatMap(group => group.styles.map(style => style.name)),
+    ...[tokens.spacing, tokens.radius, tokens.shadow].flatMap(family => family.tokens.map(token => token.name)),
   ];
 }
 const indexSchema = z.object({

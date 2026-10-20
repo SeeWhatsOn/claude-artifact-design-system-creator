@@ -1,6 +1,7 @@
 import type { ColourToken } from "../colour/derive-theme";
 import { textTransform } from "../preview-vars";
 import { FAMILY_SLOTS, TEXT_ROLES, type FamilySlot, type Project } from "../project";
+import { radiusTokens, shadowTokens, spacingTokens } from "../shape/shape-tokens";
 import { fontStack, typeStyles, type TypeStyle } from "../type/type-scale";
 import type { ExportTheme } from "./claude-design-system";
 
@@ -37,7 +38,7 @@ export const COLOUR_USAGE: [ColourToken, string][] = [
 
 const GROUP_NAMES: Record<FamilySlot, string> = { display: "Headings", body: "Text", mono: "Code" };
 
-/** Builds tokens.json in the Design System's list shape (never DTCG): colour, then type. */
+/** Builds tokens.json in the Design System's list shape (never DTCG): colour, type, spacing, radius, shadow. */
 export function claudeTokens(project: Project, themes: ExportTheme[]) {
   return {
     name: project.meta.name,
@@ -52,6 +53,10 @@ export function claudeTokens(project: Project, themes: ExportTheme[]) {
       })),
     },
     type: typeTokens(project.type),
+    spacing: { tokens: spacingTokens(project.shape) },
+    // Left out until chosen; export is blocked meanwhile.
+    ...(project.shape.radii && { radius: { tokens: radiusTokens(project.shape) } }),
+    shadow: { tokens: shadowTokens(project.shape) },
   };
 }
 

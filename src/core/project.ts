@@ -2,7 +2,7 @@ import { z } from "zod";
 import { migrate } from "./migrations";
 
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 // Stored lowercase so every colour compares and exports the same way however it was typed.
 const hexColour = z
@@ -83,14 +83,26 @@ const projectSchema = z.object({
   shape: z.object({
     spacingBase: z.union([z.literal(4), z.literal(8)]),
     density: z.enum(["compact", "comfortable", "airy"]),
-    radii: z.object({
-      control: z.number().min(0),
-      card: z.number().min(0),
-      dialog: z.number().min(0),
-      pill: z.number().min(0),
+    // Null until chosen; missing radii block export.
+    radii: z
+      .object({
+        control: z.number().min(0),
+        card: z.number().min(0),
+        dialog: z.number().min(0),
+        pill: z.number().min(0),
+      })
+      .nullable(),
+    // Switching shadows off keeps the builder's values, so switching back restores them.
+    shadow: z.object({
+      enabled: z.boolean(),
+      colour: hexColour,
+      opacity: z.number().min(0).max(1),
+      x: z.number(),
+      y: z.number(),
+      blur: z.number().min(0),
+      spread: z.number(),
     }),
-    elevation: z.enum(["shadow", "flat"]),
-    borders: z.enum(["none", "subtle", "strong"]),
+    borders: z.enum(["hairline", "none"]),
   }),
   motion: z.object({
     // Null until chosen; a missing policy blocks export.
@@ -135,6 +147,9 @@ export type FamilySlot = (typeof FAMILY_SLOTS)[number];
 
 /** One of the ten text roles. */
 export type TextRole = (typeof TEXT_ROLES)[number];
+
+/** Spacing, corners, depth and borders. */
+export type Shape = Project["shape"];
 
 /** A user's changes to one text role; anything left out is generated from the scale. */
 export type RoleOverride = z.infer<typeof roleOverrideSchema>;

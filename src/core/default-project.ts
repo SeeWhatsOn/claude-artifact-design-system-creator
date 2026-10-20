@@ -1,4 +1,5 @@
 import { CURRENT_SCHEMA_VERSION, type Project } from "./project";
+import { DEFAULT_RADII, DEFAULT_SHADOW } from "./shape/default-shape";
 
 /** A complete, valid starting project: the Civic Ledger palette with the Modern Broadsheet pairing. */
 export function createDefaultProject(): Project {
@@ -49,9 +50,9 @@ export function createDefaultProject(): Project {
     shape: {
       spacingBase: 4,
       density: "comfortable",
-      radii: { control: 6, card: 10, dialog: 14, pill: 999 },
-      elevation: "flat",
-      borders: "subtle",
+      radii: { ...DEFAULT_RADII },
+      shadow: { ...DEFAULT_SHADOW },
+      borders: "hairline",
     },
     motion: { policy: "subtle", bannedEffects: [] },
     icons: { stroke: 1.5, size: 20 },

@@ -80,6 +80,10 @@ ${colourList}
 ## Type
 
 ${typeRules(project)}
+
+## Shape and space
+
+${shapeRules(project)}
 `;
 }
 
@@ -90,6 +94,27 @@ function typeRules(project: Project): string {
     "- Use the ten text styles in `tokens.json` as they are. Don't invent in-between sizes or weights.",
     "- One `display` line per view at most; most pages start at `h1`.",
   ].join("\n");
+}
+
+function shapeRules(project: Project): string {
+  const { radii, shadow, borders } = project.shape;
+  const rules = [
+    "- Space things with the six `space-*` steps only. Use bigger steps between sections than inside them.",
+  ];
+  if (radii) {
+    rules.push(
+      `- Corners follow hierarchy: controls \`radius-control\` (${radii.control}px), cards \`radius-card\` (${radii.card}px), dialogs \`radius-dialog\` (${radii.dialog}px), badges \`radius-pill\`. Never one radius on everything.`,
+    );
+  }
+  rules.push(
+    shadow.enabled
+      ? "- Raised cards use `shadow-raised`; dialogs and menus use `shadow-overlay`. Nothing else gets a shadow."
+      : "- Flat: no shadows anywhere, including on hover.",
+    borders === "hairline"
+      ? "- Separate surfaces with 1px `border` hairlines."
+      : "- No borders: separate surfaces with fills (`card` on `background`) and space.",
+  );
+  return rules.join("\n");
 }
 
 // The index namespace is the global a component bundle would assign, so it must be a JS identifier.

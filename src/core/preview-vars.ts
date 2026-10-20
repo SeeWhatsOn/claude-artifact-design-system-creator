@@ -1,6 +1,7 @@
 import type { ThemeColours } from "./colour/derive-theme";
 import type { CssVarMap } from "./compile";
-import { FAMILY_SLOTS, TEXT_ROLES, type FontRef, type Project } from "./project";
+import { FAMILY_SLOTS, TEXT_ROLES, type FontRef, type Project, type Shape } from "./project";
+import { radiusTokens, shadowTokens, spacingTokens } from "./shape/shape-tokens";
 import { fontStack, typeStyles } from "./type/type-scale";
 
 const TEXT_TRANSFORM = { none: "none", upper: "uppercase", lower: "lowercase", title: "capitalize" } as const;
@@ -24,6 +25,19 @@ export function typeVars(type: Project["type"]): CssVarMap {
     vars[`--type-${role}-tracking`] = `${style.letterSpacing}em`;
     vars[`--type-${role}-case`] = TEXT_TRANSFORM[style.case];
   }
+  return vars;
+}
+
+/** Spacing steps, radii, shadows and border width, named as in the export (`--space-1`, `--radius-card`…). */
+export function shapeVars(shape: Shape): CssVarMap {
+  const vars: CssVarMap = {};
+  for (const token of [...spacingTokens(shape), ...radiusTokens(shape), ...shadowTokens(shape)]) {
+    vars[`--${token.name}`] = token.value;
+  }
+  // Preview components always read the raised and overlay shadows; a flat brand shows none.
+  vars["--shadow-raised"] ??= "none";
+  vars["--shadow-overlay"] ??= "none";
+  vars["--border-width"] = shape.borders === "hairline" ? "1px" : "0px";
   return vars;
 }
 
