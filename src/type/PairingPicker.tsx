@@ -30,7 +30,7 @@ function PairingOption({ pairing, checked }: { pairing: Pairing; checked: boolea
   useGoogleFonts([body], BODY_SAMPLE);
 
   return (
-    <label className="flex cursor-pointer flex-col gap-0.5 rounded-md border p-2 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-2 has-focus-visible:ring-ring">
+    <label className="group flex cursor-pointer flex-col gap-0.5 rounded-md border p-2 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-2 has-focus-visible:ring-ring">
       <input
         type="radio"
         name="font-pairing"
@@ -42,7 +42,12 @@ function PairingOption({ pairing, checked }: { pairing: Pairing; checked: boolea
       <span className="text-lg" style={{ fontFamily: fontStack(display, "display") }}>
         {pairing.name}
       </span>
-      <span aria-hidden className="text-sm text-muted-foreground" style={{ fontFamily: fontStack(body, "body") }}>
+      {/* Muted grey is too faint on the selected fill, so the sample switches to the fill's own text colour. */}
+      <span
+        aria-hidden
+        className="text-sm text-muted-foreground group-has-checked:text-accent-foreground"
+        style={{ fontFamily: fontStack(body, "body") }}
+      >
         {BODY_SAMPLE}
       </span>
     </label>
