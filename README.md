@@ -6,6 +6,11 @@ A browser app for building a brand design system visually, then exporting it as 
 flowchart LR
   UI["React UI<br/>(src/App.tsx)"] -->|updateProject| Store["Project store<br/>zustand + zundo"]
   Store <-->|autosave / restore| IDB[(IndexedDB)]
+  UI -->|uploaded fonts| Assets["Asset store<br/>zustand"]
+  Assets <-->|autosave / restore| IDB
+  Assets -->|bytes| Compile
+  Search["Font search<br/>Fontsource API, cached"] --> UI
+  Compile -->|fontsToLoad| Fonts["Google Fonts css2<br/>+ FontFace uploads"]
   Store <-->|open / save| File["Project file<br/>.brandkit.json"]
   Store -->|Project| Compile["compile()<br/>src/core"]
   Compile -->|preview vars| UI
@@ -44,9 +49,12 @@ bun run build          # static bundle in dist/
 | Folder               | What's in it                                                                                                                                                                       |
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/core/`          | Framework-free design core: Project schema and migrations, palettes, colour engine, contrast checks, exporters, project file, `compile()`. No React or zustand (enforced by lint). |
-| `src/state/`         | The project store: undo/redo and IndexedDB persistence.                                                                                                                            |
-| `src/colour/`        | Colour step: palette picker and dark-theme switch.                                                                                                                                 |
-| `src/preview/`       | Live preview with a light/dark toggle.                                                                                                                                             |
+| `src/state/`         | The project store (undo/redo) and the asset store for uploaded files, both saved to IndexedDB.                                                                                     |
+| `src/colour/`        | Colour step: palette picker, seed editor with randomise and locks, dark-theme switch, advanced overrides.                                                                          |
+| `src/type/`          | Type step: font pairing picker, size and ratio controls, per-role editor.                                                                                                          |
+| `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                      |
+| `src/shape/`         | Shape and space step: spacing, corner radii, shadow builder and borders.                                                                                                           |
+| `src/preview/`       | Live preview with a light/dark toggle and a type specimen.                                                                                                                         |
 | `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
 | `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
 | `src/export/`        | Zip building and the Download Design System button.                                                                                                                                |

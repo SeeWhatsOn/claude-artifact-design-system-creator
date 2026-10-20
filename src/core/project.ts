@@ -2,7 +2,7 @@ import { z } from "zod";
 import { migrate } from "./migrations";
 
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
 
 // Stored lowercase so every colour compares and exports the same way however it was typed.
 const hexColour = z
@@ -13,13 +13,23 @@ const hexColour = z
 /** The ten fixed text roles, from largest to smallest. */
 export const TEXT_ROLES = ["display", "h1", "h2", "h3", "lead", "body", "small", "caption", "label", "code"] as const;
 
+// Export file names go into a zip path, so no slashes or dot-dot.
+const SAFE_FILE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+/** The three font slots a design system has. Each text role uses one of them. */
+export const FAMILY_SLOTS = ["display", "body", "mono"] as const;
+
 const fontRefSchema = z.object({
   source: z.enum(["google", "upload"]),
   family: z.string().min(1),
   weights: z.array(z.number().int().min(1).max(1000)).min(1),
   variable: z.boolean(),
-  // Points at the binary in IndexedDB for uploaded fonts.
-  assetId: z.string().optional(),
+  // Picks the generic fallback (serif, monospace…). Optional because older projects didn't record it.
+  category: z.enum(["serif", "sans-serif", "monospace", "display", "handwriting"]).optional(),
+  // Uploaded fonts only: one file per weight. Each binary lives in the asset store under its assetId.
+  files: z
+    .array(z.object({ assetId: z.string().min(1), file: z.string().regex(SAFE_FILE_NAME), weight: z.number().int() }))
+    .optional(),
 });
 
 /** The few colours a user sets; the colour engine derives every interface colour from them. */
@@ -39,7 +49,7 @@ const themeOverridesSchema = z.record(z.string(), hexColour);
 
 const roleOverrideSchema = z
   .object({
-    family: z.enum(["display", "body", "mono"]),
+    family: z.enum(FAMILY_SLOTS),
     size: z.number().positive(),
     weight: z.number().int().min(1).max(1000),
     lineHeight: z.number().positive(),
@@ -70,6 +80,7 @@ const projectSchema = z.object({
   darkEnabled: z.boolean(),
   type: z.object({
     families: z.object({ display: fontRefSchema, body: fontRefSchema, mono: fontRefSchema }),
+    // Base size in px; every role is base × ratio^step.
     base: z.number().positive(),
     ratio: z.number().gt(1),
     roleOverrides: z.partialRecord(z.enum(TEXT_ROLES), roleOverrideSchema),
@@ -77,14 +88,26 @@ const projectSchema = z.object({
   shape: z.object({
     spacingBase: z.union([z.literal(4), z.literal(8)]),
     density: z.enum(["compact", "comfortable", "airy"]),
-    radii: z.object({
-      control: z.number().min(0),
-      card: z.number().min(0),
-      dialog: z.number().min(0),
-      pill: z.number().min(0),
+    // Null until chosen; missing radii block export.
+    radii: z
+      .object({
+        control: z.number().min(0),
+        card: z.number().min(0),
+        dialog: z.number().min(0),
+        pill: z.number().min(0),
+      })
+      .nullable(),
+    // Switching shadows off keeps the builder's values, so switching back restores them.
+    shadow: z.object({
+      enabled: z.boolean(),
+      colour: hexColour,
+      opacity: z.number().min(0).max(1),
+      x: z.number(),
+      y: z.number(),
+      blur: z.number().min(0),
+      spread: z.number(),
     }),
-    elevation: z.enum(["shadow", "flat"]),
-    borders: z.enum(["none", "subtle", "strong"]),
+    borders: z.enum(["hairline", "none"]),
   }),
   motion: z.object({
     // Null until chosen; a missing policy blocks export.
@@ -123,6 +146,18 @@ export type PaletteSeeds = z.infer<typeof paletteSeedsSchema>;
 
 /** A typeface choice, either from Google Fonts or uploaded by the user. */
 export type FontRef = z.infer<typeof fontRefSchema>;
+
+/** One of the display, body and mono font slots. */
+export type FamilySlot = (typeof FAMILY_SLOTS)[number];
+
+/** One of the ten text roles. */
+export type TextRole = (typeof TEXT_ROLES)[number];
+
+/** Spacing, corners, depth and borders. */
+export type Shape = Project["shape"];
+
+/** A user's changes to one text role; anything left out is generated from the scale. */
+export type RoleOverride = z.infer<typeof roleOverrideSchema>;
 
 /** The outcome of loading untrusted project data. */
 export type ParseProjectResult = { ok: true; project: Project } | { ok: false; error: string };

@@ -43,8 +43,8 @@ test("migrates a schemaVersion 0 project to the current version", () => {
   if (!result.ok) return;
   expect(result.project.schemaVersion).toBe(CURRENT_SCHEMA_VERSION);
   expect(result.project.meta.name).toBe("Old brand");
-  // v0 had a flat boolean; v1 names the choice.
-  expect(result.project.shape.elevation).toBe("flat");
+  // v0 had a flat boolean; it now switches the shadow builder off.
+  expect(result.project.shape.shadow.enabled).toBe(false);
   // v0 didn't record the palette; seeds matching a curated palette recover it.
   expect(result.project.palette.paletteId).toBe("civic-ledger");
 });

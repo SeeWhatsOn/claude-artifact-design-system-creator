@@ -1,4 +1,5 @@
 import { CURRENT_SCHEMA_VERSION, type Project } from "./project";
+import { DEFAULT_RADII, DEFAULT_SHADOW } from "./shape/default-shape";
 
 /** A complete, valid starting project: the Civic Ledger palette with the Modern Broadsheet pairing. */
 export function createDefaultProject(): Project {
@@ -26,14 +27,21 @@ export function createDefaultProject(): Project {
     type: {
       // Families from docs/research/05-font-pairings.json ("broadsheet-modern").
       families: {
-        display: { source: "google", family: "Brygada 1918", weights: [400, 500, 600, 700], variable: true },
+        display: {
+          source: "google",
+          family: "Brygada 1918",
+          weights: [400, 500, 600, 700],
+          variable: true,
+          category: "serif",
+        },
         body: {
           source: "google",
           family: "Schibsted Grotesk",
           weights: [400, 500, 600, 700, 800, 900],
           variable: true,
+          category: "sans-serif",
         },
-        mono: { source: "google", family: "Fragment Mono", weights: [400], variable: false },
+        mono: { source: "google", family: "Fragment Mono", weights: [400], variable: false, category: "monospace" },
       },
       base: 16,
       ratio: 1.333,
@@ -42,9 +50,9 @@ export function createDefaultProject(): Project {
     shape: {
       spacingBase: 4,
       density: "comfortable",
-      radii: { control: 6, card: 10, dialog: 14, pill: 999 },
-      elevation: "flat",
-      borders: "subtle",
+      radii: { ...DEFAULT_RADII },
+      shadow: { ...DEFAULT_SHADOW },
+      borders: "hairline",
     },
     motion: { policy: "subtle", bannedEffects: [] },
     icons: { stroke: 1.5, size: 20 },

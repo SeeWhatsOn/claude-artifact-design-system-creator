@@ -1,4 +1,4 @@
-import { clampChroma, converter, formatHex, wcagContrast } from "culori";
+import { clampChroma, converter, formatHex, formatRgb, wcagContrast } from "culori";
 
 const toOklch = converter("oklch");
 
@@ -21,6 +21,13 @@ export function oklchToHex({ l, c, h }: Oklch): string {
 /** WCAG 2 contrast ratio between two colours (1–21). Wrapped so only this file depends on culori. */
 export function contrast(a: string, b: string): number {
   return wcagContrast(a, b);
+}
+
+/** Formats a hex colour with transparency as `rgba(r, g, b, a)`, for shadows. */
+export function hexToRgba(hex: string, alpha: number): string {
+  const colour = toOklch(hex);
+  if (!colour) throw new Error(`Not a colour: ${hex}`);
+  return formatRgb({ ...colour, alpha });
 }
 
 /**

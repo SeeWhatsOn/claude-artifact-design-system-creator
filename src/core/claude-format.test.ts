@@ -10,6 +10,15 @@ const TOKEN_NAME = /^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$/;
 const COLOUR_VALUE = /^(#[0-9a-f]{6}|oklch\([0-9.]+%? [0-9.]+ [0-9.]+\))$/;
 
 const tokenSchema = z.object({ name: z.string(), value: z.unknown(), usage: z.string().min(1) });
+const typeStyleSchema = z.object({
+  name: z.string(),
+  fontSize: z.string().regex(/^\d+px$/),
+  lineHeight: z.string().regex(/^\d+px$/),
+  fontWeight: z.number().int(),
+  usage: z.string().min(1),
+});
+// Lengths are px, rem, em or %.
+const lengthTokenSchema = tokenSchema.extend({ value: z.string().regex(/^\d+(\.\d+)?(px|rem|em|%)$/) });
 const tokensFileSchema = z.object({
   name: z.string().min(1),
   version: z.number(),
@@ -17,7 +26,24 @@ const tokensFileSchema = z.object({
     themes: z.array(z.object({ id: z.string(), name: z.string() })).min(1),
     tokens: z.array(tokenSchema).min(1),
   }),
+  type: z.object({
+    fonts: z.array(z.object({ family: z.string(), file: z.string().startsWith("fonts/"), weight: z.string() })),
+    families: z.record(z.string(), z.string()),
+    groups: z.array(z.object({ name: z.string(), family: z.string(), styles: z.array(typeStyleSchema).min(1) })),
+  }),
+  spacing: z.object({ tokens: z.array(lengthTokenSchema).min(4).max(6) }),
+  radius: z.object({ tokens: z.array(lengthTokenSchema).length(4) }),
+  shadow: z.object({ tokens: z.array(tokenSchema.extend({ value: z.string() })).min(1) }),
 });
+
+// Names must be unique across every family, not just within one.
+function allTokenNames(tokens: z.infer<typeof tokensFileSchema>): string[] {
+  return [
+    ...tokens.color.tokens.map(token => token.name),
+    ...tokens.type.groups.flatMap(group => group.styles.map(style => style.name)),
+    ...[tokens.spacing, tokens.radius, tokens.shadow].flatMap(family => family.tokens.map(token => token.name)),
+  ];
+}
 const indexSchema = z.object({
   v: z.literal(3),
   layout: z.literal("files"),
@@ -65,7 +91,7 @@ describe.each(PALETTES.map(palette => [palette.id]))("%s export", paletteId => {
 
   test("token names are valid and unique, values are hex or oklch, and every token has a usage note", () => {
     const tokens = tokensFileSchema.parse(readJson(files, "project/tokens.json"));
-    const names = tokens.color.tokens.map(token => token.name);
+    const names = allTokenNames(tokens);
     for (const name of names) expect(name).toMatch(TOKEN_NAME);
     expect(new Set(names).size).toBe(names.length);
     for (const token of tokens.color.tokens) {
