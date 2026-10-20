@@ -55,3 +55,17 @@ test("a migrated v0 project with custom seeds has no palette id", () => {
   const result = parseProject(custom);
   expect(result.ok && result.project.palette.paletteId).toBeNull();
 });
+
+test("hex colours are stored lowercase, however they were typed", () => {
+  const project = createDefaultProject();
+  const result = parseProject({
+    ...project,
+    palette: {
+      ...project.palette,
+      seeds: { ...project.palette.seeds, brand: "#ABCDEF" },
+      overrides: { light: { card: "#FFEEDD" }, dark: {} },
+    },
+  });
+  expect(result.ok && result.project.palette.seeds.brand).toBe("#abcdef");
+  expect(result.ok && result.project.palette.overrides.light.card).toBe("#ffeedd");
+});

@@ -16,7 +16,7 @@ const paletteSchema = z.object({
 /** A curated starting palette (from docs/research/04). */
 export type Palette = z.infer<typeof paletteSchema>;
 
-/** The 20 curated palettes, parsed once so a bad edit to the data fails loudly at startup and in tests. */
+/** The curated palettes, parsed once so a bad edit to the data fails loudly at startup and in tests. */
 export const PALETTES: readonly Palette[] = z.array(paletteSchema).parse(data);
 
 /** Looks up a curated palette by id. */

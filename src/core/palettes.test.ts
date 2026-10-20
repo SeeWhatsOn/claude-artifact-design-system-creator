@@ -20,7 +20,7 @@ test("flags the two palettes that knowingly echo a generic tell", () => {
 test("applying a palette swaps the seeds and records the palette id", () => {
   const project = applyPalette(createDefaultProject(), "ledger-ink");
   expect(project.palette.paletteId).toBe("ledger-ink");
-  expect(project.palette.seeds.brand).toBe("#0E4D64");
+  expect(project.palette.seeds.brand).toBe("#0e4d64");
 });
 
 test("applying a palette keeps type and shape choices", () => {

@@ -4,7 +4,11 @@ import { migrate } from "./migrations";
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
 export const CURRENT_SCHEMA_VERSION = 1;
 
-const hexColour = z.string().regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex colour like #1D6FB5");
+// Stored lowercase so every colour compares and exports the same way however it was typed.
+const hexColour = z
+  .string()
+  .regex(/^#[0-9a-fA-F]{6}$/, "Must be a hex colour like #1D6FB5")
+  .transform(hex => hex.toLowerCase());
 
 /** The ten fixed text roles, from largest to smallest. */
 export const TEXT_ROLES = ["display", "h1", "h2", "h3", "lead", "body", "small", "caption", "label", "code"] as const;

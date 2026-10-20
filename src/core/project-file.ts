@@ -1,3 +1,5 @@
+import { isRecord } from "./is-record";
+import { toJsonFile } from "./json-file";
 import { parseProject, type Project } from "./project";
 
 /** Uploaded binaries (fonts, logos) by asset id. */
@@ -15,7 +17,7 @@ const damagedAsset = (id: string) => `The uploaded file "${id}" in this project 
 /** Serialises the whole system to one JSON file, with uploads embedded as base64 so the file is self-contained. */
 export function writeProjectFile(project: Project, assets: ProjectAssets): string {
   const encoded = Object.fromEntries(Object.entries(assets).map(([id, bytes]) => [id, toBase64(bytes)]));
-  return `${JSON.stringify({ format: FORMAT, project, assets: encoded }, null, 2)}\n`;
+  return toJsonFile({ format: FORMAT, project, assets: encoded });
 }
 
 /** Reads a project file, migrating and validating the project inside it. */
@@ -26,14 +28,12 @@ export function readProjectFile(text: string): ReadProjectFileResult {
   } catch {
     return { ok: false, error: NOT_A_PROJECT };
   }
-  if (typeof file !== "object" || file === null || !("format" in file) || file.format !== FORMAT) {
-    return { ok: false, error: NOT_A_PROJECT };
-  }
-  const parsed = parseProject("project" in file ? file.project : undefined);
+  if (!isRecord(file) || file.format !== FORMAT) return { ok: false, error: NOT_A_PROJECT };
+  const parsed = parseProject(file.project);
   if (!parsed.ok) return parsed;
 
   const assets: ProjectAssets = {};
-  const raw = "assets" in file && typeof file.assets === "object" && file.assets !== null ? file.assets : {};
+  const raw = isRecord(file.assets) ? file.assets : {};
   for (const [id, value] of Object.entries(raw)) {
     if (typeof value !== "string") return { ok: false, error: damagedAsset(id) };
     try {

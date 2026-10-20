@@ -1,5 +1,6 @@
 // Raw data rather than palettes.ts, which imports project.ts: importing it here would be a cycle.
 import palettes from "./data/palettes.json";
+import { isRecord } from "./is-record";
 
 type ProjectData = Record<string, unknown>;
 
@@ -30,8 +31,4 @@ function fromV0(data: ProjectData): ProjectData {
     shape: { ...shape, elevation: flat === false ? "shadow" : "flat" },
     palette: { ...palette, paletteId: match?.id ?? null },
   };
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
