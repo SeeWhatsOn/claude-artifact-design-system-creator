@@ -8,6 +8,10 @@ import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
 import { TypeSpecimen } from "./TypeSpecimen";
 
+// Controls and surfaces read the compiled shape variables, so corners, borders and shadows follow the project.
+const CONTROL = "rounded-[var(--radius-control)]";
+const SURFACE = "border-[length:var(--border-width)]";
+
 /** Renders sample components with the compiled colours applied as CSS variables scoped to the preview. */
 export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
   const [chosen, setChosen] = useState<ThemeId>("light");
@@ -40,26 +44,57 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
       <div
         data-preview-theme
         style={{ ...(vars as CSSProperties), fontFamily: "var(--font-body)" }}
-        className={cn("space-y-4 rounded-lg border bg-background p-6 text-foreground", theme === "dark" && "dark")}
+        className={cn(
+          "flex flex-col gap-[var(--space-5)] rounded-lg border bg-background p-[var(--space-5)] text-foreground",
+          theme === "dark" && "dark",
+        )}
       >
-        <div className="flex flex-wrap gap-2">
-          <Button>Save changes</Button>
-          <Button variant="secondary">Preview</Button>
-          <Button variant="ghost">Cancel</Button>
+        <div className="flex flex-wrap items-center gap-[var(--space-2)]">
+          <Button className={CONTROL}>Save changes</Button>
+          <Button variant="secondary" className={CONTROL}>
+            Preview
+          </Button>
+          <Button variant="ghost" className={CONTROL}>
+            Cancel
+          </Button>
+          <span className="rounded-[var(--radius-pill)] bg-secondary px-[var(--space-2)] py-0.5 text-xs text-secondary-foreground">
+            Draft
+          </span>
         </div>
-        <Card className="max-w-sm">
+        <Card className={cn("max-w-sm", SURFACE, "rounded-[var(--radius-card)] shadow-[var(--shadow-raised)]")}>
           <CardHeader>
             <CardTitle>Monthly report</CardTitle>
             <CardDescription>Sent to your team on the first of each month.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
             <Label htmlFor="preview-email">Work email</Label>
-            <Input id="preview-email" type="email" placeholder="name@company.com" />
+            <Input id="preview-email" type="email" placeholder="name@company.com" className={CONTROL} />
           </CardContent>
           <CardFooter>
-            <Button variant="outline">Subscribe</Button>
+            <Button variant="outline" className={CONTROL}>
+              Subscribe
+            </Button>
           </CardFooter>
         </Card>
+        <div
+          role="presentation"
+          className={cn(
+            "max-w-xs space-y-[var(--space-3)] bg-card p-[var(--space-4)] text-card-foreground",
+            SURFACE,
+            "rounded-[var(--radius-dialog)] shadow-[var(--shadow-overlay)]",
+          )}
+        >
+          <p className="font-medium">Delete this report?</p>
+          <p className="text-sm text-muted-foreground">It will be removed for everyone on your team.</p>
+          <div className="flex justify-end gap-[var(--space-2)]">
+            <Button variant="ghost" size="sm" className={CONTROL}>
+              Keep it
+            </Button>
+            <Button variant="destructive" size="sm" className={CONTROL}>
+              Delete report
+            </Button>
+          </div>
+        </div>
         <TypeSpecimen />
       </div>
     </section>

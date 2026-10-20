@@ -10,6 +10,9 @@ import { useGoogleFonts } from "@/fonts/use-google-fonts";
 import { UndoRedoButtons } from "@/history/UndoRedoButtons";
 import { PreviewPane } from "@/preview/PreviewPane";
 import { ProjectFileButtons } from "@/project-file/ProjectFileButtons";
+import { DepthControls } from "@/shape/DepthControls";
+import { RadiusControls } from "@/shape/RadiusControls";
+import { SpacingControls } from "@/shape/SpacingControls";
 import { useProjectStore } from "@/state/project-store";
 import { PairingPicker } from "@/type/PairingPicker";
 import { RoleEditor } from "@/type/RoleEditor";
@@ -51,6 +54,14 @@ export function App() {
             <PairingPicker />
             <TypeScaleControls />
             <RoleEditor vars={preview.light} />
+          </section>
+          <section aria-labelledby="step-shape" className="space-y-4">
+            <h2 id="step-shape" className="text-base font-semibold">
+              Shape and space
+            </h2>
+            <SpacingControls />
+            <RadiusControls />
+            <DepthControls />
           </section>
         </div>
         <div className="space-y-6">
