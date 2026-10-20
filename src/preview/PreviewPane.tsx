@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
+import { TypeSpecimen } from "./TypeSpecimen";
 
 /** Renders sample components with the compiled colours applied as CSS variables scoped to the preview. */
 export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
@@ -38,7 +39,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
       {/* Scoped vars: the app's own chrome keeps its theme while the preview shows the user's. */}
       <div
         data-preview-theme
-        style={vars as CSSProperties}
+        style={{ ...(vars as CSSProperties), fontFamily: "var(--font-body)" }}
         className={cn("space-y-4 rounded-lg border bg-background p-6 text-foreground", theme === "dark" && "dark")}
       >
         <div className="flex flex-wrap gap-2">
@@ -59,6 +60,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
             <Button variant="outline">Subscribe</Button>
           </CardFooter>
         </Card>
+        <TypeSpecimen />
       </div>
     </section>
   );
