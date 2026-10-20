@@ -47,32 +47,46 @@ export type ColourToken = (typeof COLOUR_TOKENS)[number];
 /** A full set of derived colours for one theme, as lowercase hex. */
 export type ThemeColours = Record<ColourToken, string>;
 
-const TEXT_MIN = 4.5;
+/** Light or dark. */
+export type ThemeId = "light" | "dark";
 
-/** Expands palette seeds into every light-theme interface colour. Overrides are applied by the caller. */
-export function deriveLightTheme(seeds: PaletteSeeds): ThemeColours {
+const TEXT_MIN = 4.5;
+// Chart marks aren't text, so they need the 3:1 non-text contrast against the background.
+const GRAPHIC_MIN = 3;
+
+/** Expands palette seeds into every interface colour for one theme. Overrides are applied by the caller. */
+export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId): ThemeColours {
   // The grey ramp is built at the palette's own neutral hue and chroma rather than stock zinc or slate.
   const neutral = (l: number) => oklchToHex({ l, c: seeds.neutralHue.chroma, h: seeds.neutralHue.hue });
-  const background = seeds.neutralLightBg.toLowerCase();
+  const isDark = theme === "dark";
+  const background = (isDark ? seeds.neutralDarkBg : seeds.neutralLightBg).toLowerCase();
   const bgL = hexToOklch(background).l;
+  // Light surfaces step darker from the page; dark surfaces step lighter, so raised panels read as raised.
+  const step = (amount: number) => neutral(isDark ? bgL + amount : bgL - amount);
 
-  const card = neutral(Math.min(bgL + 0.025, 1));
-  const secondary = neutral(bgL - 0.045);
-  const sidebar = neutral(bgL - 0.015);
-  const border = neutral(bgL - 0.1);
+  const card = isDark ? step(0.04) : neutral(Math.min(bgL + 0.025, 1));
+  const secondary = step(isDark ? 0.08 : 0.045);
+  const sidebar = step(isDark ? 0.02 : 0.015);
+  const border = step(isDark ? 0.14 : 0.1);
   const surfaces = [background, card, secondary, sidebar];
 
-  const foreground = ensureContrast(neutral(0.21), surfaces, TEXT_MIN);
-  const mutedForeground = ensureContrast(neutral(0.5), surfaces, TEXT_MIN);
-  const onFill = [foreground, neutral(0.99)];
+  const foreground = ensureContrast(neutral(isDark ? 0.96 : 0.21), surfaces, TEXT_MIN);
+  const mutedForeground = ensureContrast(neutral(isDark ? 0.72 : 0.5), surfaces, TEXT_MIN);
+  const onFill = [foreground, isDark ? background : neutral(0.99)];
 
-  // The brand pair is the user's exact choice in light; the contrast checker reports it if it falls short.
-  const primary = seeds.brand.toLowerCase();
-  const primaryForeground = seeds.brandForeground.toLowerCase();
+  // In light, the brand pair is the user's exact choice; the contrast checker reports it if it falls short.
+  // Brands are tuned for light surfaces, so dark mode lightens the brand until it reads on the dark
+  // background, then puts dark text on it.
+  const primary = isDark
+    ? ensureContrast(seeds.brand.toLowerCase(), [background, card], TEXT_MIN)
+    : seeds.brand.toLowerCase();
+  const primaryForeground = isDark ? background : seeds.brandForeground.toLowerCase();
+
   const accent = fitFill(seeds.accent.toLowerCase(), onFill, TEXT_MIN);
   const destructive = fitFill(seeds.danger.toLowerCase(), onFill, TEXT_MIN);
   const success = fitFill(seeds.success.toLowerCase(), onFill, TEXT_MIN);
   const warning = fitFill(seeds.warning.toLowerCase(), onFill, TEXT_MIN);
+  const chart = (seed: string) => ensureContrast(seed.toLowerCase(), [background], isDark ? GRAPHIC_MIN : 1);
 
   return {
     background,
@@ -99,10 +113,10 @@ export function deriveLightTheme(seeds: PaletteSeeds): ThemeColours {
     input: border,
     ring: primary,
     "chart-1": primary,
-    "chart-2": seeds.accent.toLowerCase(),
-    "chart-3": seeds.success.toLowerCase(),
-    "chart-4": seeds.warning.toLowerCase(),
-    "chart-5": seeds.danger.toLowerCase(),
+    "chart-2": chart(seeds.accent),
+    "chart-3": chart(seeds.success),
+    "chart-4": chart(seeds.warning),
+    "chart-5": chart(seeds.danger),
     sidebar,
     "sidebar-foreground": foreground,
     "sidebar-primary": primary,
