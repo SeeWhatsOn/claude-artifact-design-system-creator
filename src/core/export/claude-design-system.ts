@@ -91,10 +91,8 @@ ${project.meta.name}'s design system, made with Brandkit for Claude. It has ${th
 
 ## Global rules
 
-- Use \`primary\` for one main action per view. Everything else is secondary, ghost or a link.
 - Body text is \`foreground\` on \`background\` or \`card\`. Quieter text is \`muted-foreground\`, never a lighter grey.
 - Every text colour is paired with the surface named in its usage note, and reads at 4.5:1 or better in every theme.
-- No gradients, glows or colours outside this list.
 
 ## Colour
 
