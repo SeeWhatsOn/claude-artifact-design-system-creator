@@ -1,19 +1,46 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { CssVarMap } from "@/core/compile";
+import { cn } from "@/lib/utils";
+
+type PreviewTheme = "light" | "dark";
 
 /** Renders sample components with the compiled colours applied as CSS variables scoped to the preview. */
-export function PreviewPane({ vars }: { vars: CssVarMap }) {
+export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
+  const [chosen, setChosen] = useState<PreviewTheme>("light");
+  // Falls back to light when the project's dark theme is switched off.
+  const theme = dark ? chosen : "light";
+  const vars = theme === "dark" && dark ? dark : light;
+
   return (
-    <section aria-label="Preview" className="rounded-lg border">
+    <section aria-label="Preview" className="space-y-3">
+      <div role="radiogroup" aria-label="Preview theme" className="inline-flex rounded-md border p-0.5 text-sm">
+        {(["light", "dark"] as const).map(option => (
+          <label
+            key={option}
+            className="cursor-pointer rounded px-3 py-1 has-checked:bg-secondary has-disabled:cursor-not-allowed has-disabled:opacity-50 has-focus-visible:ring-2 has-focus-visible:ring-ring"
+          >
+            <input
+              type="radio"
+              name="preview-theme"
+              value={option}
+              checked={theme === option}
+              disabled={option === "dark" && !dark}
+              onChange={() => setChosen(option)}
+              className="sr-only"
+            />
+            {option === "light" ? "Light" : "Dark"}
+          </label>
+        ))}
+      </div>
       {/* Scoped vars: the app's own chrome keeps its theme while the preview shows the user's. */}
       <div
         data-preview-theme
         style={vars as CSSProperties}
-        className="space-y-4 rounded-lg bg-background p-6 text-foreground"
+        className={cn("space-y-4 rounded-lg border bg-background p-6 text-foreground", theme === "dark" && "dark")}
       >
         <div className="flex flex-wrap gap-2">
           <Button>Save changes</Button>

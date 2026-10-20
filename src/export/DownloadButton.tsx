@@ -5,8 +5,8 @@ import { useProjectStore } from "@/state/project-store";
 import { buildZip } from "./build-zip";
 import { downloadFile } from "./download-file";
 
-/** Downloads the Claude Design System package as a zip. */
-export function DownloadButton() {
+/** Downloads the Claude Design System package as a zip. Disabled while anything blocks export. */
+export function DownloadButton({ disabled }: { disabled: boolean }) {
   const project = useProjectStore(state => state.project);
 
   function download() {
@@ -16,7 +16,7 @@ export function DownloadButton() {
   }
 
   return (
-    <Button onClick={download}>
+    <Button onClick={download} disabled={disabled}>
       <Download aria-hidden />
       Download Design System
     </Button>
