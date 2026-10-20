@@ -48,6 +48,7 @@ bun run build          # static bundle in dist/
 | `src/colour/`        | Colour step: palette picker and dark-theme switch.                                                                                                                                 |
 | `src/preview/`       | Live preview with a light/dark toggle.                                                                                                                                             |
 | `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
+| `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
 | `src/export/`        | Zip building and the Download Design System button.                                                                                                                                |
 | `src/project-file/`  | Open and save project buttons.                                                                                                                                                     |
 | `src/history/`       | Undo/redo buttons and shortcuts.                                                                                                                                                   |

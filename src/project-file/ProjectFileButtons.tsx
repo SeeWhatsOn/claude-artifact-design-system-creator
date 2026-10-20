@@ -2,7 +2,7 @@ import { FolderOpen, Save } from "lucide-react";
 import { useState, type ChangeEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { readProjectFile, writeProjectFile } from "@/core/project-file";
-import { downloadFile } from "@/export/download-file";
+import { downloadFile } from "@/download/download-file";
 import { useProjectStore } from "@/state/project-store";
 
 type Status = { kind: "done" | "error"; message: string } | null;
