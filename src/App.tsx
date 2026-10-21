@@ -10,6 +10,7 @@ import { FontChooser } from "@/fonts/FontChooser";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
 import { useUploadedFonts } from "@/fonts/use-uploaded-fonts";
 import { UndoRedoButtons } from "@/history/UndoRedoButtons";
+import { LogoEditor } from "@/logos/LogoEditor";
 import { PreviewPane } from "@/preview/PreviewPane";
 import { ProjectFileButtons } from "@/project-file/ProjectFileButtons";
 import { DepthControls } from "@/shape/DepthControls";
@@ -68,6 +69,12 @@ export function App() {
             <SpacingControls />
             <RadiusControls />
             <DepthControls />
+          </section>
+          <section aria-labelledby="step-logos" className="space-y-4">
+            <h2 id="step-logos" className="text-base font-semibold">
+              Logos
+            </h2>
+            <LogoEditor />
           </section>
         </div>
         <div className="space-y-6">

@@ -6,7 +6,7 @@ A browser app for building a brand design system visually, then exporting it as 
 flowchart LR
   UI["React UI<br/>(src/App.tsx)"] -->|updateProject| Store["Project store<br/>zustand + zundo"]
   Store <-->|autosave / restore| IDB[(IndexedDB)]
-  UI -->|uploaded fonts| Assets["Asset store<br/>zustand"]
+  UI -->|uploaded fonts + logos| Assets["Asset store<br/>zustand"]
   Assets <-->|autosave / restore| IDB
   Assets -->|bytes| Compile
   Search["Font search<br/>Fontsource API, cached"] --> UI
@@ -54,6 +54,7 @@ bun run build          # static bundle in dist/
 | `src/type/`          | Type step: font pairing picker, size and ratio controls, per-role editor.                                                                                                          |
 | `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                      |
 | `src/shape/`         | Shape and space step: spacing, corner radii, shadow builder and borders.                                                                                                           |
+| `src/logos/`         | Logo step: upload light/dark logo variants, and the logo shown in the preview.                                                                                                     |
 | `src/preview/`       | Live preview with a light/dark toggle and a type specimen.                                                                                                                         |
 | `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
 | `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
