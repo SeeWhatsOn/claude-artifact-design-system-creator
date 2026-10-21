@@ -1,5 +1,3 @@
-import { useState } from "react";
-import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { COMPONENT_CSS } from "@/core/components/component-previews";
 import { PATTERNS, type PatternGroup } from "@/core/patterns/pattern-catalogue";
@@ -7,6 +5,7 @@ import { patternState, setPatternState } from "@/core/patterns/pattern-editing";
 import { PATTERN_CSS, patternPreviewBody } from "@/core/patterns/pattern-previews";
 import { PreviewSurface } from "@/preview/PreviewSurface";
 import { PreviewThemeSwitch } from "@/preview/PreviewThemeSwitch";
+import { usePreviewTheme } from "@/preview/use-preview-theme";
 import { useProjectStore } from "@/state/project-store";
 import { PatternStateSwitch } from "./PatternStateSwitch";
 
@@ -19,10 +18,7 @@ const GROUPS: PatternGroup[] = ["Data", "Diagrams", "Text and layout", "Navigati
 export function PatternLibrary({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
   const project = useProjectStore(state => state.project);
   const updateProject = useProjectStore(state => state.updateProject);
-  const [chosen, setChosen] = useState<ThemeId>("light");
-  // Falls back to light when the project's dark theme is switched off.
-  const theme = dark ? chosen : "light";
-  const vars = theme === "dark" && dark ? dark : light;
+  const { theme, vars, setTheme } = usePreviewTheme(light, dark);
 
   return (
     <section id="pattern-library-panel" aria-labelledby="pattern-library" className="space-y-4">
@@ -38,7 +34,7 @@ export function PatternLibrary({ light, dark }: { light: CssVarMap; dark?: CssVa
             to use it.
           </p>
         </div>
-        <PreviewThemeSwitch label="Pattern theme" value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
+        <PreviewThemeSwitch label="Pattern theme" value={theme} onChange={setTheme} darkAvailable={Boolean(dark)} />
       </div>
       {GROUPS.map(group => (
         <div key={group} className="space-y-3">

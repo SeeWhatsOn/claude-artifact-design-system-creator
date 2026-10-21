@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { COLOUR_TOKENS, type ThemeId } from "@/core/colour/derive-theme";
+import { COLOUR_TOKENS } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { clearOverride, setOverride } from "@/core/palette-editing";
+import { usePreviewTheme } from "@/preview/use-preview-theme";
 import { useProjectStore } from "@/state/project-store";
 
 /**
@@ -13,9 +14,7 @@ export function ColourOverrides({ light, dark }: { light: CssVarMap; dark?: CssV
   const overrides = useProjectStore(state => state.project.palette.overrides);
   const updateProject = useProjectStore(state => state.updateProject);
   const [open, setOpen] = useState(false);
-  const [chosen, setChosen] = useState<ThemeId>("light");
-  const theme = dark ? chosen : "light";
-  const values = theme === "dark" && dark ? dark : light;
+  const { theme, vars: values, setTheme } = usePreviewTheme(light, dark);
 
   return (
     <section aria-label="Advanced colours" className="space-y-3">
@@ -37,7 +36,7 @@ export function ColourOverrides({ light, dark }: { light: CssVarMap; dark?: CssV
             Theme
             <select
               value={theme}
-              onChange={event => setChosen(event.target.value === "dark" ? "dark" : "light")}
+              onChange={event => setTheme(event.target.value === "dark" ? "dark" : "light")}
               className="rounded-md border bg-background px-2 py-1"
             >
               <option value="light">Light</option>

@@ -1,17 +1,13 @@
-import { useState } from "react";
-import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { COMPONENTS } from "@/core/components/component-catalogue";
 import { PreviewSurface } from "@/preview/PreviewSurface";
 import { PreviewThemeSwitch } from "@/preview/PreviewThemeSwitch";
+import { usePreviewTheme } from "@/preview/use-preview-theme";
 import { COMPONENT_DEMOS } from "./ComponentDemos";
 
 /** All twelve components in the user's style, in light or dark, each with the summary Claude will read. */
 export function ComponentGallery({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
-  const [chosen, setChosen] = useState<ThemeId>("light");
-  // Falls back to light when the project's dark theme is switched off.
-  const theme = dark ? chosen : "light";
-  const vars = theme === "dark" && dark ? dark : light;
+  const { theme, vars, setTheme } = usePreviewTheme(light, dark);
 
   return (
     <section aria-labelledby="component-gallery" className="space-y-3">
@@ -19,7 +15,7 @@ export function ComponentGallery({ light, dark }: { light: CssVarMap; dark?: Css
         <h3 id="component-gallery" className="text-base font-semibold">
           Component gallery
         </h3>
-        <PreviewThemeSwitch label="Gallery theme" value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
+        <PreviewThemeSwitch label="Gallery theme" value={theme} onChange={setTheme} darkAvailable={Boolean(dark)} />
       </div>
       <PreviewSurface vars={vars} dark={theme === "dark"} className="grid gap-[var(--space-4)] p-[var(--space-4)]">
         {COMPONENTS.map(component => {

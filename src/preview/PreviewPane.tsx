@@ -3,7 +3,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { claudeDefaultPreview } from "@/core/claude-default";
-import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import type { EditTarget } from "@/core/edit-targets";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
@@ -15,10 +14,10 @@ import { useProjectStore } from "@/state/project-store";
 import { PreviewSurface } from "./PreviewSurface";
 import { PreviewThemeSwitch } from "./PreviewThemeSwitch";
 import { SplitView } from "./SplitView";
+import { usePreviewTheme } from "./use-preview-theme";
 
 /** The live preview: scene tabs drawn with the compiled variables, optionally beside the Claude default look. */
 export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
-  const [chosen, setChosen] = useState<ThemeId>("light");
   const [scene, setScene] = useState(SCENES[0]?.id ?? "");
   const [compare, setCompare] = useState(false);
   const compareId = useId();
@@ -29,9 +28,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
   const opener = useRef<HTMLElement | null>(null);
   const components = useProjectStore(state => state.project.components);
   const name = useProjectStore(state => state.project.meta.name);
-  // Falls back to light when the project's dark theme is switched off.
-  const theme = dark ? chosen : "light";
-  const vars = theme === "dark" && dark ? dark : light;
+  const { theme, vars, setTheme } = usePreviewTheme(light, dark);
   const claude = compare ? claudeDefaultPreview() : undefined;
   useGoogleFonts(claude?.fontsToLoad ?? []);
 
@@ -63,7 +60,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
   return (
     <section aria-label="Preview" className="space-y-3">
       <div className="flex flex-wrap items-center gap-3">
-        <PreviewThemeSwitch value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
+        <PreviewThemeSwitch value={theme} onChange={setTheme} darkAvailable={Boolean(dark)} />
         <div className="flex items-center gap-2">
           <Switch id={compareId} checked={compare} onCheckedChange={setCompare} />
           <Label htmlFor={compareId}>Compare with Claude default</Label>
