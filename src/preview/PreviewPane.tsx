@@ -107,7 +107,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
           </TabsContent>
         ))}
       </Tabs>
-      {selected && <Inspector key={selected.title} target={selected} vars={light} onClose={closeInspector} />}
+      {selected && <Inspector key={selected.title} target={selected} vars={vars} onClose={closeInspector} />}
     </section>
   );
 }
