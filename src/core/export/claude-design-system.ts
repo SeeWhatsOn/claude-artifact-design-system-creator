@@ -2,6 +2,8 @@ import { BODY_TEXT_CONTRAST, formatRatio } from "../colour/contrast-levels";
 import type { ThemeColours, ThemeId } from "../colour/derive-theme";
 import type { Diagnostic, FileMap } from "../compile";
 import { toJsonFile } from "../json-file";
+import type { BundledLogo } from "../logos/bundled-logos";
+import { LOGO_GROUP, logoAssetGroup, logoGroupReadme, logoRules } from "../logos/logo-docs";
 import type { Project } from "../project";
 import type { BundledFont } from "../type/uploaded-fonts";
 import { COMPONENTS } from "../components/component-catalogue";
@@ -16,10 +18,16 @@ export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
 export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
 
 /**
- * What the export needs besides the project: when it was made, the checks it should be honest about, uploaded fonts,
+ * What the export needs besides the project: when it was made, the checks it should be honest about, uploads,
  * and the compiled CSS variables that static preview cards inline.
  */
-export type ExportContext = { now: Date; diagnostics: Diagnostic[]; fonts: BundledFont[]; cardVars: CardVars };
+export type ExportContext = {
+  now: Date;
+  diagnostics: Diagnostic[];
+  fonts: BundledFont[];
+  logos?: BundledLogo[];
+  cardVars: CardVars;
+};
 
 /**
  * Builds the `project/` files that Claude's Design System artifact type reads, without any file the page generates.
@@ -28,7 +36,7 @@ export type ExportContext = { now: Date; diagnostics: Diagnostic[]; fonts: Bundl
 export function claudeDesignSystemFiles(
   project: Project,
   themes: ExportTheme[],
-  { now, diagnostics, fonts, cardVars }: ExportContext,
+  { now, diagnostics, fonts, logos = [], cardVars }: ExportContext,
 ): FileMap {
   const at = now.toISOString();
   // Per the type's instructions, the page fills in sections, blobs and docs.sections itself.
@@ -40,8 +48,8 @@ export function claudeDesignSystemFiles(
     namespace: toIdentifier(project.meta.namespace),
     libraries: [],
     sections: {},
-    groups: [],
-    assetGroups: {},
+    groups: logos.length ? [LOGO_GROUP] : [],
+    assetGroups: logos.length ? { [LOGO_GROUP]: logoAssetGroup(logos) } : {},
     blobs: {},
     docs: { readme: "project/README.md", sections: [] },
     lastChange: {
@@ -53,15 +61,16 @@ export function claudeDesignSystemFiles(
   };
   return {
     "project/tokens.json": toJsonFile(claudeTokens(project, themes, fonts)),
-    "project/README.md": readme(project, themes, diagnostics),
+    "project/README.md": readme(project, themes, diagnostics, logos),
     ...Object.fromEntries(fonts.map(font => [`project/fonts/${font.file}`, font.bytes])),
+    ...logoFiles(project, logos),
     // Components end with the Cover, which the type asks to be written last before the index.
     ...claudeComponentFiles(project.meta.name, cardVars),
     "project/design-system.json": toJsonFile(index),
   };
 }
 
-function readme(project: Project, themes: ExportTheme[], diagnostics: Diagnostic[]): string {
+function readme(project: Project, themes: ExportTheme[], diagnostics: Diagnostic[], logos: BundledLogo[]): string {
   const themeNames = themes.map(theme => theme.name.toLowerCase()).join(" and ");
   const colourList = COLOUR_USAGE.map(([name, usage]) => `- \`${name}\`: ${usage}`).join("\n");
   const bodyText = formatRatio(BODY_TEXT_CONTRAST);
@@ -95,10 +104,24 @@ ${typeRules(project)}
 
 ${shapeRules(project)}
 
+## Logo
+
+${logoRules(project, logos)}
+
 ## Components
 
 ${COMPONENTS.map(component => `- [${component.title}](components/${component.name}/README.md): ${component.summary}`).join("\n")}
 `;
+}
+
+// Logo files are asset uploads in the Design System; the group README is a plain file beside them.
+function logoFiles(project: Project, logos: BundledLogo[]): FileMap {
+  if (logos.length === 0) return {};
+  const folder = `project/assets/${LOGO_GROUP}`;
+  return {
+    ...Object.fromEntries(logos.map(logo => [`${folder}/${logo.file}`, logo.bytes])),
+    [`${folder}/README.md`]: logoGroupReadme(project, logos),
+  };
 }
 
 function typeRules(project: Project): string {

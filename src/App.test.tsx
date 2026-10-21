@@ -2,12 +2,15 @@ import { test, expect, beforeEach } from "bun:test";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createDefaultProject } from "@/core/default-project";
+import { resetShell } from "@/shell/shell-store";
 import { projectStore } from "@/state/project-store";
+import { openStep } from "../test/open-step";
 import { App } from "./App";
 
 beforeEach(() => {
   projectStore.setState({ project: createDefaultProject() });
   projectStore.temporal.getState().clear();
+  resetShell();
 });
 
 test("app shell shows the product title", () => {
@@ -15,8 +18,9 @@ test("app shell shows the product title", () => {
   expect(screen.getByRole("heading", { level: 1, name: "Brandkit for Claude" })).toBeInTheDocument();
 });
 
-test("the palette picker lists all 20 palettes, with the current one selected", () => {
+test("the palette picker lists all 20 palettes, with the current one selected", async () => {
   render(<App />);
+  await openStep("Colour");
   const picker = screen.getByRole("radiogroup", { name: "Palette" });
   expect(within(picker).getAllByRole("radio")).toHaveLength(20);
   expect(within(picker).getByRole("radio", { name: /Civic Ledger/ })).toBeChecked();
@@ -24,6 +28,7 @@ test("the palette picker lists all 20 palettes, with the current one selected", 
 
 test("choosing a palette updates the live preview", async () => {
   render(<App />);
+  await openStep("Colour");
   await userEvent.click(screen.getByRole("radio", { name: /Ledger Ink/ }));
   const preview = screen.getByRole("region", { name: "Preview" });
   expect(preview.querySelector("[data-preview-theme]")).toHaveStyle({ "--primary": "#0e4d64" });
@@ -55,6 +60,7 @@ test("the preview switches between light and dark", async () => {
 
 test("turning the dark theme off removes the dark preview", async () => {
   render(<App />);
+  await openStep("Colour");
   await userEvent.click(screen.getByRole("checkbox", { name: "Include a dark theme" }));
   const preview = screen.getByRole("region", { name: "Preview" });
   expect(within(preview).getByRole("radio", { name: "Dark" })).toBeDisabled();

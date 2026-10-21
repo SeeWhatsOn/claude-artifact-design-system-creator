@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { randomisePalette, setSeed, type SeedGroup } from "@/core/palette-editing";
 import type { PaletteSeeds } from "@/core/project";
+import { TokenName } from "@/shell/TokenName";
 import { projectStore, useProjectStore } from "@/state/project-store";
 
 type HexSeed = Exclude<keyof PaletteSeeds, "neutralHue">;
@@ -59,18 +60,21 @@ export function SeedEditor() {
         return (
           <div key={group} className="flex flex-wrap items-end gap-3">
             {fields.map(field => (
-              <label key={field.key} className="flex items-center gap-2 text-sm">
-                <input
-                  type="color"
-                  value={seeds[field.key]}
-                  onChange={event => {
-                    const hex = event.target.value;
-                    updateProject(project => setSeed(project, field.key, hex));
-                  }}
-                  className="h-8 w-10 cursor-pointer rounded border bg-transparent"
-                />
-                {field.label}
-              </label>
+              <span key={field.key} className="flex items-center gap-2">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="color"
+                    value={seeds[field.key]}
+                    onChange={event => {
+                      const hex = event.target.value;
+                      updateProject(project => setSeed(project, field.key, hex));
+                    }}
+                    className="h-8 w-10 cursor-pointer rounded border bg-transparent"
+                  />
+                  {field.label}
+                </label>
+                <TokenName>{seeds[field.key]}</TokenName>
+              </span>
             ))}
             <label className="ml-auto flex cursor-pointer items-center gap-1 text-xs text-muted-foreground has-focus-visible:ring-2 has-focus-visible:ring-ring">
               <input type="checkbox" checked={locked} onChange={() => toggleLock(group)} className="sr-only" />

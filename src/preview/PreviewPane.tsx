@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
+import { PreviewLogo } from "@/logos/PreviewLogo";
 import { PreviewSurface } from "./PreviewSurface";
 import { PreviewThemeSwitch } from "./PreviewThemeSwitch";
 import { TypeSpecimen } from "./TypeSpecimen";
@@ -29,6 +30,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
         dark={theme === "dark"}
         className="flex flex-col gap-[var(--space-5)] p-[var(--space-5)]"
       >
+        <PreviewLogo theme={theme} />
         <div className="flex flex-wrap items-center gap-[var(--space-2)]">
           <Button className={CONTROL}>Save changes</Button>
           <Button variant="secondary" className={CONTROL}>

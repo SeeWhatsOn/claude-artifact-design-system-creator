@@ -16,16 +16,12 @@ export function ComponentGallery({ light, dark }: { light: CssVarMap; dark?: Css
   return (
     <section aria-labelledby="component-gallery" className="space-y-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="component-gallery" className="text-base font-semibold">
+        <h3 id="component-gallery" className="text-base font-semibold">
           Component gallery
-        </h2>
+        </h3>
         <PreviewThemeSwitch label="Gallery theme" value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
       </div>
-      <PreviewSurface
-        vars={vars}
-        dark={theme === "dark"}
-        className="grid gap-[var(--space-4)] p-[var(--space-4)] md:grid-cols-2"
-      >
+      <PreviewSurface vars={vars} dark={theme === "dark"} className="grid gap-[var(--space-4)] p-[var(--space-4)]">
         {COMPONENTS.map(component => {
           const Demo = COMPONENT_DEMOS[component.name];
           return (
@@ -36,9 +32,9 @@ export function ComponentGallery({ light, dark }: { light: CssVarMap; dark?: Css
               id={`gallery-${component.name.toLowerCase()}`}
             >
               <header className="space-y-1">
-                <h3 id={`gallery-${component.name}`} className="font-semibold">
+                <h4 id={`gallery-${component.name}`} className="font-semibold">
                   {component.title}
-                </h3>
+                </h4>
                 <p className="text-sm text-muted-foreground">{component.summary.replaceAll("`", "")}</p>
               </header>
               <Demo />

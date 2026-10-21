@@ -3,10 +3,12 @@ import { checkContrast } from "./colour/contrast-check";
 import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-theme";
 import { checkPaletteTells } from "./colour/palette-tells";
 import { claudeDesignSystemFiles, type ExportTheme } from "./export/claude-design-system";
+import { bundledLogos, checkLogos } from "./logos/bundled-logos";
 import { colourVars, fontsToLoad, shapeVars, typeVars } from "./preview-vars";
 import type { FontRef, Project } from "./project";
 import type { ProjectAssets } from "./project-file";
 import { checkShape } from "./shape/check-shape";
+import type { StepId } from "./steps";
 import { checkFlaggedFonts } from "./type/flagged-fonts";
 import { bundledFonts, checkUploadedFonts } from "./type/uploaded-fonts";
 
@@ -18,7 +20,7 @@ export type Diagnostic = {
   severity: "block" | "warn" | "info";
   code: string;
   message: string;
-  step: string;
+  step: StepId;
   path: string;
 };
 
@@ -56,12 +58,15 @@ export function compile(project: Project, { now = new Date(), assets = {} }: Com
     ...checkShape(project.shape),
     ...checkFlaggedFonts(project.type),
     ...checkUploadedFonts(project.type, assets),
+    ...checkLogos(project.logos, assets),
   ];
   const fonts = bundledFonts(project.type, assets);
+  const logos = bundledLogos(project.logos, assets);
   const files = claudeDesignSystemFiles(project, themes, {
     now,
     diagnostics,
     fonts,
+    logos,
     cardVars: { light: preview.light, ...(preview.dark && { dark: preview.dark }) },
   });
   return { preview, diagnostics, files };
