@@ -8,6 +8,7 @@ import type { Project } from "../project";
 import type { BundledFont } from "../type/uploaded-fonts";
 import { COMPONENTS } from "../components/component-catalogue";
 import { claudeComponentFiles } from "./claude-components";
+import { claudePatternFiles, PATTERNS_README } from "./claude-patterns";
 import { claudeTokens, COLOUR_USAGE } from "./claude-tokens";
 import type { CardVars } from "./ds-card";
 
@@ -64,6 +65,7 @@ export function claudeDesignSystemFiles(
     "project/README.md": readme(project, themes, diagnostics, logos),
     ...Object.fromEntries(fonts.map(font => [`project/fonts/${font.file}`, font.bytes])),
     ...logoFiles(project, logos),
+    ...claudePatternFiles(project, cardVars),
     // Components end with the Cover, which the type asks to be written last before the index.
     ...claudeComponentFiles(project.meta.name, cardVars),
     "project/design-system.json": toJsonFile(index),
@@ -111,6 +113,10 @@ ${logoRules(project, logos)}
 ## Components
 
 ${COMPONENTS.map(component => `- [${component.title}](components/${component.name}/README.md): ${component.summary}`).join("\n")}
+
+## Patterns
+
+Charts, tables, diagrams and other content follow [the pattern rules](${PATTERNS_README}): which patterns to prefer, which never to use, and how charts are coloured.
 `;
 }
 

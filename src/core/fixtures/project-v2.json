@@ -32,35 +32,21 @@
       "display": {
         "source": "google",
         "family": "Brygada 1918",
-        "weights": [
-          400,
-          500,
-          600,
-          700
-        ],
+        "weights": [400, 500, 600, 700],
         "variable": true,
         "category": "serif"
       },
       "body": {
         "source": "google",
         "family": "Schibsted Grotesk",
-        "weights": [
-          400,
-          500,
-          600,
-          700,
-          800,
-          900
-        ],
+        "weights": [400, 500, 600, 700, 800, 900],
         "variable": true,
         "category": "sans-serif"
       },
       "mono": {
         "source": "google",
         "family": "Fragment Mono",
-        "weights": [
-          400
-        ],
+        "weights": [400],
         "variable": false,
         "category": "monospace"
       }

@@ -63,3 +63,11 @@ export function chartLegendHtml(data: ChartData): string {
   );
   return `<ul style="list-style: none; margin: 0; padding: 0; font-size: var(--type-caption-size); color: var(--muted-foreground);">${items.join("")}</ul>`;
 }
+
+// Fixed locale so exports are the same on every machine.
+const NUMBER_FORMAT = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 });
+
+/** Formats a chart or table number with thousands separators, e.g. 12400 → "12,400". */
+export function formatNumber(value: number): string {
+  return NUMBER_FORMAT.format(value);
+}
