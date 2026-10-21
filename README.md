@@ -16,6 +16,8 @@ flowchart LR
   Store -->|Project| Compile["compile()<br/>src/core"]
   Compile -->|preview vars| UI
   UI --> Gallery["Preview, component gallery<br/>+ pattern library<br/>scoped brand vars"]
+  Gallery --> Scenes["Scenes: dashboard, landing,<br/>report, slide"]
+  ClaudeDefault["Claude default look<br/>(comparison only)"] -->|split view| Scenes
   Compile -->|diagnostics| UI
   Compile -->|"files: tokens, README,<br/>components/*/preview.html,<br/>Patterns-*/preview.html"| Zip["Export zip"]
 ```
@@ -58,7 +60,8 @@ bun run build          # static bundle in dist/
 | `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                      |
 | `src/shape/`         | Shape and space step: spacing, corner radii, shadow builder and borders.                                                                                                           |
 | `src/logos/`         | Logo step: upload light/dark logo variants, and the logo shown in the preview.                                                                                                     |
-| `src/preview/`       | Live preview with a light/dark toggle and a type specimen; `PreviewSurface` scopes brand variables and hosts Dialog/Select portals.                                                |
+| `src/preview/`       | Live preview: light/dark toggle, scene tabs, split view against the Claude default; `PreviewSurface` scopes brand variables and hosts Dialog/Select portals.                       |
+| `src/scenes/`        | Preview scenes (basics, dashboard, landing page, report, 16:9 slide), drawn only with tokens and honouring component placement rules.                                              |
 | `src/gallery/`       | Component gallery: all twelve components live in the brand's style, light and dark.                                                                                                |
 | `src/charts/`        | `BrandChart`: recharts bar chart in the brand's `--chart-n` colours, shared by gallery and scenes.                                                                                 |
 | `src/patterns/`      | Pattern library: charts, tables, diagrams and other artifact building blocks in the brand, each set to preferred, allowed or never.                                                |

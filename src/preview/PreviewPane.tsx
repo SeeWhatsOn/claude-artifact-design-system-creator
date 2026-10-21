@@ -1,84 +1,87 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useId, useState } from "react";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { claudeDefaultPreview } from "@/core/claude-default";
 import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
-import { cn } from "@/lib/utils";
+import { useGoogleFonts } from "@/fonts/use-google-fonts";
 import { PreviewLogo } from "@/logos/PreviewLogo";
+import { SCENES, type SceneEntry } from "@/scenes/scene-registry";
+import { useProjectStore } from "@/state/project-store";
 import { PreviewSurface } from "./PreviewSurface";
 import { PreviewThemeSwitch } from "./PreviewThemeSwitch";
-import { TypeSpecimen } from "./TypeSpecimen";
+import { SplitView } from "./SplitView";
 
-// Controls and surfaces read the compiled shape variables, so corners, borders and shadows follow the project.
-const CONTROL = "rounded-[var(--radius-control)]";
-const SURFACE = "border-[length:var(--border-width)]";
-
-/** Renders sample components with the compiled colours applied as CSS variables scoped to the preview. */
+/** The live preview: scene tabs drawn with the compiled variables, optionally beside the Claude default look. */
 export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMap }) {
   const [chosen, setChosen] = useState<ThemeId>("light");
+  const [scene, setScene] = useState(SCENES[0]?.id ?? "");
+  const [compare, setCompare] = useState(false);
+  const compareId = useId();
+  const components = useProjectStore(state => state.project.components);
+  const name = useProjectStore(state => state.project.meta.name);
   // Falls back to light when the project's dark theme is switched off.
   const theme = dark ? chosen : "light";
   const vars = theme === "dark" && dark ? dark : light;
+  const claude = compare ? claudeDefaultPreview() : undefined;
+  useGoogleFonts(claude?.fontsToLoad ?? []);
+
+  function mine({ Scene }: SceneEntry) {
+    return <Scene components={components} logo={<PreviewLogo theme={theme} />} />;
+  }
 
   return (
     <section aria-label="Preview" className="space-y-3">
-      <PreviewThemeSwitch value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
-      <PreviewSurface
-        vars={vars}
-        dark={theme === "dark"}
-        className="flex flex-col gap-[var(--space-5)] p-[var(--space-5)]"
-      >
-        <PreviewLogo theme={theme} />
-        <div className="flex flex-wrap items-center gap-[var(--space-2)]">
-          <Button className={CONTROL}>Save changes</Button>
-          <Button variant="secondary" className={CONTROL}>
-            Preview
-          </Button>
-          <Button variant="ghost" className={CONTROL}>
-            Cancel
-          </Button>
-          <span className="rounded-[var(--radius-pill)] bg-secondary px-[var(--space-2)] py-0.5 text-xs text-secondary-foreground">
-            Draft
-          </span>
+      <div className="flex flex-wrap items-center gap-3">
+        <PreviewThemeSwitch value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
+        <div className="flex items-center gap-2">
+          <Switch id={compareId} checked={compare} onCheckedChange={setCompare} />
+          <Label htmlFor={compareId}>Compare with Claude default</Label>
         </div>
-        <Card className={cn("max-w-sm", SURFACE, "rounded-[var(--radius-card)] shadow-[var(--shadow-raised)]")}>
-          <CardHeader>
-            <CardTitle>Monthly report</CardTitle>
-            <CardDescription>Sent to your team on the first of each month.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Label htmlFor="preview-email">Work email</Label>
-            <Input id="preview-email" type="email" placeholder="name@company.com" className={CONTROL} />
-          </CardContent>
-          <CardFooter>
-            <Button variant="outline" className={CONTROL}>
-              Subscribe
-            </Button>
-          </CardFooter>
-        </Card>
-        <div
-          role="presentation"
-          className={cn(
-            "max-w-xs space-y-[var(--space-3)] bg-card p-[var(--space-4)] text-card-foreground",
-            SURFACE,
-            "rounded-[var(--radius-dialog)] shadow-[var(--shadow-overlay)]",
-          )}
+      </div>
+      <Tabs value={scene} onValueChange={setScene}>
+        <TabsList
+          aria-label="Scene"
+          className="flex-wrap justify-start group-data-[orientation=horizontal]/tabs:h-auto"
         >
-          <p className="font-medium">Delete this report?</p>
-          <p className="text-sm text-muted-foreground">It will be removed for everyone on your team.</p>
-          <div className="flex justify-end gap-[var(--space-2)]">
-            <Button variant="ghost" size="sm" className={CONTROL}>
-              Keep it
-            </Button>
-            <Button variant="destructive" size="sm" className={CONTROL}>
-              Delete report
-            </Button>
-          </div>
-        </div>
-        <TypeSpecimen />
-      </PreviewSurface>
+          {SCENES.map(entry => (
+            <TabsTrigger key={entry.id} value={entry.id} className="h-8 flex-none">
+              {entry.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {SCENES.map(entry => (
+          <TabsContent key={entry.id} value={entry.id}>
+            {claude ? (
+              <SplitView
+                dark={theme === "dark"}
+                sides={[
+                  {
+                    label: "Claude default",
+                    vars: (theme === "dark" && claude.dark) || claude.light,
+                    // No placement rules and no logo: the generic look as Claude would draw it unprompted.
+                    content: <entry.Scene components={{}} logo={<Wordmark name={name} />} />,
+                  },
+                  { label: "Your brand", vars, content: mine(entry) },
+                ]}
+              />
+            ) : (
+              <PreviewSurface vars={vars} dark={theme === "dark"} className="overflow-hidden">
+                {mine(entry)}
+              </PreviewSurface>
+            )}
+          </TabsContent>
+        ))}
+      </Tabs>
     </section>
+  );
+}
+
+function Wordmark({ name }: { name: string }) {
+  return (
+    <span className="text-lg font-semibold" style={{ fontFamily: "var(--font-display)" }}>
+      {name}
+    </span>
   );
 }
