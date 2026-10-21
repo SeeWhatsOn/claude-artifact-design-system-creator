@@ -1,5 +1,6 @@
 import { setDensity, setSpacingBase } from "@/core/shape-editing";
 import type { Shape } from "@/core/project";
+import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
 
 const BASES: { value: Shape["spacingBase"]; label: string }[] = [
@@ -33,6 +34,11 @@ export function SpacingControls() {
         value={density}
         onChange={value => updateProject(project => setDensity(project, value))}
       />
+      <p className="flex gap-2">
+        <TokenName>--space-1</TokenName>
+        <TokenName>to</TokenName>
+        <TokenName>--space-6</TokenName>
+      </p>
     </fieldset>
   );
 }

@@ -1,6 +1,7 @@
 import { setRadius } from "@/core/shape-editing";
 import type { Shape } from "@/core/project";
 import { DEFAULT_RADII } from "@/core/shape/default-shape";
+import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
 
 type Radii = NonNullable<Shape["radii"]>;
@@ -23,20 +24,23 @@ export function RadiusControls() {
       {!radii && <p className="text-sm text-muted-foreground">Not chosen yet. Set any corner to start.</p>}
       <div className="grid gap-2 sm:grid-cols-2">
         {RADII.map(({ key, label, max }) => (
-          <label key={key} className="flex items-center gap-2 text-sm">
-            <span className="w-32">{label} (px)</span>
-            <input
-              type="number"
-              min={0}
-              max={max}
-              value={radii?.[key] ?? DEFAULT_RADII[key]}
-              onChange={event => {
-                const value = Number(event.target.value);
-                if (Number.isFinite(value) && value >= 0) updateProject(project => setRadius(project, key, value));
-              }}
-              className="w-20 rounded-md border bg-background px-2 py-1"
-            />
-          </label>
+          <span key={key} className="flex flex-wrap items-center gap-2">
+            <label className="flex items-center gap-2 text-sm">
+              <span className="w-32">{label} (px)</span>
+              <input
+                type="number"
+                min={0}
+                max={max}
+                value={radii?.[key] ?? DEFAULT_RADII[key]}
+                onChange={event => {
+                  const value = Number(event.target.value);
+                  if (Number.isFinite(value) && value >= 0) updateProject(project => setRadius(project, key, value));
+                }}
+                className="w-20 rounded-md border bg-background px-2 py-1"
+              />
+            </label>
+            <TokenName>--radius-{key}</TokenName>
+          </span>
         ))}
       </div>
     </fieldset>

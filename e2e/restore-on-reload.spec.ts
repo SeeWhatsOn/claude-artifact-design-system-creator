@@ -17,14 +17,16 @@ function savedProject(page: Page) {
   );
 }
 
-test("reloading restores the last palette and dark-theme choice", async ({ page }) => {
+test("reloading restores the last palette, dark-theme choice and step", async ({ page }) => {
   await page.goto("./");
+  await page.getByRole("button", { name: /^Next/ }).click();
   await page.getByRole("radio", { name: /Ledger Ink/ }).check({ force: true });
   await page.getByRole("checkbox", { name: "Include a dark theme" }).uncheck();
   // Autosave is asynchronous, so wait for it to land before reloading.
   await expect.poll(() => savedProject(page)).toMatchObject({ state: { project: { darkEnabled: false } } });
 
   await page.reload();
+  await expect(page.getByRole("heading", { level: 2, name: "Colour" })).toBeVisible();
   await expect(page.getByRole("radio", { name: /Ledger Ink/ })).toBeChecked();
   await expect(page.getByRole("checkbox", { name: "Include a dark theme" })).not.toBeChecked();
 });
@@ -34,6 +36,7 @@ test("the app still works when storage is blocked, as in some private windows", 
     Object.defineProperty(window, "indexedDB", { get: () => undefined });
   });
   await page.goto("./");
+  await page.getByRole("button", { name: /^Next/ }).click();
   await page.getByRole("radio", { name: /Ledger Ink/ }).check({ force: true });
   await expect(page.getByRole("radio", { name: /Ledger Ink/ })).toBeChecked();
   await expect(page.getByRole("button", { name: "Download Design System" })).toBeEnabled();

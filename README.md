@@ -4,6 +4,7 @@ A browser app for building a brand design system visually, then exporting it as 
 
 ```mermaid
 flowchart LR
+  Shell["App shell<br/>steps rail + step registry"] -->|current step| UI
   UI["React UI<br/>(src/App.tsx)"] -->|updateProject| Store["Project store<br/>zustand + zundo"]
   Store <-->|autosave / restore| IDB[(IndexedDB)]
   UI -->|uploaded fonts| Assets["Asset store<br/>zustand"]
@@ -50,6 +51,7 @@ bun run build          # static bundle in dist/
 | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/core/`          | Framework-free design core: Project schema and migrations, palettes, colour engine, contrast checks, exporters, project file, `compile()`. No React or zustand (enforced by lint). |
 | `src/state/`         | The project store (undo/redo) and the asset store for uploaded files, both saved to IndexedDB.                                                                                     |
+| `src/shell/`         | App shell: guided steps rail, step registry (`step-panels.tsx`, add a step's controls here), Advanced toggle, phone preview sheet, export checklist.                               |
 | `src/colour/`        | Colour step: palette picker, seed editor with randomise and locks, dark-theme switch, advanced overrides.                                                                          |
 | `src/type/`          | Type step: font pairing picker, size and ratio controls, per-role editor.                                                                                                          |
 | `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                      |
@@ -63,7 +65,7 @@ bun run build          # static bundle in dist/
 | `src/components/ui/` | shadcn components.                                                                                                                                                                 |
 | `src/lib/`           | shadcn's `cn()` helper.                                                                                                                                                            |
 | `styles/`            | Global Tailwind and shadcn theme CSS.                                                                                                                                              |
-| `test/`              | `bun test` preload (happy-dom, jest-dom matchers).                                                                                                                                 |
+| `test/`              | `bun test` preload (happy-dom, jest-dom matchers) and the `openStep` helper.                                                                                                       |
 | `e2e/`               | Playwright specs and the static server that mimics GitHub Pages.                                                                                                                   |
 | `docs/`              | Spec and design research.                                                                                                                                                          |
 | `.github/workflows/` | CI and Pages deploy.                                                                                                                                                               |
