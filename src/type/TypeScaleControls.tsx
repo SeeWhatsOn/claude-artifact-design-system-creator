@@ -1,7 +1,10 @@
 import { setRatio, setTypeBase } from "@/core/type-editing";
 import { TYPE_RATIOS } from "@/core/type/type-scale";
+import { SegmentedControl } from "@/shell/SegmentedControl";
 import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
+
+const RATIO_OPTIONS = TYPE_RATIOS.map(option => ({ value: option.ratio, label: `${option.name} ${option.ratio}` }));
 
 /** The body size and the named ratio every text role is generated from. */
 export function TypeScaleControls() {
@@ -28,23 +31,12 @@ export function TypeScaleControls() {
         </label>
         <TokenName>--type-body-size</TokenName>
       </span>
-      <div role="radiogroup" aria-label="Size contrast" className="flex flex-wrap gap-1 text-sm">
-        {TYPE_RATIOS.map(option => (
-          <label
-            key={option.ratio}
-            className="cursor-pointer rounded-md border px-2 py-1 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-2 has-focus-visible:ring-ring"
-          >
-            <input
-              type="radio"
-              name="type-ratio"
-              checked={option.ratio === ratio}
-              onChange={() => updateProject(project => setRatio(project, option.ratio))}
-              className="sr-only"
-            />
-            {option.name} {option.ratio}
-          </label>
-        ))}
-      </div>
+      <SegmentedControl
+        label="Size contrast"
+        options={RATIO_OPTIONS}
+        value={ratio}
+        onChange={value => updateProject(project => setRatio(project, value))}
+      />
       <TokenName>type.ratio = {ratio}</TokenName>
     </fieldset>
   );

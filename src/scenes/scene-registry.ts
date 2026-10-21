@@ -3,7 +3,7 @@ import { BasicsScene } from "./BasicsScene";
 import { DashboardScene } from "./DashboardScene";
 import { LandingScene } from "./LandingScene";
 import { ReportScene } from "./ReportScene";
-import type { SceneProps } from "./scene-styles";
+import type { SceneProps } from "./scene-props";
 import { SlideScene } from "./SlideScene";
 
 /** One preview tab: a page drawn with the brand's tokens. */

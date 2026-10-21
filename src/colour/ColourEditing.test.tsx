@@ -53,11 +53,25 @@ test("randomise explains when the locked colours can't pass", async () => {
   expect(screen.getByRole("alert")).toHaveTextContent("Text on the main button colour");
 });
 
+test("the shell's Advanced toggle reveals the per-token colour controls; there's no separate switch", async () => {
+  render(<App />);
+  await openStep("Colour");
+  expect(screen.queryByRole("region", { name: "Advanced colours" })).toBeNull();
+  expect(screen.queryByRole("checkbox", { name: "Show advanced colour controls" })).toBeNull();
+
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
+  const advanced = screen.getByRole("region", { name: "Advanced colours" });
+  expect(within(advanced).getByText("card")).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
+  expect(screen.queryByRole("region", { name: "Advanced colours" })).toBeNull();
+});
+
 test("advanced mode pins and resets a single derived colour", async () => {
   render(<App />);
   await openStep("Colour");
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
   const advanced = screen.getByRole("region", { name: "Advanced colours" });
-  await userEvent.click(within(advanced).getByRole("checkbox", { name: "Show advanced colour controls" }));
   fireEvent.input(within(advanced).getByLabelText("card (light)"), { target: { value: "#abcdef" } });
   expect(previewVars()).toHaveStyle({ "--card": "#abcdef" });
 

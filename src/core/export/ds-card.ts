@@ -1,15 +1,12 @@
+import type { CatalogueEntry } from "../catalogue-entry";
 import type { CssVarMap } from "../compile";
+import { escapeHtml } from "../escape-html";
 
 /** The brand's variables for each theme, as compiled for the live preview. */
 export type CardVars = { light: CssVarMap; dark?: CssVarMap };
 
 /** One static preview card: where it sits on the Design System page, and its markup. */
-export type DsCard = {
-  /** The page group the card is listed under, e.g. "Actions". */
-  group: string;
-  /** Card height in px on the Design System page. */
-  height: number;
-  title: string;
+export type DsCard = Pick<CatalogueEntry, "group" | "height" | "title"> & {
   /** Extra CSS for this card. Must read colours and sizes through `var(--token)` only. */
   css?: string;
   /** The card's body markup. */
@@ -57,16 +54,6 @@ ${card.body}
 </body>
 </html>
 `;
-}
-
-/** Escapes text for use inside HTML, for brand names and other user-written strings. */
-export function escapeHtml(text: string): string {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
 
 function declarations(vars: CssVarMap, indent: number): string {

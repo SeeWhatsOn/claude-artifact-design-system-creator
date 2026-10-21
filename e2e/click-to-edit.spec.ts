@@ -34,6 +34,32 @@ test("a card's corner radius can be edited with the keyboard alone", async ({ pa
   await expect(card).toBeFocused();
 });
 
+test("on desktop the inspector is a docked side panel that covers neither the step controls nor the preview", async ({
+  page,
+}) => {
+  await page.goto("./");
+  const preview = page.getByRole("region", { name: "Preview" });
+  await preview.getByRole("switch", { name: "Edit mode" }).click();
+  await preview.getByRole("button", { name: "Edit card style" }).first().click();
+
+  const inspector = page.getByRole("complementary", { name: "Card" });
+  await expect(inspector).toBeVisible();
+  await page.waitForFunction(() => document.getAnimations().length === 0);
+  const panel = await inspector.boundingBox();
+  const steps = await page.getByRole("region", { name: "Step" }).boundingBox();
+  const shown = await preview.boundingBox();
+  const viewport = page.viewportSize();
+  if (!panel || !steps || !shown || !viewport) throw new Error("Layout not measured");
+
+  // Full height and flush with the right edge of the window.
+  expect(panel.y).toBe(0);
+  expect(panel.height).toBe(viewport.height);
+  expect(panel.x + panel.width).toBe(viewport.width);
+  // The page makes room for it rather than sliding under it.
+  expect(steps.x + steps.width).toBeLessThanOrEqual(panel.x);
+  expect(shown.x + shown.width).toBeLessThanOrEqual(panel.x);
+});
+
 test("edit mode and the inspector have no accessibility violations", async ({ page }) => {
   await page.goto("./");
   const preview = page.getByRole("region", { name: "Preview" });

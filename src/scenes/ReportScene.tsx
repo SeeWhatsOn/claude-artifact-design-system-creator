@@ -5,7 +5,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { SAMPLE_CHART_DATA } from "@/core/charts/chart-svg";
 import { roleStyle } from "@/preview/role-style";
 import { cn } from "@/lib/utils";
-import { CARD, type SceneProps } from "./scene-styles";
+import { CARD } from "@/preview/brand-classes";
+import type { SceneProps } from "./scene-props";
 
 const REGIONS = [
   { region: "North", accounts: "412", change: "+8%" },

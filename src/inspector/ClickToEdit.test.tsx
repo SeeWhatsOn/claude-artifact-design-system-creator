@@ -62,6 +62,16 @@ test("Enter opens the inspector with focus inside; Escape closes it and returns 
   expect(document.activeElement).toBe(target);
 });
 
+test("a button's inspector edits the label text style, and preview buttons follow it", async () => {
+  render(<App />);
+  await startEditing();
+  await userEvent.click(within(preview()).getAllByRole("button", { name: "Edit button style" })[0]!);
+  const inspector = screen.getByRole("complementary", { name: "Button" });
+  const text = within(inspector).getByRole("region", { name: "Label text" });
+  fireEvent.change(within(text).getByLabelText("Size (px)"), { target: { value: "19" } });
+  expect(previewVars()).toHaveStyle({ "--type-label-size": "19px" });
+});
+
 test("a heading opens the editor for its own text role", async () => {
   render(<App />);
   await startEditing();

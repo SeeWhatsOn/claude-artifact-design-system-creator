@@ -1,4 +1,4 @@
-import { escapeHtml } from "../export/ds-card";
+import { escapeHtml } from "../escape-html";
 
 /** A box in a diagram: top-left corner, size, label, and whether it's the one highlighted node. */
 type DiagramNode = { x: number; y: number; w: number; h: number; label: string; strong?: boolean };

@@ -2,7 +2,7 @@ import { setBorders, setShadow } from "@/core/shape-editing";
 import type { Shape } from "@/core/project";
 import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
-import { Choice } from "./SpacingControls";
+import { SegmentedControl } from "@/shell/SegmentedControl";
 
 type ShadowNumber = "opacity" | "blur" | "spread" | "x" | "y";
 
@@ -27,8 +27,8 @@ export function DepthControls() {
   return (
     <fieldset className="space-y-3">
       <legend className="mb-2 text-sm font-medium">Depth and borders</legend>
-      <Choice
-        name="Depth"
+      <SegmentedControl
+        label="Depth"
         options={[
           { value: "shadow", label: "Shadows" },
           { value: "flat", label: "Flat, no shadows" },
@@ -69,8 +69,8 @@ export function DepthControls() {
           ))}
         </div>
       )}
-      <Choice
-        name="Borders"
+      <SegmentedControl
+        label="Borders"
         options={BORDERS}
         value={borders}
         onChange={value => updateProject(project => setBorders(project, value))}

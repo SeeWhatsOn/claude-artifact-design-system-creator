@@ -1,7 +1,8 @@
 import type { FileMap } from "../compile";
 import { COMPONENTS, type ComponentInfo } from "../components/component-catalogue";
 import { COMPONENT_CSS, componentPreviewBody } from "../components/component-previews";
-import { dsCard, escapeHtml, type CardVars } from "./ds-card";
+import { escapeHtml } from "../escape-html";
+import { dsCard, type CardVars } from "./ds-card";
 
 const COVER_SWATCHES = ["primary", "accent", "success", "warning", "destructive", "chart-1", "chart-2", "chart-3"];
 

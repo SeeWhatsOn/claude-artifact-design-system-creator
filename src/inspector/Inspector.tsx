@@ -9,8 +9,8 @@ import { useShellStore } from "@/shell/shell-store";
 import { InspectorControl } from "./InspectorControl";
 
 /**
- * The main controls for one clicked preview element, each headed with what else it changes. A panel docked
- * bottom left on wide screens (over the step controls, so the preview stays in view) and a bottom sheet on phones.
+ * The main controls for one clicked preview element, each headed with what else it changes. A full-height side
+ * panel docked at the right on wide screens (the app shell makes room for it) and a bottom sheet on phones.
  * Portalled to the body so it sits above the phone preview sheet and stays a top-level landmark.
  * Focus starts on its title; Escape closes it.
  */
@@ -40,7 +40,8 @@ export function Inspector({ target, vars, onClose }: { target: EditTarget; vars:
     <aside
       ref={panel}
       aria-labelledby={titleId}
-      className="fixed inset-x-0 bottom-0 z-[60] max-h-[60vh] space-y-4 overflow-y-auto rounded-t-xl border-t bg-background p-4 text-foreground shadow-lg lg:inset-x-auto lg:left-4 lg:bottom-4 lg:max-h-[75vh] lg:w-96 lg:rounded-xl lg:border"
+      data-inspector
+      className="fixed inset-x-0 bottom-0 z-[60] max-h-[60vh] space-y-4 overflow-y-auto rounded-t-xl border-t bg-background p-4 text-foreground shadow-lg lg:inset-y-0 lg:left-auto lg:w-96 lg:max-h-none lg:rounded-none lg:border-t-0 lg:border-l lg:shadow-none"
     >
       <div className="flex items-center justify-between gap-2">
         <h2 ref={title} id={titleId} tabIndex={-1} className="text-base font-semibold outline-none">

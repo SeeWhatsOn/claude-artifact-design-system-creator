@@ -1,3 +1,5 @@
+import type { CatalogueEntry } from "../catalogue-entry";
+
 /** The twelve components every brand is shown and exported with. */
 export const COMPONENT_NAMES = [
   "Button",
@@ -18,18 +20,7 @@ export const COMPONENT_NAMES = [
 export type ComponentName = (typeof COMPONENT_NAMES)[number];
 
 /** What Claude is told about a component: where its card sits, a one-sentence summary and usage rules. */
-export type ComponentInfo = {
-  name: ComponentName;
-  /** The name people read, e.g. "Checkbox and switch". */
-  title: string;
-  /** The Design System page group, e.g. "Actions". */
-  group: string;
-  /** Preview card height in px. */
-  height: number;
-  /** One sentence, ending in a full stop: the Design System page shows it as the summary. */
-  summary: string;
-  rules: string[];
-};
+export type ComponentInfo = CatalogueEntry & { name: ComponentName };
 
 /** Every component's summary and rules, in gallery order. */
 export const COMPONENTS: readonly ComponentInfo[] = [

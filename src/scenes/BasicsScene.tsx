@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { TypeSpecimen } from "@/preview/TypeSpecimen";
 import { cn } from "@/lib/utils";
-import { CONTROL, type SceneProps } from "./scene-styles";
+import { CONTROL } from "@/preview/brand-classes";
+import type { SceneProps } from "./scene-props";
 
 const SURFACE = "border-[length:var(--border-width)]";
 

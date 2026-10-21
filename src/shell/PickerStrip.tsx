@@ -1,4 +1,15 @@
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+
+/**
+ * The strip's options with the choice current when the strip appeared moved to the front, so it is visible first.
+ * The order is fixed from then on: re-sorting on every pick would move options under the pointer and make arrow keys
+ * jump around.
+ */
+export function usePinnedFirst<T extends { id: string }>(options: readonly T[], selected: string | null): T[] {
+  const [pinned] = useState(selected);
+  const first = options.find(option => option.id === pinned);
+  return first ? [first, ...options.filter(option => option !== first)] : [...options];
+}
 
 // Relative so each hidden radio stays inside the strip; otherwise it escapes the scroll clip and widens the page.
 /** Classes for one option in a picker strip: a fixed-width card that shows when it is chosen or focused. */

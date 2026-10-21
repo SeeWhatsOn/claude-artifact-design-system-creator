@@ -1,4 +1,4 @@
-import { barChartSvg, chartLegendHtml, SAMPLE_CHART_DATA } from "../charts/chart-svg";
+import { barChartWithLegendHtml, SAMPLE_CHART_DATA } from "../charts/chart-svg";
 import type { ComponentName } from "./component-catalogue";
 
 /**
@@ -147,8 +147,7 @@ const BODIES: Record<ComponentName, string> = {
 </nav>`,
   Chart: `<div class="ds-card ds-stack">
   <h3 class="ds-title">Visitors by source</h3>
-  ${barChartSvg(SAMPLE_CHART_DATA, { title: "Visitors by source, January to April" })}
-  ${chartLegendHtml(SAMPLE_CHART_DATA)}
+  ${barChartWithLegendHtml(SAMPLE_CHART_DATA, { title: "Visitors by source, January to April" })}
 </div>`,
 };
 

@@ -1,6 +1,6 @@
 import type { FileMap } from "../compile";
 import { COMPONENT_CSS } from "../components/component-previews";
-import { CHART_RULES, PATTERNS, type PatternInfo } from "../patterns/pattern-catalogue";
+import { CHART_RULES, PATTERNS, type PatternInfo, type PatternState } from "../patterns/pattern-catalogue";
 import { patternState } from "../patterns/pattern-editing";
 import { PATTERN_CSS, patternPreviewBody } from "../patterns/pattern-previews";
 import type { Project } from "../project";
@@ -40,7 +40,7 @@ export function claudePatternFiles(project: Project, vars: CardVars): FileMap {
 }
 
 function patternsReadme(project: Project): string {
-  const inState = (state: string) => PATTERNS.filter(pattern => patternState(project, pattern.id) === state);
+  const inState = (state: PatternState) => PATTERNS.filter(pattern => patternState(project, pattern.id) === state);
   const section = (patterns: PatternInfo[]) =>
     patterns.length === 0
       ? "None."

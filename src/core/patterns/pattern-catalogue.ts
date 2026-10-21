@@ -1,4 +1,5 @@
 // No imports from project.ts: the project schema reads PATTERN_IDS from here.
+import type { CatalogueEntry } from "../catalogue-entry";
 
 /** Every artifact pattern, by id. The order is the library's order. */
 export const PATTERN_IDS = [
@@ -39,18 +40,10 @@ export type PatternState = (typeof PATTERN_STATES)[number];
 export type PatternGroup = "Data" | "Diagrams" | "Text and layout" | "Navigation";
 
 /** What Claude is told about a pattern: its name, when to use it, and what to use instead when it's banned. */
-export type PatternInfo = {
+export type PatternInfo = CatalogueEntry<PatternGroup> & {
   id: PatternId;
-  /** The name people read, e.g. "Bar chart". */
-  title: string;
   /** Export folder suffix: `components/Patterns-<name>/`. */
   name: string;
-  group: PatternGroup;
-  /** Preview card height in px. */
-  height: number;
-  /** One sentence, ending in a full stop. */
-  summary: string;
-  rules: string[];
   /** What to use when this pattern is set to never, e.g. "a bar chart". */
   instead: string;
   defaultState: PatternState;

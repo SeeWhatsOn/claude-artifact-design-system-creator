@@ -1,4 +1,4 @@
-import { barChartSvg, chartLegendHtml, SAMPLE_CHART_DATA } from "../charts/chart-svg";
+import { barChartWithLegendHtml, SAMPLE_CHART_DATA } from "../charts/chart-svg";
 import { donutChartSvg, SAMPLE_DONUT_DATA } from "../charts/donut-chart-svg";
 import { lineChartSvg, SAMPLE_TREND_DATA, sparklineSvg } from "../charts/line-chart-svg";
 import { architectureSvg, flowchartSvg, hierarchySvg, timelineSvg } from "./diagram-svg";
@@ -46,8 +46,7 @@ export const PATTERN_CSS = `.pt-title { margin: 0; font-family: var(--type-h3-fa
 const BODIES: Record<PatternId, string> = {
   "bar-chart": `<figure class="ds-stack" style="margin: 0;">
   <figcaption class="pt-title">Visitors by source</figcaption>
-  ${barChartSvg(SAMPLE_CHART_DATA, { title: "Bar chart: visitors by source, January to April" })}
-  ${chartLegendHtml(SAMPLE_CHART_DATA)}
+  ${barChartWithLegendHtml(SAMPLE_CHART_DATA, { title: "Bar chart: visitors by source, January to April" })}
 </figure>`,
   "line-chart": `<figure class="ds-stack" style="margin: 0;">
   <figcaption class="pt-title">Orders by channel</figcaption>
