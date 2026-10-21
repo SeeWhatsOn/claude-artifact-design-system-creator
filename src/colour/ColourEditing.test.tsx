@@ -4,19 +4,23 @@ import userEvent from "@testing-library/user-event";
 import { App } from "@/App";
 import { createDefaultProject } from "@/core/default-project";
 import { setSeed } from "@/core/palette-editing";
+import { resetShell } from "@/shell/shell-store";
 import { projectStore } from "@/state/project-store";
+import { openStep } from "../../test/open-step";
 
 beforeEach(() => {
   projectStore.setState({ project: createDefaultProject() });
   projectStore.temporal.getState().clear();
+  resetShell();
 });
 
 function previewVars() {
   return screen.getByRole("region", { name: "Preview" }).querySelector("[data-preview-theme]");
 }
 
-test("seed pickers have plain-language labels and update the preview", () => {
+test("seed pickers have plain-language labels and update the preview", async () => {
   render(<App />);
+  await openStep("Colour");
   fireEvent.input(screen.getByLabelText("Main colour"), { target: { value: "#be1e2d" } });
   expect(previewVars()).toHaveStyle({ "--primary": "#be1e2d" });
   for (const label of [
@@ -32,6 +36,7 @@ test("seed pickers have plain-language labels and update the preview", () => {
 
 test("randomise keeps locked colours", async () => {
   render(<App />);
+  await openStep("Colour");
   await userEvent.click(screen.getByRole("checkbox", { name: "Lock main colour" }));
   await userEvent.click(screen.getByRole("button", { name: "Randomise unlocked colours" }));
   const { seeds } = projectStore.getState().project.palette;
@@ -42,15 +47,31 @@ test("randomise keeps locked colours", async () => {
 test("randomise explains when the locked colours can't pass", async () => {
   projectStore.setState({ project: setSeed(createDefaultProject(), "brandForeground", "#2a7cc4") });
   render(<App />);
+  await openStep("Colour");
   await userEvent.click(screen.getByRole("checkbox", { name: "Lock main colour" }));
   await userEvent.click(screen.getByRole("button", { name: "Randomise unlocked colours" }));
   expect(screen.getByRole("alert")).toHaveTextContent("Text on the main button colour");
 });
 
+test("the shell's Advanced toggle reveals the per-token colour controls; there's no separate switch", async () => {
+  render(<App />);
+  await openStep("Colour");
+  expect(screen.queryByRole("region", { name: "Advanced colours" })).toBeNull();
+  expect(screen.queryByRole("checkbox", { name: "Show advanced colour controls" })).toBeNull();
+
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
+  const advanced = screen.getByRole("region", { name: "Advanced colours" });
+  expect(within(advanced).getByText("card")).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
+  expect(screen.queryByRole("region", { name: "Advanced colours" })).toBeNull();
+});
+
 test("advanced mode pins and resets a single derived colour", async () => {
   render(<App />);
+  await openStep("Colour");
+  await userEvent.click(screen.getByRole("checkbox", { name: "Advanced: show token names" }));
   const advanced = screen.getByRole("region", { name: "Advanced colours" });
-  await userEvent.click(within(advanced).getByRole("checkbox", { name: "Show advanced colour controls" }));
   fireEvent.input(within(advanced).getByLabelText("card (light)"), { target: { value: "#abcdef" } });
   expect(previewVars()).toHaveStyle({ "--card": "#abcdef" });
 
@@ -58,8 +79,9 @@ test("advanced mode pins and resets a single derived colour", async () => {
   expect(projectStore.getState().project.palette.overrides.light).toEqual({});
 });
 
-test("a palette that resembles a generic look shows a warning", () => {
+test("a palette that resembles a generic look shows a warning", async () => {
   projectStore.setState({ project: setSeed(createDefaultProject(), "brand", "#6366f1") });
   render(<App />);
+  await openStep("Colour");
   expect(screen.getByRole("region", { name: "Checks" })).toHaveTextContent("purple-indigo");
 });

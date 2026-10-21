@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { migrate } from "./migrations";
+import { PATTERN_IDS, PATTERN_STATES } from "./patterns/pattern-catalogue";
 
 /** The schemaVersion this build writes. Bump it and add a migration when the shape changes. */
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 
 // Stored lowercase so every colour compares and exports the same way however it was typed.
 const hexColour = z
@@ -124,6 +125,8 @@ const projectSchema = z.object({
     emoji: z.enum(["never", "sparingly", "freely"]),
   }),
   bans: z.record(z.string(), z.boolean()),
+  // Only the user's choices are stored; a pattern left out uses its catalogue default.
+  patterns: z.partialRecord(z.enum(PATTERN_IDS), z.enum(PATTERN_STATES)),
   logos: z.array(
     z.object({ id: z.string(), name: z.string(), assetId: z.string(), theme: z.enum(["light", "dark", "any"]) }),
   ),
@@ -155,6 +158,9 @@ export type TextRole = (typeof TEXT_ROLES)[number];
 
 /** Spacing, corners, depth and borders. */
 export type Shape = Project["shape"];
+
+/** One uploaded logo variant; `theme` is the theme it shows on ("any" for both). Bytes live in the asset store. */
+export type Logo = Project["logos"][number];
 
 /** A user's changes to one text role; anything left out is generated from the scale. */
 export type RoleOverride = z.infer<typeof roleOverrideSchema>;

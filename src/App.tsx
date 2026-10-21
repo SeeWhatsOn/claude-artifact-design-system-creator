@@ -1,28 +1,21 @@
 import { useMemo } from "react";
-import { ColourOverrides } from "@/colour/ColourOverrides";
-import { DarkThemeToggle } from "@/colour/DarkThemeToggle";
-import { PalettePicker } from "@/colour/PalettePicker";
-import { SeedEditor } from "@/colour/SeedEditor";
 import { compile } from "@/core/compile";
 import { DiagnosticsPanel } from "@/diagnostics/DiagnosticsPanel";
 import { DownloadButton } from "@/export/DownloadButton";
-import { FontChooser } from "@/fonts/FontChooser";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
 import { useUploadedFonts } from "@/fonts/use-uploaded-fonts";
 import { UndoRedoButtons } from "@/history/UndoRedoButtons";
 import { PreviewPane } from "@/preview/PreviewPane";
 import { ProjectFileButtons } from "@/project-file/ProjectFileButtons";
-import { DepthControls } from "@/shape/DepthControls";
-import { RadiusControls } from "@/shape/RadiusControls";
-import { SpacingControls } from "@/shape/SpacingControls";
+import { AdvancedToggle } from "@/shell/AdvancedToggle";
+import { PreviewSheet } from "@/shell/PreviewSheet";
+import { ProgressRail } from "@/shell/ProgressRail";
+import { StepView } from "@/shell/StepView";
 import { useAssetStore } from "@/state/asset-store";
 import { useProjectStore } from "@/state/project-store";
-import { PairingPicker } from "@/type/PairingPicker";
-import { RoleEditor } from "@/type/RoleEditor";
-import { TypeScaleControls } from "@/type/TypeScaleControls";
 import "./index.css";
 
-/** The app shell: controls on the left, live preview and checks on the right. */
+/** The app shell: steps rail, the current step's controls, and the live preview with checks beside them. */
 export function App() {
   const project = useProjectStore(state => state.project);
   const assets = useAssetStore(state => state.assets);
@@ -32,48 +25,24 @@ export function App() {
   useUploadedFonts(preview.fontsToLoad, assets);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    // The inspector is portalled to the body, so the shell spots it with :has() and makes room for the docked panel.
+    <div className="min-h-screen bg-background text-foreground lg:[body:has([data-inspector])_&]:pr-96">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <h1 className="text-lg font-semibold">Brandkit for Claude</h1>
         <div className="flex flex-wrap items-center gap-2">
+          <AdvancedToggle />
           <UndoRedoButtons />
           <ProjectFileButtons />
           <DownloadButton disabled={blocked} />
         </div>
       </header>
-      <main className="grid gap-6 p-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
-        <div className="space-y-8">
-          <section aria-labelledby="step-colour" className="space-y-4">
-            <h2 id="step-colour" className="text-base font-semibold">
-              Colour
-            </h2>
-            <PalettePicker />
-            <SeedEditor />
-            <DarkThemeToggle />
-            <ColourOverrides light={preview.light} dark={preview.dark} />
-          </section>
-          <section aria-labelledby="step-type" className="space-y-4">
-            <h2 id="step-type" className="text-base font-semibold">
-              Type
-            </h2>
-            <PairingPicker />
-            <FontChooser />
-            <TypeScaleControls />
-            <RoleEditor vars={preview.light} />
-          </section>
-          <section aria-labelledby="step-shape" className="space-y-4">
-            <h2 id="step-shape" className="text-base font-semibold">
-              Shape and space
-            </h2>
-            <SpacingControls />
-            <RadiusControls />
-            <DepthControls />
-          </section>
-        </div>
-        <div className="space-y-6">
+      <main className="grid gap-6 p-4 pb-20 lg:pb-4 lg:grid-cols-[12rem_minmax(0,1fr)_minmax(0,1.2fr)]">
+        <ProgressRail diagnostics={diagnostics} />
+        <StepView preview={preview} diagnostics={diagnostics} />
+        <PreviewSheet>
           <PreviewPane light={preview.light} dark={preview.dark} />
           <DiagnosticsPanel diagnostics={diagnostics} />
-        </div>
+        </PreviewSheet>
       </main>
     </div>
   );

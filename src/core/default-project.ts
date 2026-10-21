@@ -65,6 +65,7 @@ export function createDefaultProject(): Project {
       emoji: "never",
     },
     bans: {},
+    patterns: {},
     logos: [],
     snapshots: [],
   };

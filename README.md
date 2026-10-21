@@ -4,9 +4,10 @@ A browser app for building a brand design system visually, then exporting it as 
 
 ```mermaid
 flowchart LR
+  Shell["App shell<br/>steps rail + step registry"] -->|current step| UI
   UI["React UI<br/>(src/App.tsx)"] -->|updateProject| Store["Project store<br/>zustand + zundo"]
   Store <-->|autosave / restore| IDB[(IndexedDB)]
-  UI -->|uploaded fonts| Assets["Asset store<br/>zustand"]
+  UI -->|uploaded fonts + logos| Assets["Asset store<br/>zustand"]
   Assets <-->|autosave / restore| IDB
   Assets -->|bytes| Compile
   Search["Font search<br/>Fontsource API, cached"] --> UI
@@ -14,8 +15,13 @@ flowchart LR
   Store <-->|open / save| File["Project file<br/>.brandkit.json"]
   Store -->|Project| Compile["compile()<br/>src/core"]
   Compile -->|preview vars| UI
+  UI --> Gallery["Preview, component gallery<br/>+ pattern library<br/>scoped brand vars"]
+  Gallery --> Scenes["Scenes: dashboard, landing,<br/>report, slide"]
+  ClaudeDefault["Claude default look<br/>(comparison only)"] -->|split view| Scenes
+  Scenes -->|"edit mode: data-edit targets"| Inspector["Inspector<br/>edit targets from src/core"]
+  Inspector -->|updateProject| Store
   Compile -->|diagnostics| UI
-  Compile -->|files| Zip["Export zip"]
+  Compile -->|"files: tokens, README,<br/>components/*/preview.html,<br/>Patterns-*/preview.html"| Zip["Export zip"]
 ```
 
 ## Stack
@@ -46,24 +52,31 @@ bun run build          # static bundle in dist/
 
 ## Folder map
 
-| Folder               | What's in it                                                                                                                                                                       |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/core/`          | Framework-free design core: Project schema and migrations, palettes, colour engine, contrast checks, exporters, project file, `compile()`. No React or zustand (enforced by lint). |
-| `src/state/`         | The project store (undo/redo) and the asset store for uploaded files, both saved to IndexedDB.                                                                                     |
-| `src/colour/`        | Colour step: palette picker, seed editor with randomise and locks, dark-theme switch, advanced overrides.                                                                          |
-| `src/type/`          | Type step: font pairing picker, size and ratio controls, per-role editor.                                                                                                          |
-| `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                      |
-| `src/shape/`         | Shape and space step: spacing, corner radii, shadow builder and borders.                                                                                                           |
-| `src/preview/`       | Live preview with a light/dark toggle and a type specimen.                                                                                                                         |
-| `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
-| `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
-| `src/export/`        | Zip building and the Download Design System button.                                                                                                                                |
-| `src/project-file/`  | Open and save project buttons.                                                                                                                                                     |
-| `src/history/`       | Undo/redo buttons and shortcuts.                                                                                                                                                   |
-| `src/components/ui/` | shadcn components.                                                                                                                                                                 |
-| `src/lib/`           | shadcn's `cn()` helper.                                                                                                                                                            |
-| `styles/`            | Global Tailwind and shadcn theme CSS.                                                                                                                                              |
-| `test/`              | `bun test` preload (happy-dom, jest-dom matchers).                                                                                                                                 |
-| `e2e/`               | Playwright specs and the static server that mimics GitHub Pages.                                                                                                                   |
-| `docs/`              | Spec and design research.                                                                                                                                                          |
-| `.github/workflows/` | CI and Pages deploy.                                                                                                                                                               |
+| Folder               | What's in it                                                                                                                                                                           |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/core/`          | Framework-free design core: Project schema and migrations, palettes, colour engine, contrast checks, exporters, project file, `compile()`. No React or zustand (enforced by lint).     |
+| `src/state/`         | The project store (undo/redo) and the asset store for uploaded files, both saved to IndexedDB.                                                                                         |
+| `src/shell/`         | App shell: guided steps rail, step registry (`step-panels.tsx`, add a step's controls here), Advanced toggle, phone preview sheet, picker strip, `SegmentedControl`, export checklist. |
+| `src/colour/`        | Colour step: palette picker, seed editor with randomise and locks, dark-theme switch, advanced overrides.                                                                              |
+| `src/type/`          | Type step: font pairing picker, size and ratio controls, per-role editor.                                                                                                              |
+| `src/fonts/`         | Font loading (Google Fonts and uploads), Google Fonts search and font upload.                                                                                                          |
+| `src/shape/`         | Shape and space step: spacing, corner radii, shadow builder and borders.                                                                                                               |
+| `src/logos/`         | Logo step: upload light/dark logo variants, and the logo shown in the preview.                                                                                                         |
+| `src/preview/`       | Live preview: light/dark toggle, scene tabs, Claude default split view; `PreviewSurface` scopes brand vars and portals; `brand-classes.ts` shape classes.                              |
+| `src/inspector/`     | Click-to-edit: edit-mode overlays on each `data-edit` part of a scene, and the inspector of shared step controls (targets and "changes all…" text live in `src/core/edit-targets.ts`). |
+| `src/scenes/`        | Preview scenes (basics, dashboard, landing page, report, 16:9 slide), drawn only with tokens and honouring component placement rules.                                                  |
+| `src/gallery/`       | Component gallery: all twelve components live in the brand's style, light and dark; `demos/` holds one file per group.                                                                 |
+| `src/charts/`        | `BrandChart`: recharts bar chart in the brand's `--chart-n` colours, shared by gallery and scenes.                                                                                     |
+| `src/patterns/`      | Pattern library: charts, tables, diagrams and other artifact building blocks in the brand, each set to preferred, allowed or never.                                                    |
+| `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                                  |
+| `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                                  |
+| `src/export/`        | Zip building and the Download Design System button.                                                                                                                                    |
+| `src/project-file/`  | Open and save project buttons.                                                                                                                                                         |
+| `src/history/`       | Undo/redo buttons and shortcuts.                                                                                                                                                       |
+| `src/components/ui/` | shadcn components.                                                                                                                                                                     |
+| `src/lib/`           | shadcn's `cn()` helper.                                                                                                                                                                |
+| `styles/`            | Global Tailwind and shadcn theme CSS.                                                                                                                                                  |
+| `test/`              | `bun test` preload (happy-dom, jest-dom matchers) and the `openStep` helper.                                                                                                           |
+| `e2e/`               | Playwright specs and the static server that mimics GitHub Pages.                                                                                                                       |
+| `docs/`              | Spec and design research.                                                                                                                                                              |
+| `.github/workflows/` | CI and Pages deploy.                                                                                                                                                                   |

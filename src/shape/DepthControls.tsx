@@ -1,7 +1,8 @@
 import { setBorders, setShadow } from "@/core/shape-editing";
 import type { Shape } from "@/core/project";
+import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
-import { Choice } from "./SpacingControls";
+import { SegmentedControl } from "@/shell/SegmentedControl";
 
 type ShadowNumber = "opacity" | "blur" | "spread" | "x" | "y";
 
@@ -26,8 +27,8 @@ export function DepthControls() {
   return (
     <fieldset className="space-y-3">
       <legend className="mb-2 text-sm font-medium">Depth and borders</legend>
-      <Choice
-        name="Depth"
+      <SegmentedControl
+        label="Depth"
         options={[
           { value: "shadow", label: "Shadows" },
           { value: "flat", label: "Flat, no shadows" },
@@ -35,6 +36,7 @@ export function DepthControls() {
         value={shadow.enabled ? "shadow" : "flat"}
         onChange={value => updateProject(project => setShadow(project, { enabled: value === "shadow" }))}
       />
+      <TokenName>--shadow-raised, --shadow-overlay</TokenName>
       {shadow.enabled && (
         <div className="grid gap-2 sm:grid-cols-2">
           <label className="flex items-center gap-2 text-sm">
@@ -67,12 +69,13 @@ export function DepthControls() {
           ))}
         </div>
       )}
-      <Choice
-        name="Borders"
+      <SegmentedControl
+        label="Borders"
         options={BORDERS}
         value={borders}
         onChange={value => updateProject(project => setBorders(project, value))}
       />
+      <TokenName>--border-width</TokenName>
     </fieldset>
   );
 }

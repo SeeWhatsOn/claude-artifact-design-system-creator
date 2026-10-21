@@ -1,10 +1,11 @@
 "use client";
 
-import * as SelectPrimitive from "@radix-ui/react-select";
+import { Select as SelectPrimitive } from "radix-ui";
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { usePortalContainer } from "@/preview/portal-container";
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -49,10 +50,12 @@ function SelectContent({
   children,
   position = "popper",
   align = "center",
+  container,
   ...props
-}: React.ComponentProps<typeof SelectPrimitive.Content>) {
+}: React.ComponentProps<typeof SelectPrimitive.Content> & { container?: HTMLElement | null }) {
+  const scoped = usePortalContainer();
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={container ?? scoped}>
       <SelectPrimitive.Content
         data-slot="select-content"
         className={cn(
