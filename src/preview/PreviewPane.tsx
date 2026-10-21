@@ -1,11 +1,14 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { claudeDefaultPreview } from "@/core/claude-default";
 import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
+import type { EditTarget } from "@/core/edit-targets";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
+import { EditableScene } from "@/inspector/EditableScene";
+import { Inspector } from "@/inspector/Inspector";
 import { PreviewLogo } from "@/logos/PreviewLogo";
 import { SCENES, type SceneEntry } from "@/scenes/scene-registry";
 import { useProjectStore } from "@/state/project-store";
@@ -19,6 +22,11 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
   const [scene, setScene] = useState(SCENES[0]?.id ?? "");
   const [compare, setCompare] = useState(false);
   const compareId = useId();
+  const editId = useId();
+  const [editing, setEditing] = useState(false);
+  const [selected, setSelected] = useState<EditTarget | null>(null);
+  // The overlay that opened the inspector, so Escape can hand focus back to it.
+  const opener = useRef<HTMLElement | null>(null);
   const components = useProjectStore(state => state.project.components);
   const name = useProjectStore(state => state.project.meta.name);
   // Falls back to light when the project's dark theme is switched off.
@@ -27,8 +35,29 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
   const claude = compare ? claudeDefaultPreview() : undefined;
   useGoogleFonts(claude?.fontsToLoad ?? []);
 
+  // Only my brand is editable; the Claude default side of a comparison stays as it is.
   function mine({ Scene }: SceneEntry) {
-    return <Scene components={components} logo={<PreviewLogo theme={theme} />} />;
+    return (
+      <EditableScene
+        editing={editing}
+        onEdit={(target, element) => {
+          opener.current = element;
+          setSelected(target);
+        }}
+      >
+        <Scene components={components} logo={<PreviewLogo theme={theme} />} />
+      </EditableScene>
+    );
+  }
+
+  function closeInspector() {
+    setSelected(null);
+    if (opener.current?.isConnected) opener.current.focus();
+  }
+
+  function toggleEditing(on: boolean) {
+    setEditing(on);
+    if (!on) setSelected(null);
   }
 
   return (
@@ -39,7 +68,14 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
           <Switch id={compareId} checked={compare} onCheckedChange={setCompare} />
           <Label htmlFor={compareId}>Compare with Claude default</Label>
         </div>
+        <div className="flex items-center gap-2">
+          <Switch id={editId} checked={editing} onCheckedChange={toggleEditing} />
+          <Label htmlFor={editId}>Edit mode</Label>
+        </div>
       </div>
+      {editing && (
+        <p className="text-sm text-muted-foreground">Click or tab to any outlined part of the preview to edit it.</p>
+      )}
       <Tabs value={scene} onValueChange={setScene}>
         <TabsList
           aria-label="Scene"
@@ -74,6 +110,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
           </TabsContent>
         ))}
       </Tabs>
+      {selected && <Inspector key={selected.title} target={selected} vars={light} onClose={closeInspector} />}
     </section>
   );
 }

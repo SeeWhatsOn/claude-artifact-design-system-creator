@@ -4,10 +4,18 @@ import { roleStyle } from "./role-style";
 export function TypeSpecimen() {
   return (
     <div className="space-y-2">
-      <p style={roleStyle("display")}>Quarterly review</p>
-      <h2 style={roleStyle("h1")}>Revenue held steady</h2>
-      <h3 style={roleStyle("h2")}>What changed this quarter</h3>
-      <h4 style={roleStyle("h3")}>New customers by region</h4>
+      <p data-edit="heading" data-edit-role="display" style={roleStyle("display")}>
+        Quarterly review
+      </p>
+      <h2 data-edit="heading" data-edit-role="h1" style={roleStyle("h1")}>
+        Revenue held steady
+      </h2>
+      <h3 data-edit="heading" data-edit-role="h2" style={roleStyle("h2")}>
+        What changed this quarter
+      </h3>
+      <h4 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")}>
+        New customers by region
+      </h4>
       <p style={roleStyle("lead")}>
         Growth came from two regions, while churn stayed flat for the third quarter running.
       </p>

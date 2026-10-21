@@ -30,7 +30,7 @@ export function LandingScene({ components, logo }: SceneProps) {
         )}
       </div>
       <section className="max-w-xl flex flex-col gap-[var(--space-4)]">
-        <h2 data-edit="heading" style={roleStyle("display")} className="m-0">
+        <h2 data-edit="heading" data-edit-role="display" style={roleStyle("display")} className="m-0">
           Plan your week in one place
         </h2>
         <p style={roleStyle("lead")} className="m-0 text-muted-foreground">
@@ -54,7 +54,7 @@ export function LandingScene({ components, logo }: SceneProps) {
             data-edit="card"
             className={cn(CARD, "flex flex-col gap-[var(--space-2)] bg-card p-[var(--space-4)] text-card-foreground")}
           >
-            <h3 data-edit="heading" style={roleStyle("h3")} className="m-0">
+            <h3 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0">
               {feature.title}
             </h3>
             <p style={roleStyle("body")} className="m-0">
@@ -71,7 +71,7 @@ export function LandingScene({ components, logo }: SceneProps) {
           "max-w-md flex flex-col gap-[var(--space-3)] bg-card p-[var(--space-4)] text-card-foreground",
         )}
       >
-        <h3 data-edit="heading" style={roleStyle("h3")} className="m-0">
+        <h3 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0">
           Get the monthly letter
         </h3>
         <div className="flex flex-col gap-[var(--space-1)]">

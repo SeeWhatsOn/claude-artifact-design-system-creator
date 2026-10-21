@@ -2,21 +2,9 @@ import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import type { CssVarMap } from "@/core/compile";
 import { FAMILY_SLOTS, TEXT_ROLES, type FamilySlot, type RoleOverride, type TextRole } from "@/core/project";
+import { TEXT_ROLE_LABELS as ROLE_LABELS } from "@/core/type/role-labels";
 import { clearRoleOverride, setRoleOverride } from "@/core/type-editing";
 import { useProjectStore } from "@/state/project-store";
-
-const ROLE_LABELS: Record<TextRole, string> = {
-  display: "Display",
-  h1: "Heading 1",
-  h2: "Heading 2",
-  h3: "Heading 3",
-  lead: "Lead paragraph",
-  body: "Body",
-  small: "Small",
-  caption: "Caption",
-  label: "Label",
-  code: "Code",
-};
 
 const SLOT_LABELS: Record<FamilySlot, string> = { display: "Headings font", body: "Body font", mono: "Code font" };
 
@@ -30,11 +18,13 @@ const CASES: { value: NonNullable<RoleOverride["case"]>; label: string }[] = [
 /**
  * Fine-tunes one text role. Fields show the compiled values (read from the preview variables);
  * anything changed here becomes an override that survives ratio and base changes.
+ * Given `fixedRole` (as in the preview inspector), it edits only that role and hides the role picker.
  */
-export function RoleEditor({ vars }: { vars: CssVarMap }) {
+export function RoleEditor({ vars, fixedRole }: { vars: CssVarMap; fixedRole?: TextRole }) {
   const type = useProjectStore(state => state.project.type);
   const updateProject = useProjectStore(state => state.updateProject);
-  const [role, setRole] = useState<TextRole>("h1");
+  const [chosen, setRole] = useState<TextRole>("h1");
+  const role = fixedRole ?? chosen;
   const override = type.roleOverrides[role] ?? {};
   const read = (name: string) => Number.parseFloat(vars[`--type-${role}-${name}`] ?? "0");
   const size = read("size");
@@ -44,20 +34,24 @@ export function RoleEditor({ vars }: { vars: CssVarMap }) {
 
   return (
     <fieldset className="space-y-3">
-      <legend className="mb-2 text-sm font-medium">Adjust a text role</legend>
-      <Field label="Text role">
-        <select
-          value={role}
-          onChange={event => setRole(TEXT_ROLES.find(option => option === event.target.value) ?? "h1")}
-          className={INPUT}
-        >
-          {TEXT_ROLES.map(option => (
-            <option key={option} value={option}>
-              {ROLE_LABELS[option]}
-            </option>
-          ))}
-        </select>
-      </Field>
+      <legend className={fixedRole ? "sr-only" : "mb-2 text-sm font-medium"}>
+        {fixedRole ? ROLE_LABELS[fixedRole] : "Adjust a text role"}
+      </legend>
+      {!fixedRole && (
+        <Field label="Text role">
+          <select
+            value={role}
+            onChange={event => setRole(TEXT_ROLES.find(option => option === event.target.value) ?? "h1")}
+            className={INPUT}
+          >
+            {TEXT_ROLES.map(option => (
+              <option key={option} value={option}>
+                {ROLE_LABELS[option]}
+              </option>
+            ))}
+          </select>
+        </Field>
+      )}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label="Font">
           <select
