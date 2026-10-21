@@ -58,7 +58,12 @@ export function compile(project: Project, { now = new Date(), assets = {} }: Com
     ...checkUploadedFonts(project.type, assets),
   ];
   const fonts = bundledFonts(project.type, assets);
-  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics, fonts });
+  const files = claudeDesignSystemFiles(project, themes, {
+    now,
+    diagnostics,
+    fonts,
+    cardVars: { light: preview.light, ...(preview.dark && { dark: preview.dark }) },
+  });
   return { preview, diagnostics, files };
 }
 
