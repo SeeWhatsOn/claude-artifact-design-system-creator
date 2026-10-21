@@ -1,8 +1,9 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
+// Relative so each hidden radio stays inside the strip; otherwise it escapes the scroll clip and widens the page.
 /** Classes for one option in a picker strip: a fixed-width card that shows when it is chosen or focused. */
 export const STRIP_OPTION =
-  "flex shrink-0 cursor-pointer snap-start rounded-md border p-2 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-2 has-focus-visible:ring-ring";
+  "relative flex shrink-0 cursor-pointer snap-start rounded-md border p-2 has-checked:border-primary has-checked:bg-accent has-focus-visible:ring-2 has-focus-visible:ring-ring";
 
 /**
  * A radio group laid out as one horizontally scrolling row, so a long list of choices takes one line.
