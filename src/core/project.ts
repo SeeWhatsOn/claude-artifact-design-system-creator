@@ -156,6 +156,9 @@ export type TextRole = (typeof TEXT_ROLES)[number];
 /** Spacing, corners, depth and borders. */
 export type Shape = Project["shape"];
 
+/** One uploaded logo variant; `theme` is the theme it shows on ("any" for both). Bytes live in the asset store. */
+export type Logo = Project["logos"][number];
+
 /** A user's changes to one text role; anything left out is generated from the scale. */
 export type RoleOverride = z.infer<typeof roleOverrideSchema>;
 

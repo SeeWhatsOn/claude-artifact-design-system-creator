@@ -9,9 +9,11 @@ function pageOverflow(page: Page) {
 test("no step scrolls sideways at 360px", async ({ page }) => {
   await page.goto("./");
   const next = page.getByRole("button", { name: /^Next/ });
-  for (let step = 0; step < 8; step++) {
-    expect(await pageOverflow(page), `step ${step + 1}`).toBeLessThanOrEqual(0);
-    if (step < 7) await next.click();
+  // Walks every step: Next disappears on the last one.
+  for (let step = 1; ; step++) {
+    expect(await pageOverflow(page), `step ${step}`).toBeLessThanOrEqual(0);
+    if (!(await next.isVisible())) break;
+    await next.click();
   }
 });
 

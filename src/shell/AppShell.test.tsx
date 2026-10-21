@@ -3,6 +3,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { App } from "@/App";
 import { createDefaultProject } from "@/core/default-project";
+import { STEPS } from "@/core/steps";
 import { projectStore } from "@/state/project-store";
 import { resetShell } from "./shell-store";
 
@@ -27,7 +28,7 @@ async function next() {
 test("the guided path starts at Start and Next walks through every step in order", async () => {
   render(<App />);
   const seen = [currentStepTitle()];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 1; i < STEPS.length; i++) {
     await next();
     seen.push(currentStepTitle());
   }
@@ -36,6 +37,7 @@ test("the guided path starts at Start and Next walks through every step in order
     "Colour",
     "Type",
     "Shape and space",
+    "Logos",
     "Components and rules",
     "Voice",
     "Bans review",
@@ -55,7 +57,7 @@ test("before the first pass only reached steps open from the rail; afterwards ev
   expect(within(rail()).getByRole("button", { name: /^Colour/ })).toBeEnabled();
   expect(within(rail()).getByRole("button", { name: /^Type/ })).toBeDisabled();
 
-  for (let i = 0; i < 7; i++) await next();
+  for (let i = 1; i < STEPS.length; i++) await next();
   for (const button of within(rail()).getAllByRole("button")) expect(button).toBeEnabled();
   await userEvent.click(within(rail()).getByRole("button", { name: /^Type/ }));
   expect(currentStepTitle()).toBe("Type");
@@ -68,7 +70,7 @@ function withFaintButtonText() {
 }
 
 async function finishFirstPass() {
-  for (let i = 0; i < 7; i++) await next();
+  for (let i = 1; i < STEPS.length; i++) await next();
 }
 
 test("the rail marks steps that block export", () => {

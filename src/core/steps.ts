@@ -4,6 +4,7 @@ export const STEPS = [
   { id: "colour", label: "Colour" },
   { id: "type", label: "Type" },
   { id: "shape", label: "Shape and space" },
+  { id: "logos", label: "Logos" },
   { id: "components", label: "Components and rules" },
   { id: "voice", label: "Voice" },
   { id: "bans", label: "Bans review" },

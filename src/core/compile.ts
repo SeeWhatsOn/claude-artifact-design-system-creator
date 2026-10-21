@@ -2,6 +2,7 @@ import { checkContrast } from "./colour/contrast-check";
 import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-theme";
 import { checkPaletteTells } from "./colour/palette-tells";
 import { claudeDesignSystemFiles, type ExportTheme } from "./export/claude-design-system";
+import { bundledLogos, checkLogos } from "./logos/bundled-logos";
 import { colourVars, fontsToLoad, shapeVars, typeVars } from "./preview-vars";
 import type { FontRef, Project } from "./project";
 import type { ProjectAssets } from "./project-file";
@@ -55,9 +56,11 @@ export function compile(project: Project, { now = new Date(), assets = {} }: Com
     ...checkShape(project.shape),
     ...checkFlaggedFonts(project.type),
     ...checkUploadedFonts(project.type, assets),
+    ...checkLogos(project.logos, assets),
   ];
   const fonts = bundledFonts(project.type, assets);
-  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics, fonts });
+  const logos = bundledLogos(project.logos, assets);
+  const files = claudeDesignSystemFiles(project, themes, { now, diagnostics, fonts, logos });
   return { preview, diagnostics, files };
 }
 
