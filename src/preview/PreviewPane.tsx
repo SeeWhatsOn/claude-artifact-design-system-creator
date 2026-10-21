@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,8 @@ import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
 import { PreviewLogo } from "@/logos/PreviewLogo";
+import { PreviewSurface } from "./PreviewSurface";
+import { PreviewThemeSwitch } from "./PreviewThemeSwitch";
 import { TypeSpecimen } from "./TypeSpecimen";
 
 // Controls and surfaces read the compiled shape variables, so corners, borders and shadows follow the project.
@@ -22,33 +24,11 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
 
   return (
     <section aria-label="Preview" className="space-y-3">
-      <div role="radiogroup" aria-label="Preview theme" className="inline-flex rounded-md border p-0.5 text-sm">
-        {(["light", "dark"] as const).map(option => (
-          <label
-            key={option}
-            className="cursor-pointer rounded px-3 py-1 has-checked:bg-secondary has-disabled:cursor-not-allowed has-disabled:opacity-50 has-focus-visible:ring-2 has-focus-visible:ring-ring"
-          >
-            <input
-              type="radio"
-              name="preview-theme"
-              value={option}
-              checked={theme === option}
-              disabled={option === "dark" && !dark}
-              onChange={() => setChosen(option)}
-              className="sr-only"
-            />
-            {option === "light" ? "Light" : "Dark"}
-          </label>
-        ))}
-      </div>
-      {/* Scoped vars: the app's own chrome keeps its theme while the preview shows the user's. */}
-      <div
-        data-preview-theme
-        style={{ ...(vars as CSSProperties), fontFamily: "var(--font-body)" }}
-        className={cn(
-          "flex flex-col gap-[var(--space-5)] rounded-lg border bg-background p-[var(--space-5)] text-foreground",
-          theme === "dark" && "dark",
-        )}
+      <PreviewThemeSwitch value={theme} onChange={setChosen} darkAvailable={Boolean(dark)} />
+      <PreviewSurface
+        vars={vars}
+        dark={theme === "dark"}
+        className="flex flex-col gap-[var(--space-5)] p-[var(--space-5)]"
       >
         <PreviewLogo theme={theme} />
         <div className="flex flex-wrap items-center gap-[var(--space-2)]">
@@ -98,7 +78,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
           </div>
         </div>
         <TypeSpecimen />
-      </div>
+      </PreviewSurface>
     </section>
   );
 }

@@ -6,7 +6,10 @@ import type { BundledLogo } from "../logos/bundled-logos";
 import { LOGO_GROUP, logoAssetGroup, logoGroupReadme, logoRules } from "../logos/logo-docs";
 import type { Project } from "../project";
 import type { BundledFont } from "../type/uploaded-fonts";
+import { COMPONENTS } from "../components/component-catalogue";
+import { claudeComponentFiles } from "./claude-components";
 import { claudeTokens, COLOUR_USAGE } from "./claude-tokens";
+import type { CardVars } from "./ds-card";
 
 /** The Design System type contract this export is written against (see docs/research/01). */
 export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
@@ -14,8 +17,17 @@ export const DESIGN_SYSTEM_CONTRACT = "0.2.47";
 /** One theme's colours, ready to export. */
 export type ExportTheme = { id: ThemeId; name: string; colours: ThemeColours };
 
-/** What the export needs besides the project: when it was made, the checks it should be honest about, and uploads. */
-export type ExportContext = { now: Date; diagnostics: Diagnostic[]; fonts: BundledFont[]; logos?: BundledLogo[] };
+/**
+ * What the export needs besides the project: when it was made, the checks it should be honest about, uploads,
+ * and the compiled CSS variables that static preview cards inline.
+ */
+export type ExportContext = {
+  now: Date;
+  diagnostics: Diagnostic[];
+  fonts: BundledFont[];
+  logos?: BundledLogo[];
+  cardVars: CardVars;
+};
 
 /**
  * Builds the `project/` files that Claude's Design System artifact type reads, without any file the page generates.
@@ -24,7 +36,7 @@ export type ExportContext = { now: Date; diagnostics: Diagnostic[]; fonts: Bundl
 export function claudeDesignSystemFiles(
   project: Project,
   themes: ExportTheme[],
-  { now, diagnostics, fonts, logos = [] }: ExportContext,
+  { now, diagnostics, fonts, logos = [], cardVars }: ExportContext,
 ): FileMap {
   const at = now.toISOString();
   // Per the type's instructions, the page fills in sections, blobs and docs.sections itself.
@@ -52,6 +64,8 @@ export function claudeDesignSystemFiles(
     "project/README.md": readme(project, themes, diagnostics, logos),
     ...Object.fromEntries(fonts.map(font => [`project/fonts/${font.file}`, font.bytes])),
     ...logoFiles(project, logos),
+    // Components end with the Cover, which the type asks to be written last before the index.
+    ...claudeComponentFiles(project.meta.name, cardVars),
     "project/design-system.json": toJsonFile(index),
   };
 }
@@ -93,6 +107,10 @@ ${shapeRules(project)}
 ## Logo
 
 ${logoRules(project, logos)}
+
+## Components
+
+${COMPONENTS.map(component => `- [${component.title}](components/${component.name}/README.md): ${component.summary}`).join("\n")}
 `;
 }
 

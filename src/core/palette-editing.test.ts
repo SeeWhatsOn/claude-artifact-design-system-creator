@@ -26,10 +26,11 @@ function codes(project: Project) {
 
 describe("editing a seed", () => {
   test("changes the preview and leaves the curated palette behind", () => {
+    const before = compile(createDefaultProject()).preview.light["--chart-2"];
     const project = setSeed(createDefaultProject(), "accent", "#2A9D8F");
     expect(project.palette.seeds.accent).toBe("#2a9d8f");
     expect(project.palette.paletteId).toBeNull();
-    expect(compile(project).preview.light["--chart-2"]).toBe("#2a9d8f");
+    expect(compile(project).preview.light["--chart-2"]).not.toBe(before);
   });
 
   test("the grey tint feeds every derived surface", () => {

@@ -6,6 +6,7 @@ import { SeedEditor } from "@/colour/SeedEditor";
 import type { CompileOutput, Diagnostic } from "@/core/compile";
 import type { StepId } from "@/core/steps";
 import { FontChooser } from "@/fonts/FontChooser";
+import { ComponentGallery } from "@/gallery/ComponentGallery";
 import { LogoEditor } from "@/logos/LogoEditor";
 import { DepthControls } from "@/shape/DepthControls";
 import { RadiusControls } from "@/shape/RadiusControls";
@@ -40,7 +41,11 @@ export const STEP_PANELS: StepPanel[] = [
   { step: "shape", id: "radius", Panel: RadiusControls },
   { step: "shape", id: "depth", Panel: DepthControls },
   { step: "logos", id: "logo-editor", Panel: LogoEditor },
-  { step: "components", id: "components-coming-soon", Panel: ComingSoon },
+  {
+    step: "components",
+    id: "component-gallery",
+    Panel: ({ preview }) => <ComponentGallery light={preview.light} dark={preview.dark} />,
+  },
   { step: "voice", id: "voice-coming-soon", Panel: ComingSoon },
   { step: "bans", id: "bans-coming-soon", Panel: ComingSoon },
   { step: "export", id: "export-checklist", Panel: ExportChecklist },

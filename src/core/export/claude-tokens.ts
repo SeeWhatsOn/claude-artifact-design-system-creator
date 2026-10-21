@@ -30,7 +30,7 @@ export const COLOUR_USAGE: [ColourToken, string][] = [
   ["success-foreground", "Text on success."],
   ["warning", "Caution status that needs attention but isn't an error."],
   ["warning-foreground", "Text on warning."],
-  ["chart-1", "First chart series; the brand colour."],
+  ["chart-1", "First chart series, in the brand hue. Chart colours step in lightness, so use them in order."],
   ["chart-2", "Second chart series."],
   ["chart-3", "Third chart series."],
   ["chart-4", "Fourth chart series."],

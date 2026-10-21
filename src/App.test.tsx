@@ -62,7 +62,8 @@ test("turning the dark theme off removes the dark preview", async () => {
   render(<App />);
   await openStep("Colour");
   await userEvent.click(screen.getByRole("checkbox", { name: "Include a dark theme" }));
-  expect(screen.getByRole("radio", { name: "Dark" })).toBeDisabled();
+  const preview = screen.getByRole("region", { name: "Preview" });
+  expect(within(preview).getByRole("radio", { name: "Dark" })).toBeDisabled();
   expect(projectStore.getState().project.darkEnabled).toBe(false);
 });
 

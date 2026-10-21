@@ -59,6 +59,39 @@ const indexSchema = z.object({
   lastChange: z.object({ by: z.string(), at: z.iso.datetime(), via: z.string(), note: z.string() }),
 });
 
+// The twelve components every export documents (SPEC story 42), by folder name.
+const COMPONENTS = [
+  "Button",
+  "Badge",
+  "Card",
+  "Input",
+  "Select",
+  "Checkbox",
+  "Tabs",
+  "Table",
+  "Alert",
+  "Dialog",
+  "Sidebar",
+  "Chart",
+];
+const DS_CARD_MARKER = /^<!-- @dsCard group="[A-Za-z][A-Za-z ]*" height=\d+ -->$/;
+
+function readText(files: Record<string, string | Uint8Array>, path: string): string {
+  const contents = files[path];
+  if (typeof contents !== "string") throw new Error(`${path} missing`);
+  return contents;
+}
+
+// Static previews may only use the brand's tokens: every var() they read is defined in the file,
+// and no colour is written anywhere except as a token value.
+function expectTokensOnly(html: string) {
+  const defined = new Set([...html.matchAll(/(--[a-z0-9-]+)\s*:/g)].map(match => match[1]));
+  for (const [, name] of html.matchAll(/var\((--[a-z0-9-]+)/g)) expect(defined).toContain(name);
+  const withoutTokenValues = html.replace(/--[a-z0-9-]+\s*:[^;]*;/g, "");
+  expect(withoutTokenValues).not.toMatch(/#[0-9a-fA-F]{3,8}\b|rgba?\(|oklch\(|hsl\(/);
+  expect(html).not.toMatch(/<script/i);
+}
+
 function readJson(files: Record<string, string | Uint8Array>, path: string): unknown {
   const contents = files[path];
   if (typeof contents !== "string") throw new Error(`${path} missing`);
@@ -100,6 +133,19 @@ describe.each(PALETTES.map(palette => [palette.id]))("%s export", paletteId => {
     }
   });
 
+  test.each(COMPONENTS)("%s has a README that opens with a one-sentence summary", name => {
+    const readme = readText(files, `project/components/${name}/README.md`);
+    const [firstLine = ""] = readme.split("\n");
+    expect(firstLine).toMatch(/^[A-Z][^#.!?]*[.]$/);
+    expect(firstLine.length).toBeLessThanOrEqual(160);
+  });
+
+  test.each([...COMPONENTS, "Cover"])("%s has a static preview card that uses tokens only", name => {
+    const html = readText(files, `project/components/${name}/preview.html`);
+    expect(html.split("\n")[0]).toMatch(DS_CARD_MARKER);
+    expectTokensOnly(html);
+  });
+
   test("the light theme comes first", () => {
     const tokens = tokensFileSchema.parse(readJson(files, "project/tokens.json"));
     expect(tokens.color.themes[0]).toEqual({ id: "light", name: "Light" });
@@ -126,6 +172,17 @@ test("the title and README use the brand name", () => {
 
 test("the index is the last file, as the Design System type asks", () => {
   expect(Object.keys(compile(createDefaultProject()).files).at(-1)).toBe("project/design-system.json");
+});
+
+test("the Cover is written after the components, right before the index", () => {
+  const paths = Object.keys(compile(createDefaultProject()).files);
+  expect(paths.slice(-2)).toEqual(["project/components/Cover/preview.html", "project/design-system.json"]);
+});
+
+test("previews carry dark values when the project has a dark theme", () => {
+  const project = { ...createDefaultProject(), darkEnabled: true };
+  const html = readText(compile(project).files, "project/components/Button/preview.html");
+  expect(html).toContain("prefers-color-scheme: dark");
 });
 
 test("the README only promises 4.5:1 text when every pair reaches it", () => {
