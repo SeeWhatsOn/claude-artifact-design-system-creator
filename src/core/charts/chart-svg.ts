@@ -111,3 +111,8 @@ const NUMBER_FORMAT = new Intl.NumberFormat("en-GB", { maximumFractionDigits: 1 
 export function formatNumber(value: number): string {
   return NUMBER_FORMAT.format(value);
 }
+
+/** A bar chart with its legend underneath, as used by the component card and the bar chart pattern. */
+export function barChartWithLegendHtml(data: ChartData, options: ChartOptions = {}): string {
+  return `${barChartSvg(data, options)}\n  ${chartLegendHtml(data)}`;
+}
