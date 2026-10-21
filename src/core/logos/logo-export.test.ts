@@ -73,7 +73,10 @@ test("the Logos group has a README saying which file goes on which theme, and th
 
 test("two logos that would share a file name get distinct names", () => {
   const project = projectWithLogos();
-  const twins = { ...project, logos: project.logos.map(logo => ({ ...logo, theme: "any" as const, assetId: "png-bytes" })) };
+  const twins = {
+    ...project,
+    logos: project.logos.map(logo => ({ ...logo, theme: "any" as const, assetId: "png-bytes" })),
+  };
   const { files } = compile(twins, { assets });
   expect(Object.keys(files)).toEqual(
     expect.arrayContaining(["project/assets/Logos/acme-mark.png", "project/assets/Logos/acme-mark-2.png"]),

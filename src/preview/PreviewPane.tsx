@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import type { ThemeId } from "@/core/colour/derive-theme";
 import type { CssVarMap } from "@/core/compile";
 import { cn } from "@/lib/utils";
+import { PreviewLogo } from "@/logos/PreviewLogo";
 import { TypeSpecimen } from "./TypeSpecimen";
 
 // Controls and surfaces read the compiled shape variables, so corners, borders and shadows follow the project.
@@ -49,6 +50,7 @@ export function PreviewPane({ light, dark }: { light: CssVarMap; dark?: CssVarMa
           theme === "dark" && "dark",
         )}
       >
+        <PreviewLogo theme={theme} />
         <div className="flex flex-wrap items-center gap-[var(--space-2)]">
           <Button className={CONTROL}>Save changes</Button>
           <Button variant="secondary" className={CONTROL}>

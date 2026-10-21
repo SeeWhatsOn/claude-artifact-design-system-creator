@@ -18,7 +18,9 @@ export function detectLogoFormat(bytes: Uint8Array): LogoFormat | null {
 }
 
 /** The outcome of turning a picked file into one logo. */
-export type LogoUploadResult = { ok: true; logo: Logo; assets: Record<string, Uint8Array> } | { ok: false; error: string };
+export type LogoUploadResult =
+  | { ok: true; logo: Logo; assets: Record<string, Uint8Array> }
+  | { ok: false; error: string };
 
 /** Turns a picked file into a logo for both themes, named after the file, plus the bytes to store. */
 export function prepareLogoUpload(file: { name: string; bytes: Uint8Array }, makeId: () => string): LogoUploadResult {
