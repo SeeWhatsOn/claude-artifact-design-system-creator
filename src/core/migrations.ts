@@ -9,6 +9,7 @@ type ProjectData = Record<string, unknown>;
 const MIGRATIONS: Record<number, (data: ProjectData) => ProjectData> = {
   0: fromV0,
   1: fromV1,
+  2: fromV2,
 };
 
 /** Upgrades raw project data from `version` to `target`, one step at a time. The result is validated afterwards. */
@@ -46,4 +47,9 @@ function fromV1(data: ProjectData): ProjectData {
       borders: shape.borders === "none" ? "none" : "hairline",
     },
   };
+}
+
+// v3 adds artifact pattern choices; an empty map means every pattern keeps its default.
+function fromV2(data: ProjectData): ProjectData {
+  return { ...data, patterns: {} };
 }
