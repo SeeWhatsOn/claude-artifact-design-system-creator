@@ -16,7 +16,7 @@ import { PairingPicker } from "@/type/PairingPicker";
 import { RoleEditor } from "@/type/RoleEditor";
 import { TypeScaleControls } from "@/type/TypeScaleControls";
 import { ExportChecklist } from "./ExportChecklist";
-import { ComingSoon, StartIntro } from "./placeholder-panels";
+import { ComingSoon, StartIntro } from "./PlaceholderPanels";
 
 /** What every step panel receives: the compiled preview and the current diagnostics. */
 export type StepPanelProps = { preview: CompileOutput["preview"]; diagnostics: Diagnostic[] };
