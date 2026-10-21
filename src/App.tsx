@@ -25,7 +25,8 @@ export function App() {
   useUploadedFonts(preview.fontsToLoad, assets);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    // The inspector is portalled to the body, so the shell spots it with :has() and makes room for the docked panel.
+    <div className="min-h-screen bg-background text-foreground lg:[body:has([data-inspector])_&]:pr-96">
       <header className="flex flex-wrap items-center justify-between gap-2 border-b px-4 py-3">
         <h1 className="text-lg font-semibold">Brandkit for Claude</h1>
         <div className="flex flex-wrap items-center gap-2">
