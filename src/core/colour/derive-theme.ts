@@ -1,5 +1,6 @@
 import type { PaletteSeeds } from "../project";
-import { BODY_TEXT_CONTRAST, NON_TEXT_CONTRAST } from "./contrast-levels";
+import { chartColours } from "./chart-colours";
+import { BODY_TEXT_CONTRAST } from "./contrast-levels";
 import { ensureContrast, fitFill, hexToOklch, oklchToHex } from "./oklch";
 
 /** Every derived colour name: the shadcn set plus success, warning and destructive foregrounds. */
@@ -91,8 +92,11 @@ export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId, overrides: Reco
   const destructive = fitFill(seeds.danger, onFill, BODY_TEXT_CONTRAST);
   const success = fitFill(seeds.success, onFill, BODY_TEXT_CONTRAST);
   const warning = fitFill(seeds.warning, onFill, BODY_TEXT_CONTRAST);
-  // Light chart colours are the seeds as given; dark ones are lifted until they stand out from the page.
-  const chart = (seed: string) => (isDark ? ensureContrast(seed, [background], NON_TEXT_CONTRAST) : seed);
+  // Chart series keep the seeds' hues but are spaced by lightness, so they can be told apart.
+  const [chart1, chart2, chart3, chart4, chart5] = chartColours(
+    [seeds.brand, seeds.accent, seeds.success, seeds.warning, seeds.danger],
+    background,
+  );
 
   const derived: ThemeColours = {
     background,
@@ -118,11 +122,11 @@ export function deriveTheme(seeds: PaletteSeeds, theme: ThemeId, overrides: Reco
     border,
     input: border,
     ring: primary,
-    "chart-1": primary,
-    "chart-2": chart(seeds.accent),
-    "chart-3": chart(seeds.success),
-    "chart-4": chart(seeds.warning),
-    "chart-5": chart(seeds.danger),
+    "chart-1": chart1 ?? primary,
+    "chart-2": chart2 ?? primary,
+    "chart-3": chart3 ?? primary,
+    "chart-4": chart4 ?? primary,
+    "chart-5": chart5 ?? primary,
     sidebar,
     "sidebar-foreground": foreground,
     "sidebar-primary": primary,

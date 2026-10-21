@@ -1,3 +1,4 @@
+import { checkChartColours } from "./colour/chart-colours";
 import { checkContrast } from "./colour/contrast-check";
 import { deriveTheme, type ThemeColours, type ThemeId } from "./colour/derive-theme";
 import { checkPaletteTells } from "./colour/palette-tells";
@@ -50,6 +51,7 @@ export function compile(project: Project, { now = new Date(), assets = {} }: Com
   };
   const diagnostics = [
     ...themes.flatMap(theme => checkContrast(theme.colours, theme.id)),
+    ...themes.flatMap(theme => checkChartColours(theme.colours, theme.id)),
     ...checkPaletteTells(project.palette.seeds),
     ...checkShape(project.shape),
     ...checkFlaggedFonts(project.type),
