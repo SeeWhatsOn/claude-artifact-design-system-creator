@@ -9,8 +9,8 @@ test("the Claude default look is set in Inter", () => {
   expect(preview.fontsToLoad.map(font => font.family)).toEqual(["Inter", "JetBrains Mono"]);
 });
 
-test("the Claude default primary is Tailwind's indigo-500", () => {
-  expect(preview.light["--primary"]).toBe("#6366f1");
+test("the Claude default primary is Tailwind UI's indigo-600 button", () => {
+  expect(preview.light["--primary"]).toBe("#4f46e5");
 });
 
 test("the Claude default uses one radius everywhere and the stock soft shadow", () => {

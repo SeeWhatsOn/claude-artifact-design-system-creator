@@ -10,7 +10,7 @@ const INTER: FontRef = {
   category: "sans-serif",
 };
 
-// What Claude reaches for with no direction (docs/research/02-generic-claude-look.md): Inter, Tailwind's indigo-500
+// What Claude reaches for with no direction (docs/research/02-generic-claude-look.md): Inter, Tailwind UI's indigo-600 buttons (indigo-500 fails AA with white text)
 // on slate greys, one 8px radius everywhere (rounded-lg) and the stock rgba(0,0,0,.1) soft shadow.
 // Kept private so it can only be previewed: it is a comparison, never a preset or an export.
 function claudeDefaultProject(): Project {
@@ -21,7 +21,7 @@ function claudeDefaultProject(): Project {
     palette: {
       paletteId: null,
       seeds: {
-        brand: "#6366f1",
+        brand: "#4f46e5",
         brandForeground: "#ffffff",
         neutralLightBg: "#ffffff",
         neutralDarkBg: "#0f172a",
@@ -54,7 +54,11 @@ function claudeDefaultProject(): Project {
   };
 }
 
+// The look never changes, so it is compiled once, on first use.
+let cached: CompileOutput["preview"] | undefined;
+
 /** Preview variables for the generic "Claude default" look, shown beside the user's brand for comparison only. */
 export function claudeDefaultPreview(): CompileOutput["preview"] {
-  return compile(claudeDefaultProject()).preview;
+  cached ??= compile(claudeDefaultProject()).preview;
+  return cached;
 }
