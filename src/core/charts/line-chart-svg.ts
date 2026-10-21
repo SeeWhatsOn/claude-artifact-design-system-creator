@@ -1,5 +1,14 @@
 import { escapeHtml } from "../escape-html";
-import { chartVar, formatNumber, type ChartData } from "./chart-svg";
+import {
+  CHART_LABEL,
+  CHART_TEXT,
+  chartSvg,
+  chartVar,
+  formatNumber,
+  gridlinesSvg,
+  type ChartData,
+  type ChartOptions,
+} from "./chart-svg";
 
 /** Monthly totals for the line and area chart examples: three series, so lines are labelled directly. */
 export const SAMPLE_TREND_DATA: ChartData = {
@@ -10,11 +19,6 @@ export const SAMPLE_TREND_DATA: ChartData = {
     { name: "Store", values: [5100, 4800, 5300, 5000, 5600, 5900] },
   ],
 };
-
-const TEXT = "font-size: var(--type-caption-size); fill: var(--muted-foreground);";
-const LABEL = "font-size: var(--type-caption-size); fill: var(--foreground);";
-
-type ChartOptions = { width?: number; height?: number; title?: string };
 
 /**
  * Draws a line chart as static SVG in the brand's tokens: series stroke `--chart-n` in order, light horizontal
@@ -33,13 +37,16 @@ export function lineChartSvg(
   const x = (i: number) => pad.left + i * step;
   const y = (value: number) => pad.top + plotH - (value / max) * plotH;
 
-  const grid = [0, 0.5, 1].map(f => {
-    const gy = y(max * f).toFixed(1);
-    return `<line x1="${pad.left}" x2="${width - pad.right}" y1="${gy}" y2="${gy}" style="stroke: var(--border);" /><text x="${pad.left - 6}" y="${gy}" text-anchor="end" dominant-baseline="middle" style="${TEXT}">${formatNumber(max * f)}</text>`;
+  const grid = gridlinesSvg({
+    values: [0, 0.5, 1].map(f => ({ value: max * f, label: formatNumber(max * f) })),
+    left: pad.left,
+    right: width - pad.right,
+    y,
+    gap: 6,
   });
   const axis = data.categories.map(
     (category, i) =>
-      `<text x="${x(i).toFixed(1)}" y="${height - 6}" text-anchor="middle" style="${TEXT}">${escapeHtml(category)}</text>`,
+      `<text x="${x(i).toFixed(1)}" y="${height - 6}" text-anchor="middle" style="${CHART_TEXT}">${escapeHtml(category)}</text>`,
   );
   const lines = data.series.map((series, s) => {
     const points = series.values.map((value, i) => `${x(i).toFixed(1)},${y(value).toFixed(1)}`);
@@ -48,10 +55,10 @@ export function lineChartSvg(
       area && s === 0
         ? `<polygon points="${pad.left},${pad.top + plotH} ${points.join(" ")} ${x(last).toFixed(1)},${pad.top + plotH}" style="fill: ${chartVar(s)}; fill-opacity: 0.16;" />`
         : "";
-    const label = `<text x="${(x(last) + 6).toFixed(1)}" y="${y(series.values[last] ?? 0).toFixed(1)}" dominant-baseline="middle" style="${LABEL}">${escapeHtml(series.name)}</text>`;
+    const label = `<text x="${(x(last) + 6).toFixed(1)}" y="${y(series.values[last] ?? 0).toFixed(1)}" dominant-baseline="middle" style="${CHART_LABEL}">${escapeHtml(series.name)}</text>`;
     return `${fill}<polyline points="${points.join(" ")}" style="fill: none; stroke: ${chartVar(s)}; stroke-width: 2; stroke-linejoin: round;"><title>${escapeHtml(series.name)}</title></polyline>${label}`;
   });
-  return svg(width, height, title, [...grid, ...axis, ...lines]);
+  return chartSvg(width, height, title, [...grid, ...axis, ...lines]);
 }
 
 /** A tiny trend line with no axes or labels, for next to a number. Strokes `--chart-1`. */
@@ -72,8 +79,4 @@ export function sparklineSvg(
 function niceMax(value: number): number {
   const magnitude = 10 ** Math.floor(Math.log10(value));
   return Math.ceil(value / magnitude) * magnitude;
-}
-
-function svg(width: number, height: number, title: string, parts: string[]): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" width="100%" role="img" aria-label="${escapeHtml(title)}">${parts.join("")}</svg>`;
 }
