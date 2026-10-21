@@ -1,3 +1,4 @@
+import type { CatalogueEntry } from "../catalogue-entry";
 import type { CssVarMap } from "../compile";
 import { escapeHtml } from "../escape-html";
 
@@ -5,12 +6,7 @@ import { escapeHtml } from "../escape-html";
 export type CardVars = { light: CssVarMap; dark?: CssVarMap };
 
 /** One static preview card: where it sits on the Design System page, and its markup. */
-export type DsCard = {
-  /** The page group the card is listed under, e.g. "Actions". */
-  group: string;
-  /** Card height in px on the Design System page. */
-  height: number;
-  title: string;
+export type DsCard = Pick<CatalogueEntry, "group" | "height" | "title"> & {
   /** Extra CSS for this card. Must read colours and sizes through `var(--token)` only. */
   css?: string;
   /** The card's body markup. */
