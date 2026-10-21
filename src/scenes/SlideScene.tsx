@@ -36,13 +36,13 @@ export function SlideScene({ logo }: SceneProps) {
         style={{ width: SLIDE_WIDTH, height: SLIDE_HEIGHT, transform: `scale(${scale})` }}
         className="absolute top-0 left-0 flex origin-top-left flex-col justify-between gap-[var(--space-5)] p-10"
       >
-        <h2 data-edit="heading" style={roleStyle("h1")} className="m-0">
+        <h2 data-edit="heading" data-edit-role="h1" style={roleStyle("h1")} className="m-0">
           Three things we learned
         </h2>
         <ul className="m-0 grid list-none grid-cols-3 gap-[var(--space-4)] p-0">
           {POINTS.map(point => (
             <li key={point} data-edit="card" className={cn(CARD, "bg-card p-[var(--space-4)] text-card-foreground")}>
-              <h3 data-edit="heading" style={roleStyle("h3")} className="m-0">
+              <h3 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0">
                 {point}
               </h3>
             </li>

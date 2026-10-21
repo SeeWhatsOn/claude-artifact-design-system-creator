@@ -41,7 +41,7 @@ export function DashboardScene({ components, logo }: SceneProps) {
           </Button>
         </div>
       </header>
-      <h2 data-edit="heading" style={roleStyle("h2")} className="m-0">
+      <h2 data-edit="heading" data-edit-role="h2" style={roleStyle("h2")} className="m-0">
         Weekly overview
       </h2>
       <div className="grid gap-[var(--space-3)] @md:grid-cols-3">
@@ -64,13 +64,13 @@ export function DashboardScene({ components, logo }: SceneProps) {
         ))}
       </div>
       <section data-edit="card" className={cn(CARD, "min-w-0 bg-card p-[var(--space-4)] text-card-foreground")}>
-        <h3 data-edit="heading" style={roleStyle("h3")} className="m-0 mb-[var(--space-3)]">
+        <h3 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0 mb-[var(--space-3)]">
           Tasks finished by team
         </h3>
         <BrandChart data={SAMPLE_CHART_DATA} title="Tasks finished by team, January to April" />
       </section>
       <section data-edit="card" className={cn(CARD, "min-w-0 bg-card p-[var(--space-4)] text-card-foreground")}>
-        <h3 data-edit="heading" style={roleStyle("h3")} className="m-0 mb-[var(--space-3)]">
+        <h3 data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0 mb-[var(--space-3)]">
           Projects
         </h3>
         <Table>
@@ -111,7 +111,7 @@ export function DashboardScene({ components, logo }: SceneProps) {
         data-edit="dialog"
         className="max-w-sm flex flex-col gap-[var(--space-3)] rounded-[var(--radius-dialog)] border-[length:var(--border-width)] bg-card p-[var(--space-4)] text-card-foreground shadow-[var(--shadow-overlay)]"
       >
-        <p data-edit="heading" style={roleStyle("h3")} className="m-0">
+        <p data-edit="heading" data-edit-role="h3" style={roleStyle("h3")} className="m-0">
           Archive Billing move?
         </p>
         <p style={roleStyle("small")} className="m-0 text-muted-foreground">

@@ -1,12 +1,9 @@
 import { Lock, LockOpen, Shuffle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { randomisePalette, setSeed, type SeedGroup } from "@/core/palette-editing";
-import type { PaletteSeeds } from "@/core/project";
-import { TokenName } from "@/shell/TokenName";
+import { randomisePalette, type SeedGroup } from "@/core/palette-editing";
 import { projectStore, useProjectStore } from "@/state/project-store";
-
-type HexSeed = Exclude<keyof PaletteSeeds, "neutralHue">;
+import { GreyTintFields, SeedField, type HexSeed } from "./SeedFields";
 
 // Plain-language labels; the seed names stay out of sight.
 const GROUPS: { group: SeedGroup; label: string; seeds: { key: HexSeed; label: string }[] }[] = [
@@ -34,7 +31,6 @@ const GROUPS: { group: SeedGroup; label: string; seeds: { key: HexSeed; label: s
 
 /** Edits the few seed colours everything else is derived from, with randomise and per-group locks. */
 export function SeedEditor() {
-  const seeds = useProjectStore(state => state.project.palette.seeds);
   const updateProject = useProjectStore(state => state.updateProject);
   const [locks, setLocks] = useState<ReadonlySet<SeedGroup>>(new Set());
   const [problem, setProblem] = useState<string | null>(null);
@@ -60,21 +56,7 @@ export function SeedEditor() {
         return (
           <div key={group} className="flex flex-wrap items-end gap-3">
             {fields.map(field => (
-              <span key={field.key} className="flex items-center gap-2">
-                <label className="flex items-center gap-2 text-sm">
-                  <input
-                    type="color"
-                    value={seeds[field.key]}
-                    onChange={event => {
-                      const hex = event.target.value;
-                      updateProject(project => setSeed(project, field.key, hex));
-                    }}
-                    className="h-8 w-10 cursor-pointer rounded border bg-transparent"
-                  />
-                  {field.label}
-                </label>
-                <TokenName>{seeds[field.key]}</TokenName>
-              </span>
+              <SeedField key={field.key} seed={field.key} label={field.label} />
             ))}
             <label className="ml-auto flex cursor-pointer items-center gap-1 text-xs text-muted-foreground has-focus-visible:ring-2 has-focus-visible:ring-ring">
               <input type="checkbox" checked={locked} onChange={() => toggleLock(group)} className="sr-only" />
@@ -84,35 +66,7 @@ export function SeedEditor() {
           </div>
         );
       })}
-      <div className="flex flex-wrap gap-4">
-        <label className="flex items-center gap-2 text-sm">
-          Grey tint
-          <input
-            type="range"
-            min={0}
-            max={360}
-            value={seeds.neutralHue.hue}
-            onChange={event => {
-              const hue = Number(event.target.value);
-              updateProject(project => setSeed(project, "neutralHue", { ...project.palette.seeds.neutralHue, hue }));
-            }}
-          />
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          Tint strength
-          <input
-            type="range"
-            min={0}
-            max={0.04}
-            step={0.001}
-            value={seeds.neutralHue.chroma}
-            onChange={event => {
-              const chroma = Number(event.target.value);
-              updateProject(project => setSeed(project, "neutralHue", { ...project.palette.seeds.neutralHue, chroma }));
-            }}
-          />
-        </label>
-      </div>
+      <GreyTintFields />
       <Button variant="secondary" onClick={randomise}>
         <Shuffle aria-hidden />
         Randomise unlocked colours

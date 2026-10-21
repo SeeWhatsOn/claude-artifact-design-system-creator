@@ -97,7 +97,7 @@ test("scenes leave out a variant the component rules don't allow there", async (
 
 test("key parts of every scene are tagged for click-to-edit", async () => {
   const pane = renderPane();
-  for (const tab of ["Dashboard", "Landing page", "Report", "Slide"]) {
+  for (const tab of ["Basics", "Dashboard", "Landing page", "Report", "Slide"]) {
     const panel = await openScene(pane, tab);
     for (const target of ["surface", "heading"]) {
       expect(panel.querySelector(`[data-edit="${target}"]`), `${tab} ${target}`).not.toBeNull();

@@ -19,7 +19,7 @@ export function ReportScene({ logo }: SceneProps) {
     <article data-edit="surface" className="mx-auto flex max-w-2xl flex-col gap-[var(--space-4)] p-[var(--space-4)]">
       {logo}
       <header className="flex flex-col gap-[var(--space-2)] border-b border-border pb-[var(--space-4)]">
-        <h2 data-edit="heading" style={roleStyle("h1")} className="m-0">
+        <h2 data-edit="heading" data-edit-role="h1" style={roleStyle("h1")} className="m-0">
           Quarterly customer report
         </h2>
         <p style={roleStyle("small")} className="m-0 text-muted-foreground">
@@ -29,7 +29,7 @@ export function ReportScene({ logo }: SceneProps) {
       <p style={roleStyle("lead")} className="m-0">
         Customer numbers grew in two of three regions, and support waits fell for the second quarter running.
       </p>
-      <h3 data-edit="heading" style={roleStyle("h2")} className="m-0">
+      <h3 data-edit="heading" data-edit-role="h2" style={roleStyle("h2")} className="m-0">
         Where growth came from
       </h3>
       <p style={roleStyle("body")} className="m-0">
@@ -43,7 +43,7 @@ export function ReportScene({ logo }: SceneProps) {
           Figure 1. New accounts by channel.
         </figcaption>
       </figure>
-      <h3 data-edit="heading" style={roleStyle("h2")} className="m-0">
+      <h3 data-edit="heading" data-edit-role="h2" style={roleStyle("h2")} className="m-0">
         Accounts by region
       </h3>
       <Table>
