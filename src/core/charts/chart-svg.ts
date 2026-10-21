@@ -1,4 +1,4 @@
-import { escapeHtml } from "../export/ds-card";
+import { escapeHtml } from "../escape-html";
 
 /** One chart series: a name and one value per category. */
 export type ChartSeries = { name: string; values: number[] };

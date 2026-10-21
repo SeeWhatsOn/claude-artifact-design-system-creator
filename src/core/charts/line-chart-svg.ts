@@ -1,4 +1,4 @@
-import { escapeHtml } from "../export/ds-card";
+import { escapeHtml } from "../escape-html";
 import { chartVar, formatNumber, type ChartData } from "./chart-svg";
 
 /** Monthly totals for the line and area chart examples: three series, so lines are labelled directly. */

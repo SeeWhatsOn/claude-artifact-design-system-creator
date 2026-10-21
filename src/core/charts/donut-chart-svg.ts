@@ -1,4 +1,4 @@
-import { escapeHtml } from "../export/ds-card";
+import { escapeHtml } from "../escape-html";
 import { chartVar } from "./chart-svg";
 
 const LABEL = "font-size: var(--type-caption-size); fill: var(--foreground);";

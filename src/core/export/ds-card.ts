@@ -1,4 +1,5 @@
 import type { CssVarMap } from "../compile";
+import { escapeHtml } from "../escape-html";
 
 /** The brand's variables for each theme, as compiled for the live preview. */
 export type CardVars = { light: CssVarMap; dark?: CssVarMap };
@@ -57,16 +58,6 @@ ${card.body}
 </body>
 </html>
 `;
-}
-
-/** Escapes text for use inside HTML, for brand names and other user-written strings. */
-export function escapeHtml(text: string): string {
-  return text
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
 }
 
 function declarations(vars: CssVarMap, indent: number): string {
