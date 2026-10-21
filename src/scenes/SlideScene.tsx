@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { roleStyle } from "@/preview/role-style";
 import { cn } from "@/lib/utils";
-import { CARD, type SceneProps } from "./scene-styles";
+import { CARD } from "@/preview/brand-classes";
+import type { SceneProps } from "./scene-props";
 
 // The slide is laid out at a fixed 16:9 size, then scaled to fit, so type keeps its real proportions on any width.
 // 640×360 keeps the scaled type legible on a phone (about half size at 360px wide).

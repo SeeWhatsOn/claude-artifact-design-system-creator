@@ -6,7 +6,8 @@ import { SAMPLE_CHART_DATA } from "@/core/charts/chart-svg";
 import { pickVariant } from "@/core/components/placement";
 import { roleStyle } from "@/preview/role-style";
 import { cn } from "@/lib/utils";
-import { CARD, CONTROL, PILL, STATUS, type SceneProps } from "./scene-styles";
+import { CARD, CONTROL, PILL, STATUS } from "@/preview/brand-classes";
+import type { SceneProps } from "./scene-props";
 
 const METRICS = [
   { label: "Active projects", value: "24", note: "3 more than last week" },

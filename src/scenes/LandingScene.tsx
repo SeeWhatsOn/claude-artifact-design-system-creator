@@ -5,7 +5,8 @@ import { Label } from "@/components/ui/label";
 import { pickVariant } from "@/core/components/placement";
 import { roleStyle } from "@/preview/role-style";
 import { cn } from "@/lib/utils";
-import { CARD, CONTROL, type SceneProps } from "./scene-styles";
+import { CARD, CONTROL } from "@/preview/brand-classes";
+import type { SceneProps } from "./scene-props";
 
 const FEATURES = [
   { title: "Shared plans", body: "Everyone sees the same week, so nobody books over a deadline." },
