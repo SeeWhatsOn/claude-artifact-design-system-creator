@@ -24,7 +24,13 @@ export function PreviewSurface({
       ref={setElement}
       data-preview-theme
       style={{ ...(vars as CSSProperties), fontFamily: "var(--font-body)" }}
-      className={cn("rounded-lg border bg-background text-foreground", dark && "dark", className)}
+      className={cn(
+        "rounded-lg border bg-background text-foreground",
+        // Button words are set in the label text style, as in the exported cards.
+        "[&_[data-slot=button]]:text-[length:var(--type-label-size)] [&_[data-slot=button]]:font-[number:var(--type-label-weight)]",
+        dark && "dark",
+        className,
+      )}
     >
       <PortalContainerProvider value={element}>{children}</PortalContainerProvider>
     </div>

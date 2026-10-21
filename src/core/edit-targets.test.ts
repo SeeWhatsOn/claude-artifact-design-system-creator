@@ -16,6 +16,13 @@ test("a button's corners are shared with inputs", () => {
   expect(sectionHeader(button!.sections[0]!)).toBe("Corner radius · changes all buttons and inputs");
 });
 
+test("a button also edits the label text style its words are set in", () => {
+  const button = editTarget("button");
+  expect(button?.role).toBe("label");
+  const text = button?.sections.find(section => section.control === "text-role");
+  expect(sectionHeader(text!)).toBe("Label text · changes buttons, tabs and form labels");
+});
+
 test("a heading edits its own text role and names it", () => {
   const heading = editTarget("heading", "h2");
   expect(heading?.title).toBe("Heading 2");

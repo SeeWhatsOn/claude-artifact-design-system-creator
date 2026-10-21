@@ -37,7 +37,7 @@ export type EditTarget = {
   title: string;
   /** Accessible name of the element's edit target in edit mode. */
   actionLabel: string;
-  /** The text role being edited, for headings. */
+  /** The text role its text-role section edits: a heading's own level, or the label style for buttons. */
   role?: TextRole;
   sections: readonly InspectorSection[];
 };
@@ -135,6 +135,7 @@ const TARGETS: Record<Exclude<EditTargetId, "heading">, EditTarget> = {
     id: "button",
     title: "Button",
     actionLabel: "Edit button style",
+    role: "label",
     sections: [
       {
         control: "radius-control",
@@ -149,6 +150,13 @@ const TARGETS: Record<Exclude<EditTargetId, "heading">, EditTarget> = {
         sharedWith: "changes main buttons, links, focus rings and charts",
         tokens: ["--primary", "--primary-foreground", "--ring", "--chart-1"],
         step: "colour",
+      },
+      {
+        control: "text-role",
+        title: "Label text",
+        sharedWith: "changes buttons, tabs and form labels",
+        tokens: ["--type-label-size", "--type-label-weight"],
+        step: "type",
       },
     ],
   },
