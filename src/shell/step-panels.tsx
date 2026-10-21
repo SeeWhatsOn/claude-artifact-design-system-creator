@@ -8,6 +8,7 @@ import type { StepId } from "@/core/steps";
 import { FontChooser } from "@/fonts/FontChooser";
 import { ComponentGallery } from "@/gallery/ComponentGallery";
 import { LogoEditor } from "@/logos/LogoEditor";
+import { PatternLibrary } from "@/patterns/PatternLibrary";
 import { DepthControls } from "@/shape/DepthControls";
 import { RadiusControls } from "@/shape/RadiusControls";
 import { SpacingControls } from "@/shape/SpacingControls";
@@ -45,6 +46,11 @@ export const STEP_PANELS: StepPanel[] = [
     step: "components",
     id: "component-gallery",
     Panel: ({ preview }) => <ComponentGallery light={preview.light} dark={preview.dark} />,
+  },
+  {
+    step: "components",
+    id: "pattern-library",
+    Panel: ({ preview }) => <PatternLibrary light={preview.light} dark={preview.dark} />,
   },
   { step: "voice", id: "voice-coming-soon", Panel: ComingSoon },
   { step: "bans", id: "bans-coming-soon", Panel: ComingSoon },
