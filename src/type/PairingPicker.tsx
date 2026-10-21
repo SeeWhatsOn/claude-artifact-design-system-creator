@@ -2,7 +2,7 @@ import { useId } from "react";
 import { applyPairing, currentPairingId, pairingFont, PAIRINGS, type Pairing } from "@/core/font-pairings";
 import { fontStack } from "@/core/type/type-scale";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
-import { PickerStrip, STRIP_OPTION } from "@/shell/PickerStrip";
+import { PickerStrip, STRIP_OPTION, usePinnedFirst } from "@/shell/PickerStrip";
 import { useProjectStore } from "@/state/project-store";
 
 const BODY_SAMPLE = "Clear words, set well.";
@@ -12,12 +12,13 @@ export function PairingPicker() {
   const pairingId = useProjectStore(state => currentPairingId(state.project));
   // The picker can show twice (Type step and preview inspector); each copy needs its own radio group.
   const name = useId();
+  const pairings = usePinnedFirst(PAIRINGS, pairingId);
 
   return (
     <fieldset className="min-w-0 space-y-2">
       <legend className="mb-2 text-sm font-medium">Font pairing</legend>
       <PickerStrip label="Font pairing" selected={pairingId}>
-        {PAIRINGS.map(pairing => (
+        {pairings.map(pairing => (
           <PairingOption key={pairing.id} name={name} pairing={pairing} checked={pairing.id === pairingId} />
         ))}
       </PickerStrip>

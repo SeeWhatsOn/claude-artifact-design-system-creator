@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { applyPalette, PALETTES } from "@/core/palettes";
-import { PickerStrip, STRIP_OPTION } from "@/shell/PickerStrip";
+import { PickerStrip, STRIP_OPTION, usePinnedFirst } from "@/shell/PickerStrip";
 import { useProjectStore } from "@/state/project-store";
 
 /** Lets the user pick one of the curated palettes, each shown with its seed swatches, from a scrolling strip. */
@@ -9,12 +9,13 @@ export function PalettePicker() {
   const updateProject = useProjectStore(state => state.updateProject);
   // The picker can show twice (Colour step and preview inspector); each copy needs its own radio group.
   const name = useId();
+  const palettes = usePinnedFirst(PALETTES, paletteId);
 
   return (
     <fieldset className="min-w-0 space-y-2">
       <legend className="mb-2 text-sm font-medium">Palette</legend>
       <PickerStrip label="Palette" selected={paletteId}>
-        {PALETTES.map(palette => {
+        {palettes.map(palette => {
           const { brand, accent, neutralLightBg, neutralDarkBg } = palette.seeds;
           return (
             <label key={palette.id} className={`${STRIP_OPTION} w-44 items-center gap-3`}>
