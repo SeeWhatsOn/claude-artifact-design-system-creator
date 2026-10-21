@@ -15,9 +15,9 @@ flowchart LR
   Store <-->|open / save| File["Project file<br/>.brandkit.json"]
   Store -->|Project| Compile["compile()<br/>src/core"]
   Compile -->|preview vars| UI
-  UI --> Gallery["Preview + component gallery<br/>scoped brand vars"]
+  UI --> Gallery["Preview, component gallery<br/>+ pattern library<br/>scoped brand vars"]
   Compile -->|diagnostics| UI
-  Compile -->|"files: tokens, README,<br/>components/*/preview.html"| Zip["Export zip"]
+  Compile -->|"files: tokens, README,<br/>components/*/preview.html,<br/>Patterns-*/preview.html"| Zip["Export zip"]
 ```
 
 ## Stack
@@ -61,6 +61,7 @@ bun run build          # static bundle in dist/
 | `src/preview/`       | Live preview with a light/dark toggle and a type specimen; `PreviewSurface` scopes brand variables and hosts Dialog/Select portals.                                                |
 | `src/gallery/`       | Component gallery: all twelve components live in the brand's style, light and dark.                                                                                                |
 | `src/charts/`        | `BrandChart`: recharts bar chart in the brand's `--chart-n` colours, shared by gallery and scenes.                                                                                 |
+| `src/patterns/`      | Pattern library: charts, tables, diagrams and other artifact building blocks in the brand, each set to preferred, allowed or never.                                                |
 | `src/diagnostics/`   | The checks panel: what blocks export or needs a look.                                                                                                                              |
 | `src/download/`      | Hands the browser a file to save (shared by export and project file).                                                                                                              |
 | `src/export/`        | Zip building and the Download Design System button.                                                                                                                                |
