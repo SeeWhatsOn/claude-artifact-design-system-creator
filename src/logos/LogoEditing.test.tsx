@@ -4,7 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { App } from "@/App";
 import { createDefaultProject } from "@/core/default-project";
 import { assetStore } from "@/state/asset-store";
+import { resetShell } from "@/shell/shell-store";
 import { projectStore } from "@/state/project-store";
+import { openStep } from "../../test/open-step";
 
 const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1]);
 const SVG = `<svg xmlns="http://www.w3.org/2000/svg"/>`;
@@ -13,6 +15,7 @@ beforeEach(() => {
   projectStore.setState({ project: createDefaultProject() });
   projectStore.temporal.getState().clear();
   assetStore.setState({ assets: {} });
+  resetShell();
 });
 
 function preview(): HTMLElement {
@@ -21,6 +24,7 @@ function preview(): HTMLElement {
 
 test("an uploaded logo is stored, listed with a thumbnail and shown in the preview", async () => {
   render(<App />);
+  await openStep("Logos");
   await userEvent.upload(screen.getByLabelText("Upload logo"), new File([PNG], "Acme Mark.png", { type: "image/png" }));
 
   const [logo] = projectStore.getState().project.logos;
@@ -33,6 +37,7 @@ test("an uploaded logo is stored, listed with a thumbnail and shown in the previ
 
 test("light and dark variants each show on their own preview theme", async () => {
   render(<App />);
+  await openStep("Logos");
   await userEvent.upload(screen.getByLabelText("Upload logo"), new File([PNG], "On light.png"));
   await userEvent.upload(screen.getByLabelText("Upload logo"), new File([SVG], "On dark.svg"));
   await userEvent.selectOptions(screen.getByLabelText("Theme for On light"), "light");
@@ -47,6 +52,7 @@ test("light and dark variants each show on their own preview theme", async () =>
 
 test("a logo can be removed, and the preview falls back to the brand name in plain type", async () => {
   render(<App />);
+  await openStep("Logos");
   await userEvent.upload(screen.getByLabelText("Upload logo"), new File([PNG], "Acme Mark.png"));
   await userEvent.click(screen.getByRole("button", { name: "Remove Acme Mark" }));
 
@@ -57,6 +63,7 @@ test("a logo can be removed, and the preview falls back to the brand name in pla
 
 test("a file that isn't a PNG or SVG is refused with a reason", async () => {
   render(<App />);
+  await openStep("Logos");
   await userEvent.upload(screen.getByLabelText("Upload logo"), new File(["hello"], "logo.png"));
   expect(await screen.findByRole("alert")).toHaveTextContent("logo.png isn't a PNG or SVG file.");
   expect(projectStore.getState().project.logos).toEqual([]);

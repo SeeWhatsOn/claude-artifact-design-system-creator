@@ -4,7 +4,9 @@ import userEvent from "@testing-library/user-event";
 import { App } from "@/App";
 import { createDefaultProject } from "@/core/default-project";
 import { assetStore } from "@/state/asset-store";
+import { resetShell } from "@/shell/shell-store";
 import { projectStore } from "@/state/project-store";
+import { openStep } from "../../test/open-step";
 
 const realFetch = globalThis.fetch;
 
@@ -17,6 +19,7 @@ function respondWith(fonts: unknown) {
 beforeEach(() => {
   projectStore.setState({ project: createDefaultProject() });
   projectStore.temporal.getState().clear();
+  resetShell();
   assetStore.setState({ assets: {} });
 });
 
@@ -33,6 +36,7 @@ const API_FONTS = [
 test("searching shows matching Google fonts, each in its own face, and picking one fills the chosen slot", async () => {
   respondWith(API_FONTS);
   render(<App />);
+  await openStep("Type");
   await userEvent.click(screen.getByRole("radio", { name: /Body text/ }));
   await userEvent.type(screen.getByRole("searchbox", { name: "Search Google Fonts" }), "kar");
   const results = await screen.findByRole("list", { name: "Font results" });
@@ -48,6 +52,7 @@ test("searching shows matching Google fonts, each in its own face, and picking o
 test("a flagged font is marked in the results and warns once picked", async () => {
   respondWith(API_FONTS);
   render(<App />);
+  await openStep("Type");
   await userEvent.type(screen.getByRole("searchbox", { name: "Search Google Fonts" }), "inter");
   const inter = await screen.findByRole("button", { name: /Inter/ });
   expect(inter).toHaveTextContent("Overused by AI");
@@ -60,6 +65,7 @@ test("when font search is offline, the curated fonts are offered instead", async
     preconnect: realFetch.preconnect,
   });
   render(<App />);
+  await openStep("Type");
   await userEvent.type(screen.getByRole("searchbox", { name: "Search Google Fonts" }), "jost");
   expect(await screen.findByText("Font search is offline, so only the curated fonts are shown.")).toBeInTheDocument();
   expect(await screen.findByRole("button", { name: /Jost/ })).toBeInTheDocument();
@@ -67,6 +73,7 @@ test("when font search is offline, the curated fonts are offered instead", async
 
 test("an uploaded font is stored, used for the slot and bundled into the export", async () => {
   render(<App />);
+  await openStep("Type");
   await userEvent.click(screen.getByRole("radio", { name: /Body text/ }));
   const file = new File([new Uint8Array([0x77, 0x4f, 0x46, 0x32, 1])], "AcmeSans-Bold.woff2", { type: "font/woff2" });
   await userEvent.upload(screen.getByLabelText("Upload font files"), file);
@@ -80,6 +87,7 @@ test("an uploaded font is stored, used for the slot and bundled into the export"
 
 test("a file that isn't a font is refused with a reason", async () => {
   render(<App />);
+  await openStep("Type");
   const file = new File(["<svg/>"], "logo.woff2");
   await userEvent.upload(screen.getByLabelText("Upload font files"), file);
   expect(await screen.findByRole("alert")).toHaveTextContent("logo.woff2 isn't a font file");

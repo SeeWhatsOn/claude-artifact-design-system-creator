@@ -7,6 +7,7 @@ import { colourVars, fontsToLoad, shapeVars, typeVars } from "./preview-vars";
 import type { FontRef, Project } from "./project";
 import type { ProjectAssets } from "./project-file";
 import { checkShape } from "./shape/check-shape";
+import type { StepId } from "./steps";
 import { checkFlaggedFonts } from "./type/flagged-fonts";
 import { bundledFonts, checkUploadedFonts } from "./type/uploaded-fonts";
 
@@ -18,7 +19,7 @@ export type Diagnostic = {
   severity: "block" | "warn" | "info";
   code: string;
   message: string;
-  step: string;
+  step: StepId;
   path: string;
 };
 

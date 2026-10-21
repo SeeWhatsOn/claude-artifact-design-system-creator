@@ -1,5 +1,6 @@
 import { setBorders, setShadow } from "@/core/shape-editing";
 import type { Shape } from "@/core/project";
+import { TokenName } from "@/shell/TokenName";
 import { useProjectStore } from "@/state/project-store";
 import { Choice } from "./SpacingControls";
 
@@ -35,6 +36,7 @@ export function DepthControls() {
         value={shadow.enabled ? "shadow" : "flat"}
         onChange={value => updateProject(project => setShadow(project, { enabled: value === "shadow" }))}
       />
+      <TokenName>--shadow-raised, --shadow-overlay</TokenName>
       {shadow.enabled && (
         <div className="grid gap-2 sm:grid-cols-2">
           <label className="flex items-center gap-2 text-sm">
@@ -73,6 +75,7 @@ export function DepthControls() {
         value={borders}
         onChange={value => updateProject(project => setBorders(project, value))}
       />
+      <TokenName>--border-width</TokenName>
     </fieldset>
   );
 }
