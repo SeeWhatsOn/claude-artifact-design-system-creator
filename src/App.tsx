@@ -6,6 +6,7 @@ import { SeedEditor } from "@/colour/SeedEditor";
 import { compile } from "@/core/compile";
 import { DiagnosticsPanel } from "@/diagnostics/DiagnosticsPanel";
 import { DownloadButton } from "@/export/DownloadButton";
+import { ComponentGallery } from "@/gallery/ComponentGallery";
 import { FontChooser } from "@/fonts/FontChooser";
 import { useGoogleFonts } from "@/fonts/use-google-fonts";
 import { useUploadedFonts } from "@/fonts/use-uploaded-fonts";
@@ -73,6 +74,7 @@ export function App() {
         <div className="space-y-6">
           <PreviewPane light={preview.light} dark={preview.dark} />
           <DiagnosticsPanel diagnostics={diagnostics} />
+          <ComponentGallery light={preview.light} dark={preview.dark} />
         </div>
       </main>
     </div>
